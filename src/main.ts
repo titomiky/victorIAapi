@@ -10,10 +10,9 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-  .setTitle('Your API Documentation')
-  .setDescription('Description of your API')
+  .setTitle('VictorIA API Documentation')
+  .setDescription('VictorIA API Documentation')
   .setVersion('1.0')
-  .addTag('Users') // Add the same tag as in your controller
   .build();
 
 const document = SwaggerModule.createDocument(app, config);

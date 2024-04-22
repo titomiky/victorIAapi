@@ -9,23 +9,24 @@ import {
   Param,
 } from '@nestjs/common';
 
-import { TodoService } from './todo.service';
-import { CreateTodoDto } from './dtos/create-todo.dto';
-import { UpdateTodoDto } from './dtos/update-todo.dto';
+import { UserService } from './user.service';
+import { UserDto } from './dtos/user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('todo')
-export class TodoController {
-  constructor(private todoService: TodoService) {}
+@Controller('User')
+@ApiTags('User')
+export class UserController {
+  constructor(private todoService: UserService) {}
 
-  @Post()
-  async create(@Body(new ValidationPipe()) createTodo: CreateTodoDto) {
+  @Post()  
+  async create(@Body(new ValidationPipe()) createTodo: UserDto) {
     return this.todoService.create(createTodo);
   }
 
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body(new ValidationPipe()) updateTodo: UpdateTodoDto,
+    @Body(new ValidationPipe()) updateTodo: UserDto,
   ) {
     return this.todoService.update(id, updateTodo);
   }
