@@ -6,6 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { adminUserDto } from '../../adminUser/dtos/adminUser.dto';
 import { Prop } from '@nestjs/mongoose';
 import { ObjectId } from 'mongoose';
+import { User } from '../schemas/user.schema';
 
 
 export class UserDto {
@@ -29,3 +30,4 @@ export class UserDto {
   adminUser: adminUserDto;
 
 }
+
