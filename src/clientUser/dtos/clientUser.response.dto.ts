@@ -5,7 +5,7 @@ import { ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 
-export class adminUserResponseDto {
+export class clientUserResponseDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
