@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
+import { adminUserModule } from './adminUser/adminUser.module';
+
 
 @Module({
   imports: [
@@ -12,7 +14,7 @@ import { UserModule } from './user/user.module';
     MongooseModule.forRoot(
      'mongodb://localhost:27017/holaqueai',
     ),
-    UserModule
+    UserModule, adminUserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

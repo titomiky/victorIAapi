@@ -3,24 +3,20 @@ import { Injectable } from '@nestjs/common';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { adminUserDto } from '../../adminUser/dtos/adminUser.dto';
 
 
-export class UserDto {
+export class adminUserDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
-  email: string;
+  name: string;
 
   @IsString()  
   @ApiProperty()
-  password: string;
+  surname: string;
 
-  
-  @ApiProperty({
-    type: adminUserDto,    
-  })  
-  @Type(() => adminUserDto)
-  adminUser: adminUserDto;
+  @IsString()  
+  @ApiProperty()
+  phoneNumber: string;
 
 }
