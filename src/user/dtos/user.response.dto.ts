@@ -1,14 +1,11 @@
 import { IsNotEmpty, IsString, IsEnum, IsOptional, IsObject} from 'class-validator';
-import { Injectable } from '@nestjs/common';
 import { Type } from 'class-transformer';
-import { ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { adminUserDto } from '../../adminUser/dtos/adminUser.dto';
-import { Prop } from '@nestjs/mongoose';
-import { ObjectId } from 'mongoose';
+import { adminUserResponseDto } from '../../adminUser/dtos/adminUser.response.dto';
 
 
-export class UserDto {
+export class UserResponseDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty()
@@ -19,13 +16,13 @@ export class UserDto {
   password: string;
 
   @IsString()
-  @IsOptional()
-  _id?: ObjectId;
+  @ApiProperty()
+  _id: string;
   
   @ApiProperty({
-    type: adminUserDto,    
+    type: adminUserResponseDto,    
   })  
-  @Type(() => adminUserDto)
-  adminUser: adminUserDto;
+  @Type(() => adminUserResponseDto)
+  adminUser: adminUserResponseDto;
 
 }

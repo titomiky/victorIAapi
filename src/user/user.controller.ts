@@ -12,6 +12,7 @@ import {
 import { UserService } from './user.service';
 import { UserDto } from './dtos/user.dto';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { UserResponseDto } from './dtos/user.response.dto';
 
 @Controller('User')
 @ApiTags('User')
@@ -19,7 +20,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()  
-  @ApiResponse({ type: UserDto })
+  @ApiResponse({ status: 201, description: 'Created user ok', type: UserResponseDto })
   async create(@Body(new ValidationPipe()) createuser: UserDto) {
     return this.userService.create(createuser);
   }
