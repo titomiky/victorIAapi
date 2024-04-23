@@ -4,6 +4,7 @@ import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { adminUserDto } from '../../adminUser/dtos/adminUser.dto';
+import { clientUserDto } from '../../clientUser/dtos/clientUser.dto';
 import { Prop } from '@nestjs/mongoose';
 import { ObjectId } from 'mongoose';
 import { User } from '../schemas/user.schema';
@@ -23,11 +24,13 @@ export class UserDto {
   @IsOptional()
   _id?: ObjectId;
   
-  @ApiProperty({
-    type: adminUserDto,    
-  })  
+  @ApiProperty({type: adminUserDto})  
   @Type(() => adminUserDto)
   adminUser: adminUserDto;
+
+  @ApiProperty({type: clientUserDto})  
+  @Type(() => clientUserDto)
+  clientUser: clientUserDto;
 
 }
 

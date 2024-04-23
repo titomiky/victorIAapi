@@ -17,4 +17,4 @@ import { adminUserController } from './adminUser.controller';
   providers: [adminUserService],
   controllers: [adminUserController],
 })
-export class adminUserModule {}
+export class AdminUserModule {}
