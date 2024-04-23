@@ -13,8 +13,8 @@ import { adminUserService } from './adminUser.service';
 import { adminUserDto } from './dtos/adminUser.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@Controller('adminUser')
-@ApiTags('adminUser')
+@Controller('adminUsers')
+@ApiTags('adminUsers')
 export class adminUserController {
   constructor(private adminUserService: adminUserService) {}
 
@@ -31,7 +31,7 @@ export class adminUserController {
     return this.adminUserService.update(id, updateadminUser);
   }
 
-  @Get()
+  @Get('list')
   async findAll() {
     return this.adminUserService.findAll();
   }

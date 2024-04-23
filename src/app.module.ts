@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AdminUserModule } from './adminUser/adminUser.module';
 import { ClientUserModule } from './clientUser/clientUser.module';
+import { CandidateUserModule } from './candidateUser/candidateUser.module';
 
 
 @Module({
@@ -15,7 +16,7 @@ import { ClientUserModule } from './clientUser/clientUser.module';
     MongooseModule.forRoot(
      'mongodb://localhost:27017/holaqueai',
     ),
-    UserModule, AdminUserModule, ClientUserModule
+    UserModule, AdminUserModule, ClientUserModule, CandidateUserModule
   ],
   controllers: [AppController],
   providers: [AppService],
