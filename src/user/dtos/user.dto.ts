@@ -19,6 +19,7 @@ export class UserDto {
 
   @IsString()  
   @ApiProperty()
+  @IsNotEmpty()
   password: string;
 
   @IsString()

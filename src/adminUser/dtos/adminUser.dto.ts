@@ -13,10 +13,12 @@ export class adminUserDto {
 
   @IsString()  
   @ApiProperty()
+  @IsOptional()
   surname: string;
 
   @IsString()  
   @ApiProperty()
+  @IsOptional()
   phoneNumber: string;
 
 }

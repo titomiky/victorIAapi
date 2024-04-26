@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsEnum, IsOptional} from 'class-validator';
+import { IsNotEmpty, IsString, IsEnum, IsOptional, isNotEmpty} from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
@@ -13,6 +13,7 @@ export class clientUserResponseDto {
 
   @IsString()  
   @ApiProperty()
+  @IsNotEmpty()
   surname: string;
 
   @IsString()  

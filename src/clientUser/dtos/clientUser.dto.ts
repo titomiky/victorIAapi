@@ -19,10 +19,12 @@ export class clientUserDto {
   
   @IsString()
   @ApiProperty()
+  @IsOptional()
   position: string;
 
   @IsString()
   @ApiProperty()  
+  @IsOptional()
   phoneNumber: string;
 
   @IsNotEmpty()
@@ -32,14 +34,17 @@ export class clientUserDto {
   
   @IsString()
   @ApiProperty()  
+  @IsOptional()
   companyAddress: string;
 
   @IsNumber()
   @ApiProperty()
+  @IsOptional()
   numberOfEmployees: number;
   
   @IsString()
   @ApiProperty()
+  @IsOptional()
   companyNIF?: string;
 
 }

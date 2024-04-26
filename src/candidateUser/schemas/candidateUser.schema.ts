@@ -9,23 +9,24 @@ export class candidateUser {
   @Prop({ required: true })
   surname: string;
 
-  @Prop({ required: false })
-  position: string;
-
   @Prop({ required: true })
   phoneNumber: string;
 
-  @Prop({ required: true })
-  companyName: string;
+  @Prop({ required: false })
+  currentSalary: number;
 
   @Prop({ required: false })
-  companyAddress: string;
+  desiredSalary: number;
 
-  @Prop({ required: true })
-  numberOfEmployees: number;
+  @Prop({ required: false })
+  birthDate: Date;
   
   @Prop({ required: false })
-  companyNIF?: string;
+  CVtext: string;
+
+  @Prop({ required: false })
+  CVpdf: string;
+    
 }
 
 export const candidateUserSchema = SchemaFactory.createForClass(candidateUser);
