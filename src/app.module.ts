@@ -14,7 +14,7 @@ import { CandidateUserModule } from './candidateUser/candidateUser.module';
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(
-     'mongodb://localhost:27017/holaqueai',
+      process.env.MONGODB_URL,
     ),
     UserModule, AdminUserModule, ClientUserModule, CandidateUserModule
   ],

@@ -38,4 +38,4 @@ lerna-debug.log*
 *.http
 
 # environment
-*.env
+# *.env
