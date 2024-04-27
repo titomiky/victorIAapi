@@ -21,10 +21,6 @@ export class UserDto {
   @ApiProperty()
   @IsNotEmpty()
   password: string;
-
-  @IsString()
-  @IsOptional()
-  _id?: ObjectId;
   
   @ApiProperty({type: adminUserDto})  
   @Type(() => adminUserDto)
