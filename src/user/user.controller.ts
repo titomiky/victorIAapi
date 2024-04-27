@@ -7,12 +7,15 @@ import {
   Get,
   Delete,
   Param,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { UserDto } from './dtos/user.dto';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { UserResponseDto } from './dtos/user.response.dto';
+import { loginUserDto } from './dtos/user.login.dto';
 
 @Controller('Users')
 @ApiTags('Users')
@@ -52,4 +55,18 @@ export class UserController {
     console.log(id);
     return this.userService.delete(id);
   }
+
+  @ApiResponse({ status: 200, description: 'Login user ok', type: UserResponseDto })
+  @Post('login')
+  async login (@Body() userLoginDto: loginUserDto) {
+    const loggedIn = await this.userService.login(userLoginDto.email, userLoginDto.password);
+    if (loggedIn) {
+      console.log(loggedIn);
+      return loggedIn;
+    } else {
+      console.log('not logged in');
+      throw new HttpException('Wrong credentials', HttpStatus.UNAUTHORIZED );
+    }
+  }
 }
+
