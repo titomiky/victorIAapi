@@ -18,9 +18,7 @@ export class UserService {
     const savedUser = createdUser.save();
     const token = await this.generateToken(savedUser);
     console.log(token);
-    return token;
-    //return this.removePassword(savedUser);
-
+    return token;    
   }
 
   private removePassword( user) {
@@ -52,6 +50,11 @@ export class UserService {
 
   async findOne(id: string) {
     return this.userModel.findById(id).exec();
+  }
+
+  async findByEmail(email: string) {
+    return this.userModel.findOne({email: email}).exec();
+    //return this.userModel.find(user => user.email === email).exec();
   }
 
   async delete(id: string) {

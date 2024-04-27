@@ -11,13 +11,15 @@ import {
 
 import { clientUserService } from './clientUser.service';
 import { clientUserDto } from './dtos/clientUser.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
 
 @Controller('clientUsers')
 @ApiTags('clientUsers')
 export class clientUserController {
   constructor(private clientUserService: clientUserService) {}
 
+  @ApiBearerAuth()
   @Post()  
   async create(@Body(new ValidationPipe()) createclientUser: clientUserDto) {
     return this.clientUserService.create(createclientUser);
