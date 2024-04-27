@@ -9,6 +9,7 @@ import { AdminUserModule } from './adminUser/adminUser.module';
 import { ClientUserModule } from './clientUser/clientUser.module';
 import { CandidateUserModule } from './candidateUser/candidateUser.module';
 import { CompetenceModule } from './competence/competence.module';
+import { JobOfferModule } from './jobOffer/jobOffer.module';
 
 
 @Module({
@@ -17,7 +18,7 @@ import { CompetenceModule } from './competence/competence.module';
     MongooseModule.forRoot(
       process.env.MONGODB_URL,
     ),
-    UserModule, AdminUserModule, ClientUserModule, CandidateUserModule, CompetenceModule
+    UserModule, AdminUserModule, ClientUserModule, CandidateUserModule, CompetenceModule,JobOfferModule
   ],
   controllers: [AppController],
   providers: [AppService],
