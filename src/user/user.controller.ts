@@ -9,6 +9,7 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  Req,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
@@ -32,8 +33,9 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Updated user ok', type: UserResponseDto })
   async update(
     @Param('id') id: string,
-    @Body(new ValidationPipe()) updateuser: UserDto,
+    @Body(new ValidationPipe()) updateuser: UserDto, @Req() request: Request
   ) {
+    const [bearer, token] = request.headers['authorization']?.split(' ') || [];
     return this.userService.update(id, updateuser);
   }
 

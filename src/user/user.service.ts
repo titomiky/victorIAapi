@@ -6,6 +6,7 @@ import { User } from './schemas/user.schema';
 import { UserDto } from './dtos/user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UserModule } from './user.module';
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>, private jwtService: JwtService) {}
@@ -14,7 +15,27 @@ export class UserService {
     user.password = await bcrypt.hash(user.password, 10);
 
     const createdUser = new this.userModel(user);
-    return createdUser.save();
+    const savedUser = createdUser.save();
+    const token = await this.generateToken(savedUser);
+    console.log(token);
+    return token;
+    //return this.removePassword(savedUser);
+
+  }
+
+  private removePassword( user) {
+    const { password,...result } = user;
+    return result;
+  }
+
+  async generateToken (user) {
+    console.log(user);
+    const payload = {
+      email: user.email,
+      userId: user._id,
+    };
+    const token = await this.jwtService.signAsync(payload);
+    return token;    
   }
 
   async update(id: string, user: UserDto) {
@@ -46,15 +67,10 @@ export class UserService {
         return null;
       }
 
-
       const isMatch = await bcrypt.compare(password, foundUser.password);
       if (isMatch) {
-
-        const payload = {
-          email: foundUser.email,
-          sub: foundUser._id,
-        };
-        const token = await this.jwtService.signAsync(payload);
+      
+        const token = await this.generateToken(foundUser);
         return token;
       
       } else {
