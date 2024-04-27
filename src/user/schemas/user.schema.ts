@@ -6,7 +6,7 @@ import { candidateUser } from '../../candidateUser/schemas/candidateUser.schema'
 
 @Schema()
 export class User {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   email: string;
 
   @Prop({ required: true })
