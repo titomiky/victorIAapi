@@ -46,8 +46,8 @@ export class UserController {
 
   @Post('createAdmin')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Update the password of the user', description: 'Update the password of the logged user' })
-  @ApiResponse({ status: 200, description: 'Updated user ok', type: UserResponseDto })
+  @ApiOperation({ summary: 'Create admin user', description: 'Create an admin user' })
+  @ApiResponse({ status: 200, description: 'Created admin user ok', type: UserResponseDto })
   async createAdmin(    
     @Body(new ValidationPipe()) adminUser: adminUserDto, @Req() request: Request
   ) {
