@@ -19,8 +19,7 @@ import { IS_PUBLIC_KEY } from './auth.controller';
             context.getHandler(),
             context.getClass(),
           ]);
-          if (isPublic) {
-            // 💡 See this condition
+          if (isPublic) {            
             return true;
           }
 

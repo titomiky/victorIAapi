@@ -13,6 +13,7 @@ async function bootstrap() {
   .setTitle('VictorIA API Documentation')
   .setDescription('VictorIA API Documentation')
   .setVersion('1.0')
+  .addBearerAuth()
   .build();
 
 const document = SwaggerModule.createDocument(app, config);

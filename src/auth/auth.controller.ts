@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { loginUserDto } from '../user/dtos/user.login.dto';
 import { AuthGuard } from './auth.guard';
 import { SetMetadata } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -18,11 +19,11 @@ export class AuthController {
   {    
     return this.authService.signIn(userLoginDto.email, userLoginDto.password);
   }
-
-  @UseGuards(AuthGuard)
-  //@Public()
+  
+  @ApiBearerAuth()
   @Get('profile')
   getProfile(@Request() req) {
+    
     return req.user;
   }
 

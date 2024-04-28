@@ -23,13 +23,15 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('candidateUsers')
 export class candidateUserController {
   constructor(private candidateUserService: candidateUserService) {}
-
+  
   @Post()  
+  @ApiBearerAuth()
   async create(@UploadedFile() CVpdf: File, @Body(new ValidationPipe()) createcandidateUser: candidateUserDto) {
     return this.candidateUserService.create(createcandidateUser);
   }
 
   @Put(':id')
+  @ApiBearerAuth()
   async update(
     @Param('id') id: string,
     @Body(new ValidationPipe()) updatecandidateUser: candidateUserDto,
@@ -38,16 +40,19 @@ export class candidateUserController {
   }
 
   @Get('list')
+  @ApiBearerAuth()
   async findAll() {
     return this.candidateUserService.findAll();
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   async findOne(@Param('id') id: string) {
     return this.candidateUserService.findOne(id);
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   async delete(@Param('id') id: string) {
     return this.candidateUserService.delete(id);
   }
@@ -56,6 +61,7 @@ export class candidateUserController {
   @ApiBody({ type: CvPdfDto, required: true })
   @ApiOkResponse({ status: 201 })
   @UseInterceptors(FileInterceptor('file'))
+  @ApiBearerAuth()
   @Post('uploadCVpdf')
   async saveCVpdf(
     @UploadedFile() cvFile: Express.Multer.File,
