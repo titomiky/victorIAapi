@@ -16,8 +16,7 @@ export class UserService {
 
     const createdUser = new this.userModel(user);
     const savedUser = createdUser.save();
-    const token = await this.generateToken(savedUser);
-    console.log(token);
+    const token = await this.generateToken(savedUser);    
     return token;    
   }
 
@@ -38,36 +37,36 @@ export class UserService {
 
   async update(id: string, user: UserDto) {
     user.password = await bcrypt.hash(user.password, 10);
-    
+
     return this.userModel
       .findByIdAndUpdate(id, user, {
         new: true,
-      })
+      }).select('-password')
       .exec();
   }
 
   async findAll() {
-    return this.userModel.find().exec();
+    return this.userModel.find().select('-password').exec();
   }
 
   async findOne(id: string) {
-    return this.userModel.findById(id).exec();
+    return this.userModel.findById(id).select('-password').exec();
   }
 
   async findByEmail(email: string) {
-    return this.userModel.findOne({email: email}).exec();
+    return this.userModel.findOne({email: email}).select('-password').exec();
     //return this.userModel.find(user => user.email === email).exec();
   }
 
   async delete(id: string) {
-    return this.userModel.findByIdAndDelete(id).exec();
+    return this.userModel.findByIdAndDelete(id).select('-password').exec();
   }
 
   async login(email: string, password: string) {
     try {
       const foundUser = await this.userModel.findOne({
         email: email,
-      }).exec();
+      }).select('-password').exec();
       if (!foundUser) {
         return null;
       }
