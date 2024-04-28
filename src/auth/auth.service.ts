@@ -13,13 +13,14 @@ export class AuthService {
   constructor(private userService: UserService, private jwtService: JwtService) {}
 
   async signIn(email: string, password: string): Promise<any> {
-    try {
-      const foundUser = await this.userService.findByEmail(email);
-      console.log(foundUser);
+    try {      
+      const foundUser = await this.userService.findByEmail(email);    
+      console.log(foundUser);    
       if (!foundUser) {
         return null;
       }
 
+      console.log(password, foundUser.password);
       const isMatch = await bcrypt.compare(password, foundUser.password);
       if (isMatch) {
         const token = await this.generateToken(foundUser);
@@ -43,8 +44,7 @@ export class AuthService {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];    
-    //const [type, token] = request.headers['authorization']?.split(' ') ?? [];
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];        
     return type === 'Bearer' ? token : undefined;
   }
   

@@ -22,6 +22,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { Request } from 'express';
 import { Public } from '../auth/auth.controller';
 import { UserPasswordDto } from './dtos/user.password.dto';
+import { adminUserDto } from './dtos/adminUser.dto';
 
 @Controller('Users')
 @ApiTags('Users')
@@ -41,6 +42,27 @@ export class UserController {
     } catch (error) {      
       throw new HttpException(error, HttpStatus.CONFLICT); 
     }
+  }
+
+  @Post('createAdmin')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update the password of the user', description: 'Update the password of the logged user' })
+  @ApiResponse({ status: 200, description: 'Updated user ok', type: UserResponseDto })
+  async createAdmin(    
+    @Body(new ValidationPipe()) adminUser: adminUserDto, @Req() request: Request
+  ) {
+    const userId = await this.authService.getUserIdFromToken(request);    
+    const user = await this.userService.findOne(userId);
+    console.log(user);
+    
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    user.adminUser = adminUser;
+
+    console.log(userId);    
+    return this.userService.createAdminUser(userId, user);
   }
 
   @Put()
@@ -83,18 +105,5 @@ export class UserController {
     return this.userService.delete(id);
   }
   
-  // @Post('login')
-  // @ApiBearerAuth()
-  // @ApiResponse({ status: 200, description: 'Login user ok', type: UserResponseDto })
-  // async login (@Body() userLoginDto: loginUserDto) {
-  //   const loggedIn = await this.userService.login(userLoginDto.email, userLoginDto.password);
-  //   if (loggedIn) {
-  //     console.log(loggedIn);
-  //     return loggedIn;
-  //   } else {
-  //     console.log('not logged in');
-  //     throw new HttpException('Wrong credentials', HttpStatus.UNAUTHORIZED );
-  //   }
-  // }
 }
 

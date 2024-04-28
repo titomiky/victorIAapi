@@ -2,8 +2,6 @@ import { IsNotEmpty, IsString, IsEnum, IsOptional, IsObject} from 'class-validat
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { adminUserResponseDto } from '../../adminUser/dtos/adminUser.response.dto';
-import { clientUserResponseDto } from '../../clientUser/dtos/clientUser.response.dto';
 
 export class UserResponseDto {
   @IsNotEmpty()
@@ -19,15 +17,15 @@ export class UserResponseDto {
   @ApiProperty()
   _id: string;
   
-  @ApiProperty({
-    type: adminUserResponseDto,    
-  })  
-  @Type(() => adminUserResponseDto)
-  adminUser: adminUserResponseDto;
+  // @ApiProperty({
+  //   type: adminUserResponseDto,    
+  // })  
+  // @Type(() => adminUserResponseDto)
+  // adminUser: adminUserResponseDto;
 
-  @ApiProperty({
-    type: clientUserResponseDto,    
-  })  
-  @Type(() => clientUserResponseDto)
-  clientUser: clientUserResponseDto;
+  // @ApiProperty({
+  //   type: clientUserResponseDto,    
+  // })  
+  // @Type(() => clientUserResponseDto)
+  // clientUser: clientUserResponseDto;
 }

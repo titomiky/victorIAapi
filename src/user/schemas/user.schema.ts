@@ -1,7 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { adminUser } from '../../adminUser/schemas/adminUser.schema';
-import { clientUser } from '../../clientUser/schemas/clientUser.schema';
-import { candidateUser } from '../../candidateUser/schemas/candidateUser.schema';
+import { adminUser } from './adminUser.schema';
+import { clientUser } from './clientUser.schema';
+import { candidateUser } from './candidateUser.schema';
 
 
 @Schema()

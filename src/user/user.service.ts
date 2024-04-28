@@ -45,6 +45,15 @@ export class UserService {
       .exec();
   }
 
+  async createAdminUser(id: string, user: UserDto) {
+    
+    return this.userModel
+      .findByIdAndUpdate(id, user, {
+        new: true,
+      }).select('-password')
+      .exec();
+  }
+
   async findAll() {
     return this.userModel.find().select('-password').exec();
   }
@@ -54,7 +63,7 @@ export class UserService {
   }
 
   async findByEmail(email: string) {
-    return this.userModel.findOne({email: email}).select('-password').exec();
+    return this.userModel.findOne({email: email}).exec();
     //return this.userModel.find(user => user.email === email).exec();
   }
 
