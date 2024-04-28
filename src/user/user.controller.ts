@@ -21,6 +21,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { Request } from 'express';
 import { Public } from '../auth/auth.controller';
+import { UserPasswordDto } from './dtos/user.password.dto';
 
 @Controller('Users')
 @ApiTags('Users')
@@ -47,11 +48,16 @@ export class UserController {
   @ApiOperation({ summary: 'Update the password of the user', description: 'Update the password of the logged user' })
   @ApiResponse({ status: 200, description: 'Updated user ok', type: UserResponseDto })
   async update(    
-    @Body(new ValidationPipe()) updateuser: UserDto, @Req() request: Request
+    @Body(new ValidationPipe()) updateuser: UserPasswordDto, @Req() request: Request
   ) {
     const userId = await this.authService.getUserIdFromToken(request);
+    const email = await this.authService.getEmailFromToken(request);
+    const updatedUser : UserDto = {
+      password: updateuser.password,
+      email: email
+    };
     console.log(userId);    
-    return this.userService.update(userId, updateuser);
+    return this.userService.update(userId, updatedUser);
   }
 
   @Get('list')

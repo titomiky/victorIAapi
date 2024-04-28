@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -14,24 +14,22 @@ export class AuthService {
 
   async signIn(email: string, password: string): Promise<any> {
     try {
-        const foundUser = await this.userService.findByEmail(email);
-        console.log(foundUser);
-        if (!foundUser) {
-          return null;
-        }
-  
-        const isMatch = await bcrypt.compare(password, foundUser.password);
-        if (isMatch) {
-        
-          const token = await this.generateToken(foundUser);
-          return token;
-        
-        } else {
-          return null;
-        }
-      } catch (exception) {
-        throw exception;
+      const foundUser = await this.userService.findByEmail(email);
+      console.log(foundUser);
+      if (!foundUser) {
+        return null;
       }
+
+      const isMatch = await bcrypt.compare(password, foundUser.password);
+      if (isMatch) {
+        const token = await this.generateToken(foundUser);
+        return token;
+      } else {
+        throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
+      }
+    } catch (exception) {
+      throw exception;
+    }
   }
   
   async generateToken (user) {
@@ -67,6 +65,24 @@ export class AuthService {
     } catch {
         return null;
     }
-} 
+  } 
 
+  public async getEmailFromToken(request: Request): Promise<string> {
+                
+    const token = this.extractTokenFromHeader(request);
+    if (!token) {
+        return null;
+    }
+    try {
+        const payload = await this.jwtService.verifyAsync(
+        token,
+        {
+            secret: process.env.JWT_SECRET,
+        }
+        );
+        return payload.email;
+    } catch {
+        return null;
+    }
+  }
 }

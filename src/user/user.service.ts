@@ -37,6 +37,8 @@ export class UserService {
   }
 
   async update(id: string, user: UserDto) {
+    user.password = await bcrypt.hash(user.password, 10);
+    
     return this.userModel
       .findByIdAndUpdate(id, user, {
         new: true,
