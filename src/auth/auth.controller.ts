@@ -20,11 +20,11 @@ export class AuthController {
     return this.authService.signIn(userLoginDto.email, userLoginDto.password);
   }
   
-  @ApiBearerAuth()
-  @Get('profile')
-  getProfile(@Request() req) {
+//   @ApiBearerAuth()
+//   @Get('profile')
+//   getProfile(@Request() req) {
     
-    return req.user;
-  }
+//     return req.user;
+//   }
 
 }

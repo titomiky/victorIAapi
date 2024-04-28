@@ -20,16 +20,6 @@ export class UserDto {
   @MinLength(8)
   password: string;
   
-  @ApiProperty({type: adminUserDto})  
-  @Type(() => adminUserDto)
-  adminUser: adminUserDto;
 
-  @ApiProperty({type: clientUserDto})  
-  @Type(() => clientUserDto)
-  clientUser: clientUserDto;
-
-  @ApiProperty({type: candidateUserDto})  
-  @Type(() => candidateUserDto)
-  candidateUser: candidateUserDto;
 }
 

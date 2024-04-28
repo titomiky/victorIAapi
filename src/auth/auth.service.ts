@@ -5,6 +5,8 @@ import * as bcrypt from 'bcrypt';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../user/schemas/user.schema';
 import { Model } from 'mongoose';
+import { Request } from 'express';
+
 
 @Injectable()
 export class AuthService {
@@ -41,4 +43,30 @@ export class AuthService {
     const token = await this.jwtService.signAsync(payload);
     return token;    
   }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];    
+    //const [type, token] = request.headers['authorization']?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
+  }
+  
+  public async getUserIdFromToken(request: Request): Promise<string> {
+                
+    const token = this.extractTokenFromHeader(request);
+    if (!token) {
+        return null;
+    }
+    try {
+        const payload = await this.jwtService.verifyAsync(
+        token,
+        {
+            secret: process.env.JWT_SECRET,
+        }
+        );
+        return payload.userId;
+    } catch {
+        return null;
+    }
+} 
+
 }

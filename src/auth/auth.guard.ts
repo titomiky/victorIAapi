@@ -5,8 +5,8 @@ import {
     UnauthorizedException,
   } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-  import { JwtService } from '@nestjs/jwt';  
-  import { Request } from 'express';
+import { JwtService } from '@nestjs/jwt';  
+import { Request } from 'express';
 import { IS_PUBLIC_KEY } from './auth.controller';
   
   @Injectable()
@@ -47,5 +47,5 @@ import { IS_PUBLIC_KEY } from './auth.controller';
     private extractTokenFromHeader(request: Request): string | undefined {
       const [type, token] = request.headers.authorization?.split(' ') ?? [];
       return type === 'Bearer' ? token : undefined;
-    }
-  }
+    }   
+}

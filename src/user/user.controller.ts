@@ -14,35 +14,49 @@ import {
 
 import { UserService } from './user.service';
 import { UserDto } from './dtos/user.dto';
-import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { UserResponseDto } from './dtos/user.response.dto';
 import { loginUserDto } from './dtos/user.login.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { AuthService } from 'src/auth/auth.service';
+import { Request } from 'express';
+import { Public } from '../auth/auth.controller';
 
 @Controller('Users')
 @ApiTags('Users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private authService: AuthService) {}
 
   @Post()  
-  @ApiBearerAuth()
+  @Public()
+  @ApiOperation({ summary: 'Create a user', description: 'Create a user with email and password' })
   @ApiResponse({ status: 201, description: 'Created user ok', type: UserResponseDto })
-  async create(@Body(new ValidationPipe()) createuser: UserDto) {
-    return this.userService.create(createuser);
+  async create(
+    @Body(new ValidationPipe()) createuser: UserDto,
+    @Req() request: Request,
+  ) {
+    try {  
+      return this.userService.create(createuser);
+    } catch (error) {      
+      throw new HttpException(error, HttpStatus.CONFLICT); 
+    }
   }
 
-  @Put(':id')
+  @Put()
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update the password of the user', description: 'Update the password of the logged user' })
   @ApiResponse({ status: 200, description: 'Updated user ok', type: UserResponseDto })
-  async update(
-    @Param('id') id: string,
+  async update(    
     @Body(new ValidationPipe()) updateuser: UserDto, @Req() request: Request
   ) {
-    const [bearer, token] = request.headers['authorization']?.split(' ') || [];
-    return this.userService.update(id, updateuser);
+    const userId = await this.authService.getUserIdFromToken(request);
+    console.log(userId);    
+    return this.userService.update(userId, updateuser);
   }
 
   @Get('list')
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'List users', description: 'List all users' })
   @ApiResponse({ status: 200, description: 'Returned users ok', type: UserResponseDto })
   async findAll() {
     return this.userService.findAll();
