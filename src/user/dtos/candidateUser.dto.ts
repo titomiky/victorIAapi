@@ -38,7 +38,7 @@ export class candidateUserDto {
   @IsOptional()
   birthDate: Date;
 
-  @IsDate()
+  @IsString()
   @ApiProperty()
   @IsOptional()
   cvText: string;

@@ -23,6 +23,8 @@ import { Request } from 'express';
 import { Public } from '../auth/auth.controller';
 import { UserPasswordDto } from './dtos/user.password.dto';
 import { adminUserDto } from './dtos/adminUser.dto';
+import { clientUserDto } from './dtos/clientUser.dto';
+import { candidateUserDto } from './dtos/candidateUser.dto';
 
 @Controller('Users')
 @ApiTags('Users')
@@ -52,8 +54,7 @@ export class UserController {
     @Body(new ValidationPipe()) adminUser: adminUserDto, @Req() request: Request
   ) {
     const userId = await this.authService.getUserIdFromToken(request);    
-    const user = await this.userService.findOne(userId);
-    console.log(user);
+    const user = await this.userService.findOne(userId);    
     
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -64,6 +65,48 @@ export class UserController {
     console.log(userId);    
     return this.userService.createAdminUser(userId, user);
   }
+
+  @Post('createClient')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create client user', description: 'Create a client user' })
+  @ApiResponse({ status: 200, description: 'Created client user ok', type: UserResponseDto })
+  async createClient(    
+    @Body(new ValidationPipe()) clientUser: clientUserDto, @Req() request: Request
+  ) {
+    const userId = await this.authService.getUserIdFromToken(request);    
+    const user = await this.userService.findOne(userId);    
+    
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    user.clientUser = clientUser;
+
+    console.log(userId);    
+    return this.userService.createClientUser(userId, user);
+  }
+
+
+  @Post('createCandidate')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create candidate user', description: 'Create a candidate user' })
+  @ApiResponse({ status: 200, description: 'Created candidate user ok', type: UserResponseDto })
+  async createCandidate(    
+    @Body(new ValidationPipe()) candidateUser: candidateUserDto, @Req() request: Request
+  ) {
+    const userId = await this.authService.getUserIdFromToken(request);    
+    const user = await this.userService.findOne(userId);    
+    
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    user.candidateUser = candidateUser;
+
+    console.log(userId);    
+    return this.userService.createCandidateUser(userId, user);
+  }
+
 
   @Put()
   @ApiBearerAuth()

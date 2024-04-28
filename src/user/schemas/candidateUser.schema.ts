@@ -22,10 +22,10 @@ export class candidateUser {
   birthDate: Date;
   
   @Prop({ required: false })
-  CVtext: string;
+  cvText: string;
 
   @Prop({ required: false })
-  CVpdf: string;
+  cvPdf: Buffer;
     
 }
 

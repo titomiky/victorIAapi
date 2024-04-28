@@ -54,6 +54,24 @@ export class UserService {
       .exec();
   }
 
+  async createClientUser(id: string, user: UserDto) {
+    
+    return this.userModel
+      .findByIdAndUpdate(id, user, {
+        new: true,
+      }).select('-password')
+      .exec();
+  }
+
+  async createCandidateUser(id: string, user: UserDto) {
+    
+    return this.userModel
+      .findByIdAndUpdate(id, user, {
+        new: true,
+      }).select('-password')
+      .exec();
+  }
+
   async findAll() {
     return this.userModel.find().select('-password').exec();
   }
