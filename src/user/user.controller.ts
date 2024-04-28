@@ -10,11 +10,14 @@ import {
   HttpException,
   HttpStatus,
   Req,
+  UseInterceptors,
+  UploadedFile,
+  Res,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { UserDto } from './dtos/user.dto';
-import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation, ApiConsumes, ApiBody, ApiOkResponse } from '@nestjs/swagger';
 import { UserResponseDto } from './dtos/user.response.dto';
 import { loginUserDto } from './dtos/user.login.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -25,6 +28,8 @@ import { UserPasswordDto } from './dtos/user.password.dto';
 import { adminUserDto } from './dtos/adminUser.dto';
 import { clientUserDto } from './dtos/clientUser.dto';
 import { candidateUserDto } from './dtos/candidateUser.dto';
+import { CvPdfDto } from './dtos/CvPdf.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('Users')
 @ApiTags('Users')
@@ -148,5 +153,21 @@ export class UserController {
     return this.userService.delete(id);
   }
   
+  @ApiConsumes('multipart/form-data', 'application/json')  
+  @ApiBody({ type: CvPdfDto, required: true })
+  @ApiOkResponse({ status: 201 })
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('uploadCVpdf')
+  async saveCVpdf(
+    @UploadedFile() cvFile: Express.Multer.File,
+    @Body() userId: string, 
+    @Req() req: any, @Res() res: Response
+  ) {
+    console.log('userId', userId);
+    //const cv = await this.cvsService.createCV(cvFile, createCVDto);
+    return { message: 'CV creado exitosamente' };
+  }
+
+
 }
 
