@@ -63,18 +63,18 @@ export class UserController {
     return this.userService.delete(id);
   }
   
-  @Post('login')
-  @ApiBearerAuth()
-  @ApiResponse({ status: 200, description: 'Login user ok', type: UserResponseDto })
-  async login (@Body() userLoginDto: loginUserDto) {
-    const loggedIn = await this.userService.login(userLoginDto.email, userLoginDto.password);
-    if (loggedIn) {
-      console.log(loggedIn);
-      return loggedIn;
-    } else {
-      console.log('not logged in');
-      throw new HttpException('Wrong credentials', HttpStatus.UNAUTHORIZED );
-    }
-  }
+  // @Post('login')
+  // @ApiBearerAuth()
+  // @ApiResponse({ status: 200, description: 'Login user ok', type: UserResponseDto })
+  // async login (@Body() userLoginDto: loginUserDto) {
+  //   const loggedIn = await this.userService.login(userLoginDto.email, userLoginDto.password);
+  //   if (loggedIn) {
+  //     console.log(loggedIn);
+  //     return loggedIn;
+  //   } else {
+  //     console.log('not logged in');
+  //     throw new HttpException('Wrong credentials', HttpStatus.UNAUTHORIZED );
+  //   }
+  // }
 }
 
