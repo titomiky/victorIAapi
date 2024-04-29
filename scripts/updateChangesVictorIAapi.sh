@@ -9,6 +9,7 @@ git -C /home/debian/GitHub/victorIAapi pull
 npm install --prefix /home/debian/GitHub/victorIAapi
 
 # 4. compile with tsc
+sudo npm install -g bcrypt
 tsc -p /home/debian/GitHub/victorIAapi
 
 # 5. start pm2
