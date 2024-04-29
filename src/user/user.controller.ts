@@ -53,7 +53,7 @@ export class UserController {
 
   @Post('createAdmin')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create admin user', description: 'Create an admin user' })
+  @ApiOperation({ summary: 'Create/update admin user', description: 'Create/update an admin user' })
   @ApiResponse({ status: 200, description: 'Created admin user ok', type: UserResponseDto })
   async createAdmin(    
     @Body(new ValidationPipe()) adminUser: adminUserDto, @Req() request: Request
@@ -73,7 +73,7 @@ export class UserController {
 
   @Post('createClient')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create client user', description: 'Create a client user' })
+  @ApiOperation({ summary: 'Create/update client user', description: 'Create/update a client user' })
   @ApiResponse({ status: 200, description: 'Created client user ok', type: UserResponseDto })
   async createClient(    
     @Body(new ValidationPipe()) clientUser: clientUserDto, @Req() request: Request
@@ -94,7 +94,7 @@ export class UserController {
 
   @Post('createCandidate')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create candidate user', description: 'Create a candidate user' })
+  @ApiOperation({ summary: 'Create/update candidate user', description: 'Create/update a candidate user' })
   @ApiResponse({ status: 200, description: 'Created candidate user ok', type: UserResponseDto })
   async createCandidate(    
     @Body(new ValidationPipe()) candidateUser: candidateUserDto, @Req() request: Request
@@ -115,8 +115,8 @@ export class UserController {
 
   @Put()
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Update the password of the user', description: 'Update the password of the logged user' })
-  @ApiResponse({ status: 200, description: 'Updated user ok', type: UserResponseDto })
+  @ApiOperation({ summary: 'CHange the password of the user', description: 'Change the password of the logged user' })
+  @ApiResponse({ status: 200, description: 'Changed password ok', type: UserResponseDto })
   async update(    
     @Body(new ValidationPipe()) updateuser: UserPasswordDto, @Req() request: Request
   ) {
