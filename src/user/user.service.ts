@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ObjectId} from 'mongodb';
 
 import { User } from './schemas/user.schema';
 import { UserDto } from './dtos/user.dto';
@@ -87,6 +88,13 @@ export class UserService {
 
   async delete(id: string) {
     return this.userModel.findByIdAndDelete(id).select('-password').exec();
+  }
+
+  async deleteJobOffer(userId: string, jobOfferId: string) {
+    const filter = { _id: new ObjectId(userId) };
+    const update = { $pull: { "clientUser.jobOffers": { _id: new ObjectId(jobOfferId) } } };
+
+    return this.userModel.updateOne(filter, update).exec();    
   }
 
   async login(email: string, password: string) {
