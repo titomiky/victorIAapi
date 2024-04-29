@@ -50,6 +50,8 @@ nvm install 20.9.0
 sudo npm install -g typescript
 sudo npm install pm2@5.3.1 -g
 
+sudo npm install -g bcrypt
+
 # Run victorIAapi
 npm install --prefix /home/debian/GitHub/victorIAapi
 tsc -p /home/debian/GitHub/victorIAapi
