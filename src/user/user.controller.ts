@@ -33,8 +33,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JobOffer } from './schemas/jobOffer.schema';
 import { JobOfferDto } from './dtos/jobOffer.dto';
 
-@Controller('Users')
-@ApiTags('Users')
+@Controller('users')
+@ApiTags('users')
 export class UserController {
   constructor(private userService: UserService, private authService: AuthService) {}
 
@@ -53,7 +53,7 @@ export class UserController {
     }
   }
 
-  @Post('createAdmin')
+  @Put('admin')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create/update admin user', description: 'Create/update an admin user' })
   @ApiResponse({ status: 200, description: 'Created admin user ok', type: UserResponseDto })
@@ -73,7 +73,7 @@ export class UserController {
     return this.userService.createAdminUser(userId, user);
   }
 
-  @Put('createClient')
+  @Put('client')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create/update client user', description: 'Create/update a client user' })
   @ApiResponse({ status: 200, description: 'Created client user ok', type: UserResponseDto })
@@ -94,7 +94,7 @@ export class UserController {
   }
 
 
-  @Put('createCandidate')
+  @Put('candidate')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create/update candidate user', description: 'Create/update a candidate user' })
   @ApiResponse({ status: 200, description: 'Created candidate user ok', type: UserResponseDto })
@@ -115,7 +115,7 @@ export class UserController {
   }
 
 
-  @Put('createJobOffer')
+  @Put('jobOffer')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create/update job offer', description: 'Create/update a job offer. Send the complete array of competencies to update/delete competencies to the job offer' })
   @ApiResponse({ status: 200, description: 'Created jobOffer user ok', type: UserResponseDto })
