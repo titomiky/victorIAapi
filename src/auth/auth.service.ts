@@ -14,13 +14,11 @@ export class AuthService {
 
   async signIn(email: string, password: string): Promise<any> {
     try {      
-      const foundUser = await this.userService.findByEmail(email);    
-      console.log(foundUser);    
+      const foundUser = await this.userService.findByEmail(email);          
       if (!foundUser) {
         return null;
       }
-
-      console.log(password, foundUser.password);
+      
       const isMatch = await bcrypt.compare(password, foundUser.password);
       if (isMatch) {
         const token = await this.generateToken(foundUser);
@@ -38,7 +36,9 @@ export class AuthService {
     const payload = {
       email: user.email,
       userId: user._id,
+      onBoarding: user.clientUser && typeof user.clientUser === 'object' || user.adminUser && typeof user.adminUser === 'object',
     };
+    console.log(payload);
     const token = await this.jwtService.signAsync(payload);
     return token;    
   }

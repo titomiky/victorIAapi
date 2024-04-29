@@ -53,8 +53,7 @@ export class CompetenceController {
   @Delete(':id')
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'Deleted competence ok', type: CompetenceResponseDto })
-  async delete(@Param('id') id: string) {
-    console.log(id);
+  async delete(@Param('id') id: string) {    
     return this.competenceService.delete(id);
   }
 }

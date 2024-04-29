@@ -67,9 +67,7 @@ export class UserController {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    user.adminUser = adminUser;
-
-    console.log(userId);    
+    user.adminUser = adminUser;     
     return this.userService.createAdminUser(userId, user);
   }
 
@@ -88,8 +86,7 @@ export class UserController {
     }
 
     user.clientUser = clientUser;
-
-    console.log(userId);    
+     
     return this.userService.createClientUser(userId, user);
   }
 
@@ -110,7 +107,6 @@ export class UserController {
 
     user.candidateUser = candidateUser;
 
-    console.log(userId);    
     return this.userService.createCandidateUser(userId, user);
   }
 
@@ -167,8 +163,7 @@ export class UserController {
     const updatedUser : UserDto = {
       password: updateuser.password,
       email: email
-    };
-    console.log(userId);    
+    };    
     return this.userService.update(userId, updatedUser);
   }
 
@@ -190,8 +185,7 @@ export class UserController {
   @Delete(':id')
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'Deleted user ok', type: UserResponseDto })
-  async delete(@Param('id') id: string) {
-    console.log(id);
+  async delete(@Param('id') id: string) {    
     return this.userService.delete(id);
   }
   
@@ -205,7 +199,7 @@ export class UserController {
     @Body() userId: string, 
     @Req() req: any, @Res() res: Response
   ) {
-    console.log('userId', userId);
+    
     //const cv = await this.cvsService.createCV(cvFile, createCVDto);
     return { message: 'CV creado exitosamente' };
   }

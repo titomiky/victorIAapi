@@ -27,10 +27,11 @@ export class UserService {
   }
 
   async generateToken (user) {
-    console.log(user);
+    console.log(user);    
     const payload = {
       email: user.email,
       userId: user._id,
+      onBoarding: user.clientUser && typeof user.clientUser === 'object' || user.adminUser && typeof user.adminUser === 'object',
     };
     const token = await this.jwtService.signAsync(payload);
     return token;    
