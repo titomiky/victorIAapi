@@ -28,7 +28,7 @@ export class clientUser {
   @Prop({ required: false })
   companyNIF?: string;
 
-  @Prop({IsArray: true})
+  @Prop([{ type: JobOffer }])
   jobOffers?: [JobOffer];
 }
 
