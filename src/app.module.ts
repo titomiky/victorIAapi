@@ -6,7 +6,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { CompetenceModule } from './competence/competence.module';
-import { JobOfferModule } from './jobOffer/jobOffer.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -22,7 +21,7 @@ import { JwtModule } from '@nestjs/jwt';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
-    UserModule, CompetenceModule,JobOfferModule, AuthModule
+    UserModule, CompetenceModule, AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

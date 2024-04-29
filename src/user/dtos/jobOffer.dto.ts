@@ -14,7 +14,7 @@ export class JobOfferDto {
   @ApiProperty()  
   description: string;
   
-  @ApiProperty({type: [mongoose.Schema.Types.ObjectId]})    
-  competencies: [mongoose.Schema.Types.ObjectId];
+  @ApiProperty({type: Array(mongoose.Schema.Types.ObjectId)})    
+  competenceIds: mongoose.Schema.Types.ObjectId[];
 }
 

@@ -1,4 +1,5 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { JobOffer } from './jobOffer.schema';
 
 
 @Schema()
@@ -26,6 +27,9 @@ export class clientUser {
   
   @Prop({ required: false })
   companyNIF?: string;
+
+  @Prop({IsArray: true})
+  jobOffers?: [JobOffer];
 }
 
 export const clientUserSchema = SchemaFactory.createForClass(clientUser);

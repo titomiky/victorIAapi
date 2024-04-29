@@ -4,19 +4,16 @@ import mongoose from 'mongoose';
 
 @Schema()
 export class JobOffer {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string;
 
   @Prop({ required: false })
   description: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
-  competencies: {
-    type: mongoose.Schema.Types.ObjectId[],
-    ref: Competence,
-    required: true
-  }
-
+  competenceIds:  mongoose.Schema.Types.ObjectId[];
+    //ref: Competence,    
+  
 }
 
 export const JobOfferSchema = SchemaFactory.createForClass(JobOffer);

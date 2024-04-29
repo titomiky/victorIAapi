@@ -30,6 +30,8 @@ import { clientUserDto } from './dtos/clientUser.dto';
 import { candidateUserDto } from './dtos/candidateUser.dto';
 import { CvPdfDto } from './dtos/CvPdf.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JobOffer } from './schemas/jobOffer.schema';
+import { JobOfferDto } from './dtos/jobOffer.dto';
 
 @Controller('Users')
 @ApiTags('Users')
@@ -71,7 +73,7 @@ export class UserController {
     return this.userService.createAdminUser(userId, user);
   }
 
-  @Post('createClient')
+  @Put('createClient')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create/update client user', description: 'Create/update a client user' })
   @ApiResponse({ status: 200, description: 'Created client user ok', type: UserResponseDto })
@@ -92,7 +94,7 @@ export class UserController {
   }
 
 
-  @Post('createCandidate')
+  @Put('createCandidate')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create/update candidate user', description: 'Create/update a candidate user' })
   @ApiResponse({ status: 200, description: 'Created candidate user ok', type: UserResponseDto })
@@ -113,7 +115,31 @@ export class UserController {
   }
 
 
-  @Put()
+  @Put('createJobOffer')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create/update job offer', description: 'Create/update a job offer. Send the complete array of competencies to update/delete competencies to the job offer' })
+  @ApiResponse({ status: 200, description: 'Created jobOffer user ok', type: UserResponseDto })
+  async createJobOffer(    
+    @Body(new ValidationPipe()) newJobOffer: JobOfferDto, @Req() request: Request
+  ) {
+    const userId = await this.authService.getUserIdFromToken(request);    
+    const user = await this.userService.findOne(userId);    
+    
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const jobOffer = new JobOffer();
+    jobOffer.name = newJobOffer.name;
+    jobOffer.description = newJobOffer.description;
+    jobOffer.competenceIds = newJobOffer.competenceIds;
+    
+    user.clientUser.jobOffers?.push(jobOffer);
+  
+    return this.userService.createCandidateUser(userId, user);
+  }
+
+  @Put('changePassword')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'CHange the password of the user', description: 'Change the password of the logged user' })
   @ApiResponse({ status: 200, description: 'Changed password ok', type: UserResponseDto })
