@@ -15,4 +15,5 @@ tsc -p /home/debian/GitHub/victorIAapi
 # 5. start pm2
 chmod +x /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAapi.sh
 
+
 pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAapi.sh --name victorIAapi --daemon 
