@@ -139,6 +139,24 @@ export class UserController {
     return this.userService.createCandidateUser(userId, user);
   }
 
+  @Delete('jobOffer/:id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete job offer', description: 'Delete a job offer. Send the complete array of competencies to update/delete competencies to the job offer' })
+  @ApiResponse({ status: 200, description: 'Deleted jobOffer ok', type: UserResponseDto })
+  async deleteJobOffer(  @Param('id') id: string,  @Req() request: Request
+  ) {
+    const userId = await this.authService.getUserIdFromToken(request);    
+    const user = await this.userService.findOne(userId);    
+    
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }    
+  
+    //TODO: delete job offer by Id
+
+    return this.userService.createCandidateUser(userId, user);
+  }
+
   @Put('changePassword')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'CHange the password of the user', description: 'Change the password of the logged user' })
