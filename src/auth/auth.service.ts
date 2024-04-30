@@ -31,18 +31,17 @@ export class AuthService {
     }
   }
   
-  async generateToken (user) {
-    console.log(user);
+  async generateToken (user) {    
     let  onboarding = user.clientUser && typeof user.clientUser === 'object' || user.adminUser && typeof user.adminUser === 'object';
     if (onboarding === undefined) onboarding = true;
     else onboarding = false;
-    console.log();
+    
     const payload = {
       email: user.email,
       userId: user._id,
       onBoarding: onboarding,
     };
-    console.log(payload);
+    
     const token = await this.jwtService.signAsync(payload);
     return token;    
   }

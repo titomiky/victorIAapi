@@ -68,6 +68,7 @@ export class UserService {
   }
 
   async createCandidateUser(id: string, user: UserDto) {
+    console.log(user);    
     
     return this.userModel
       .findByIdAndUpdate(id, user, {

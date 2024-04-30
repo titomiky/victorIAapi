@@ -34,7 +34,7 @@ client.connect(err => {
       return;
     }
 
-    console.log('Competencias insertadas con éxito:', result.insertedCount);
+    //console.log('Competencias insertadas con éxito:', result.insertedCount);
     client.close();
   });
 });

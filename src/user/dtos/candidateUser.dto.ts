@@ -1,9 +1,9 @@
-import { IsNotEmpty, IsString, IsNumber, IsDate, IsOptional} from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsDate, IsOptional, isObject, isISO8601, IsDateString} from 'class-validator';
 import { Injectable, UploadedFile } from '@nestjs/common';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-
+import { mongo } from 'mongoose';
 
 
 export class candidateUserDto {
@@ -33,9 +33,9 @@ export class candidateUserDto {
   @IsOptional()
   desiredSalary: number;
 
-  @IsDate()
+  @IsDateString()
   @ApiProperty()
-  @IsOptional()
+  @IsOptional()  
   birthDate: Date;
 
   @IsString()
@@ -46,5 +46,13 @@ export class candidateUserDto {
   @ApiProperty()
   @IsOptional()  
   cvPdf: Buffer;
+
+  @ApiProperty()
+  @IsOptional()    
+  createdByUserId?: mongo.ObjectId; 
+  
+  @ApiProperty()
+  @IsOptional()    
+  jobOfferIds?: [mongo.ObjectId];
 
 }

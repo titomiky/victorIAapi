@@ -32,6 +32,7 @@ import { CvPdfDto } from './dtos/CvPdf.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JobOffer } from './schemas/jobOffer.schema';
 import { JobOfferDto } from './dtos/jobOffer.dto';
+import { ObjectId} from 'mongodb';
 
 @Controller('users')
 @ApiTags('users')
@@ -105,7 +106,8 @@ export class UserController {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    user.candidateUser = candidateUser;
+    candidateUser.createdByUserId = new ObjectId(userId);
+    user.candidateUser = candidateUser;    
 
     return this.userService.createCandidateUser(userId, user);
   }

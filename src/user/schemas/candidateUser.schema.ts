@@ -1,4 +1,5 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { mongo } from 'mongoose';
 
 
 @Schema()
@@ -26,7 +27,12 @@ export class candidateUser {
 
   @Prop({ required: false })
   cvPdf: Buffer;
-    
+  
+  @Prop({ type: mongo.ObjectId })
+  createdByUserId?: mongo.ObjectId; 
+  
+  @Prop([{ type: mongo.ObjectId }])
+  jobOfferIds?: [mongo.ObjectId];
 }
 
 export const candidateUserSchema = SchemaFactory.createForClass(candidateUser);
