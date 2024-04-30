@@ -8,6 +8,9 @@ import { UserDto } from './dtos/user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UserModule } from './user.module';
+import { JobOffer } from './schemas/jobOffer.schema';
+import { JobOfferDto } from './dtos/jobOffer.dto';
+
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>, private jwtService: JwtService) {}
@@ -77,6 +80,25 @@ export class UserService {
       .exec();
   }
 
+  async updateJobOffer (userId: string, jobOfferId: string, jobOffer: JobOfferDto) {
+    return this.userModel.updateOne (
+      {
+        "clientUser._id": new ObjectId(userId),
+        "clientUser.jobOffers._id": new ObjectId(jobOfferId)
+      },
+      {
+        $set: {
+          "clientUser.jobOffers.$": {
+            //"_id": jobOffer,
+            "name": jobOffer.name,
+            "description": jobOffer.description,
+            "candidateIds": jobOffer.candidateIds,            
+          }
+        }
+      }
+    );
+  }
+
   async findAll() {
     return this.userModel.find().select('-password').exec();
   }
@@ -100,6 +122,8 @@ export class UserService {
 
     return this.userModel.updateOne(filter, update).exec();    
   }
+
+
 
   async login(email: string, password: string) {
     try {

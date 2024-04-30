@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { CompetenceDto } from 'src/competence/dtos/competence.dto';
 import mongoose from 'mongoose';
+import { mongo } from 'mongoose';
 
 export class JobOfferDto {
   @IsNotEmpty()
@@ -14,7 +15,10 @@ export class JobOfferDto {
   @ApiProperty()  
   description: string;
   
-  @ApiProperty({type: Array(mongoose.Schema.Types.ObjectId)})    
-  competenceIds: mongoose.Schema.Types.ObjectId[];
+  @ApiProperty({ type: [mongo.ObjectId]})
+  competenceIds: [mongo.ObjectId];
+
+  @ApiProperty({ type: [mongo.ObjectId]})
+  candidateIds?: [mongo.ObjectId];
 }
 

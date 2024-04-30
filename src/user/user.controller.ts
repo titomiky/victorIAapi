@@ -113,7 +113,7 @@ export class UserController {
   }
 
 
-  @Put('jobOffer')
+  @Post('jobOffer')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create/update job offer', description: 'Create/update a job offer. Send the complete array of competencies to update/delete competencies to the job offer' })
   @ApiResponse({ status: 200, description: 'Created jobOffer user ok', type: UserResponseDto })
@@ -135,6 +135,24 @@ export class UserController {
     user.clientUser.jobOffers?.push(jobOffer);
   
     return this.userService.createCandidateUser(userId, user);
+  }
+
+  @Put('jobOffer/:id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update job offer', description: 'Update a job offer. Send the complete array of competencies to update/delete competencies to the job offer' })
+  @ApiResponse({ status: 200, description: 'Updated jobOffer user ok', type: UserResponseDto })
+  async updateJobOffer(    
+    @Body(new ValidationPipe()) newJobOffer: JobOfferDto, @Req() request: Request, @Param('id') jobOfferId: string) {
+    const userId = await this.authService.getUserIdFromToken(request);    
+    const user = await this.userService.findOne(userId);    
+    
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    
+    const jobOfferToUpdate = new JobOffer();
+          
+    return this.userService.updateJobOffer(userId, jobOfferId, newJobOffer);
   }
 
   @Delete('jobOffer/:id')

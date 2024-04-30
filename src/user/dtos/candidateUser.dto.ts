@@ -49,10 +49,6 @@ export class candidateUserDto {
 
   @ApiProperty()
   @IsOptional()    
-  createdByUserId?: mongo.ObjectId; 
-  
-  @ApiProperty()
-  @IsOptional()    
-  jobOfferIds?: [mongo.ObjectId];
+  createdByUserId?: mongo.ObjectId;     
 
 }
