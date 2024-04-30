@@ -1,8 +1,5 @@
-import { IsNotEmpty, IsString, IsEnum, IsOptional, IsObject, IsArray} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsNotEmpty, IsString} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CompetenceDto } from 'src/competence/dtos/competence.dto';
-import mongoose from 'mongoose';
 import { mongo } from 'mongoose';
 
 export class JobOfferDto {

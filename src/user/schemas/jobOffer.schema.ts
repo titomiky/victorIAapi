@@ -1,6 +1,4 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Competence } from '../../competence/schemas/competence.schema';
-import mongoose from 'mongoose';
 import { mongo } from 'mongoose';
 
 @Schema()
