@@ -8,7 +8,7 @@ import { UserModule } from './user/user.module';
 import { CompetenceModule } from './competence/competence.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
-
+import { CopyViewsService } from './copy-views.service';
 
 @Module({
   imports: [
@@ -24,6 +24,6 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule, CompetenceModule, AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CopyViewsService],
 })
 export class AppModule {}

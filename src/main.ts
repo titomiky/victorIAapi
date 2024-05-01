@@ -1,13 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as express from 'express';
+import * as path from 'path';
+import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    cors: {
-      origin: '*',
-    },
-  });
+  const expressApp = express();
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    new ExpressAdapter(expressApp),
+  );
 
   const config = new DocumentBuilder()
   .setTitle('VictorIA API Documentation')
@@ -16,8 +19,15 @@ async function bootstrap() {
   .addBearerAuth()
   .build();
 
-const document = SwaggerModule.createDocument(app, config);
-SwaggerModule.setup('doc', app, document);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('doc', app, document);
+
+  app.setBaseViewsDir(path.join(__dirname, 'views'));
+  app.setViewEngine('ejs');
+
+  // Servir archivos estáticos desde la carpeta 'public'
+  app.useStaticAssets(path.join(__dirname, '..', 'public'));
+
 
   await app.listen(process.env.PORT);
 }

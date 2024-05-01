@@ -268,9 +268,9 @@ export class UserController {
       //const templatePath = path.join(process.cwd(), 'validateEmail.ejs');
 
       // Render the HTML email body using the EJS template
-      const templatePath = 'validateEmail.ejs';
-      //console.log(templatePath);
-      console.log(process.cwd);
+      const templatePath = __dirname.replace('user', 'views/validateEmail.ejs');
+      console.log(templatePath);                      
+
       const templateString = fs.readFileSync(templatePath, 'utf8');
       const html = await ejs.renderFile(templatePath, { userId, verificationLink })
       console.log(html);
