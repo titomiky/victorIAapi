@@ -241,7 +241,7 @@ export class UserController {
   @ApiOperation({ summary: 'Send an email to verify the account', description: 'Send an email to verify the account' })
   @ApiResponse({ status: 201, description: 'Sent email ok', type: String })
   async sendEmail (    
-    @Req() request: Request, @Res() response: Response
+    @Req() req: Request, @Res() res: Response
   ) {
     try {              
       const config = {
@@ -253,13 +253,16 @@ export class UserController {
         }
       };
 
-      const userId = await this.authService.getUserIdFromToken(request);    
-      const email = await this.authService.getEmailFromToken(request);    
-      console.log(userId);
-      console.log(email);
+      const userId = await this.authService.getUserIdFromToken(req);    
+      const email = await this.authService.getEmailFromToken(req);    
       
-      const validationToken = userId;
-      const verificationLink = "http://localhost:3000/validateEmail?validationToken=" + validationToken;
+      const hostname = req.headers.host;
+      const isSecure = req.secure;
+      const protocol = isSecure ? 'https' : 'http';
+      const currentURL = `${protocol}://${hostname}`;
+      console.log(`Current URL: ${currentURL}`);
+            
+      const verificationLink = currentURL + "/validateEmailByToken?validationToken=" + userId;
       console.log(verificationLink);
       
       // Render the HTML email body using the EJS template

@@ -52,6 +52,15 @@ export class UserService {
       .exec();
   }
 
+  async validateEmail(id: string) {    
+    
+    return await this.userModel
+      .findByIdAndUpdate(id, { IsValidated: Date.now }, {
+        new: true,
+      }).select('-password')
+      .exec();
+  }
+
   async createAdminUser(id: string, user: UserDto) {
     
     return await this.userModel

@@ -20,6 +20,9 @@ export class User {
 
   @Prop()
   candidateUser: candidateUser;
+
+  @Prop({default: Date.now})
+  emailValidatedDate: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
