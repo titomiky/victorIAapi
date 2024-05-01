@@ -222,6 +222,7 @@ export class UserController {
   @ApiConsumes('multipart/form-data', 'application/json')  
   @ApiBody({ type: CvPdfDto, required: true })
   @ApiOkResponse({ status: 201 })
+  @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('file'))
   @Post('uploadCVpdf')
   async saveCVpdf(
@@ -236,43 +237,41 @@ export class UserController {
 
 
   @Post('sendEmail')    
-  //@ApiBearerAuth()
-  @Public()
+  @ApiBearerAuth()  
   @ApiOperation({ summary: 'Send an email to verify the account', description: 'Send an email to verify the account' })
   @ApiResponse({ status: 201, description: 'Sent email ok', type: String })
   async sendEmail (    
     @Req() request: Request, @Res() response: Response
   ) {
-    try {        
-      // Replace with your actual email configuration
+    try {              
       const config = {
-        host: 'ssl0.ovh.net',
-        port: 587,
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
         auth: {
-          user: 'info@stoical.be',
-          pass: 'Zaq1Xsw2Cde3*-'
+          user: process.env.EMAIL_AUTH_USER,
+          pass: process.env.EMAIL_AUTH_PASS
         }
       };
 
-      //const userId = await this.authService.getUserIdFromToken(request);    
-      //const email = await this.authService.getEmailFromToken(request);    
-      const userId= '6631eb279d7c3d0c081bc2c3';
-      const email = 'titomiky@gmail.com';
-      const validationToken = userId;
-      const verificationLink = "http://localhost:3000/validateEmail/" + validationToken;
-      console.log(verificationLink);
-
-      console.log(__dirname);
-
+      const userId = await this.authService.getUserIdFromToken(request);    
+      const email = await this.authService.getEmailFromToken(request);    
+      console.log(userId);
+      console.log(email);
       
-      //const templatePath = path.join(process.cwd(), 'validateEmail.ejs');
-
+      const validationToken = userId;
+      const verificationLink = "http://localhost:3000/validateEmail?validationToken=" + validationToken;
+      console.log(verificationLink);
+      
       // Render the HTML email body using the EJS template
       const templatePath = __dirname.replace('user', 'views/validateEmail.ejs');
       console.log(templatePath);                      
 
-      const templateString = fs.readFileSync(templatePath, 'utf8');
-      const html = await ejs.renderFile(templatePath, { userId, verificationLink })
+      //const templateString = fs.readFileSync(templatePath, 'utf8');
+      const templateData  = {
+        email: email,
+        verificationLink: verificationLink,
+      };
+      const html = await ejs.renderFile(templatePath, templateData)
       console.log(html);
 
       // Define email options
