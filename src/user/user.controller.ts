@@ -262,7 +262,7 @@ export class UserController {
       const currentURL = `${protocol}://${hostname}`;
       console.log(`Current URL: ${currentURL}`);
             
-      const verificationLink = currentURL + "/validateEmailByToken?validationToken=" + userId;
+      const verificationLink = currentURL + "/validateEmailByToken/" + userId;
       console.log(verificationLink);
       
       // Render the HTML email body using the EJS template

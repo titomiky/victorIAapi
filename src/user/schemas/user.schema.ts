@@ -21,7 +21,7 @@ export class User {
   @Prop()
   candidateUser: candidateUser;
 
-  @Prop({default: Date.now})
+  @Prop()
   emailValidatedDate: Date;
 }
 

@@ -12,7 +12,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('validateEmailByToken:validationToken')
+  @Get('validateEmailByToken/:validationToken')
   @Public()
   @Render('validateEmailByToken')
   validateEmail(@Param('validationToken') validationToken: string) {

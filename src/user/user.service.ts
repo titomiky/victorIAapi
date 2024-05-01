@@ -53,10 +53,10 @@ export class UserService {
   }
 
   async validateEmail(id: string) {    
-    
+    console.log(id);
     return await this.userModel
-      .findByIdAndUpdate(id, { IsValidated: Date.now }, {
-        new: true,
+      .findByIdAndUpdate(id, { emailValidatedDate: Date.now() }, {
+        new: false,
       }).select('-password')
       .exec();
   }
