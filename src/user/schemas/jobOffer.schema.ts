@@ -3,7 +3,7 @@ import { mongo } from 'mongoose';
 
 @Schema()
 export class JobOffer {
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true})
   name: string;
 
   @Prop({ required: false })

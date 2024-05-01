@@ -49,6 +49,7 @@ export class UserController {
   ) {
     try {  
       return this.userService.create(createuser);
+      
     } catch (error) {      
       throw new HttpException(error, HttpStatus.CONFLICT); 
     }
@@ -149,7 +150,7 @@ export class UserController {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    
+
     const jobOfferToUpdate = new JobOffer();
           
     return this.userService.updateJobOffer(userId, jobOfferId, newJobOffer);

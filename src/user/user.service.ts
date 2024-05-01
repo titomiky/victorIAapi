@@ -19,7 +19,8 @@ export class UserService {
     user.password = await bcrypt.hash(user.password, 10);
 
     const createdUser = new this.userModel(user);
-    const savedUser = createdUser.save();
+    const savedUser = await createdUser.save();
+    console.log(savedUser);
     const token = await this.generateToken(savedUser);    
     return token;    
   }
@@ -45,7 +46,7 @@ export class UserService {
   async update(id: string, user: UserDto) {
     user.password = await bcrypt.hash(user.password, 10);
 
-    return this.userModel
+    return await this.userModel
       .findByIdAndUpdate(id, user, {
         new: true,
       }).select('-password')
@@ -54,7 +55,7 @@ export class UserService {
 
   async createAdminUser(id: string, user: UserDto) {
     
-    return this.userModel
+    return await this.userModel
       .findByIdAndUpdate(id, user, {
         new: true,
       }).select('-password')
@@ -63,7 +64,7 @@ export class UserService {
 
   async createClientUser(id: string, user: UserDto) {
     
-    return this.userModel
+    return await this.userModel
       .findByIdAndUpdate(id, user, {
         new: true,
       }).select('-password')
@@ -73,7 +74,7 @@ export class UserService {
   async createCandidateUser(id: string, user: UserDto) {
     console.log(user);    
     
-    return this.userModel
+    return await this.userModel
       .findByIdAndUpdate(id, user, {
         new: true,
       }).select('-password')
@@ -81,7 +82,7 @@ export class UserService {
   }
 
   async updateJobOffer (userId: string, jobOfferId: string, jobOffer: JobOfferDto) {
-    return this.userModel.updateOne (
+    return await this.userModel.updateOne (
       {
         "clientUser._id": new ObjectId(userId),
         "clientUser.jobOffers._id": new ObjectId(jobOfferId)
@@ -100,27 +101,27 @@ export class UserService {
   }
 
   async findAll() {
-    return this.userModel.find().select('-password').exec();
+    return await this.userModel.find().select('-password').exec();
   }
 
   async findOne(id: string) {
-    return this.userModel.findById(id).select('-password').exec();
+    return await this.userModel.findById(id).select('-password').exec();
   }
 
   async findByEmail(email: string) {
-    return this.userModel.findOne({email: email}).exec();
+    return await this.userModel.findOne({email: email}).exec();
     //return this.userModel.find(user => user.email === email).exec();
   }
 
   async delete(id: string) {
-    return this.userModel.findByIdAndDelete(id).select('-password').exec();
+    return await this.userModel.findByIdAndDelete(id).select('-password').exec();
   }
 
   async deleteJobOffer(userId: string, jobOfferId: string) {
     const filter = { _id: new ObjectId(userId) };
     const update = { $pull: { "clientUser.jobOffers": { _id: new ObjectId(jobOfferId) } } };
 
-    return this.userModel.updateOne(filter, update).exec();    
+    return await this.userModel.updateOne(filter, update).exec();    
   }
 
 

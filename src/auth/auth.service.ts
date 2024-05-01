@@ -41,7 +41,7 @@ export class AuthService {
       userId: user._id,
       onBoarding: onboarding,
     };
-    
+    console.log(payload);
     const token = await this.jwtService.signAsync(payload);
     return token;    
   }
