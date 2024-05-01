@@ -33,5 +33,7 @@ db.createUser({
 
 print('Usuarios creados exitosamente.');
 
+db.users.createIndex({ email: 1 }, { unique: true });
 
+print('Indice creado por user.email.');
 
