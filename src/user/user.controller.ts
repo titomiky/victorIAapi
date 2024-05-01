@@ -33,11 +33,20 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JobOffer } from './schemas/jobOffer.schema';
 import { JobOfferDto } from './dtos/jobOffer.dto';
 import { ObjectId} from 'mongodb';
+import * as ejs from 'ejs'; 
+import * as nodemailer from 'nodemailer';
+import { stringify } from 'querystring';
+//import html from 'adminjs/types/src/frontend/login-template';
+import path from 'path';
+import * as fs from 'fs'; 
+import { readFileSync } from 'fs';
+import { Console } from 'console';
 
 @Controller('users')
 @ApiTags('users')
 export class UserController {
   constructor(private userService: UserService, private authService: AuthService) {}
+
 
   @Post()  
   @Public()
@@ -225,6 +234,72 @@ export class UserController {
     return { message: 'CV creado exitosamente' };
   }
 
+
+  @Post('sendEmail')    
+  //@ApiBearerAuth()
+  @Public()
+  @ApiOperation({ summary: 'Send an email to verify the account', description: 'Send an email to verify the account' })
+  @ApiResponse({ status: 201, description: 'Sent email ok', type: String })
+  async sendEmail (    
+    @Req() request: Request, @Res() response: Response
+  ) {
+    try {        
+      // Replace with your actual email configuration
+      const config = {
+        host: 'ssl0.ovh.net',
+        port: 587,
+        auth: {
+          user: 'info@stoical.be',
+          pass: 'Zaq1Xsw2Cde3*-'
+        }
+      };
+
+      //const userId = await this.authService.getUserIdFromToken(request);    
+      //const email = await this.authService.getEmailFromToken(request);    
+      const userId= '6631eb279d7c3d0c081bc2c3';
+      const email = 'titomiky@gmail.com';
+      const validationToken = userId;
+      const verificationLink = "http://localhost:3000/validateEmail/" + validationToken;
+      console.log(verificationLink);
+
+      console.log(__dirname);
+
+      
+      //const templatePath = path.join(process.cwd(), 'validateEmail.ejs');
+
+      // Render the HTML email body using the EJS template
+      const templatePath = 'validateEmail.ejs';
+      //console.log(templatePath);
+      console.log(process.cwd);
+      const templateString = fs.readFileSync(templatePath, 'utf8');
+      const html = await ejs.renderFile(templatePath, { userId, verificationLink })
+      console.log(html);
+
+      // Define email options
+      const message = {
+        from: 'info@stoical.be',
+        to: email,
+        subject: 'Verificación de email',
+        html: html,
+        text: 'hola'
+      };
+    
+      // Send the email
+      try {
+        const transport = await nodemailer.createTransport(config);
+        const info = await transport.sendMail(message);
+        console.log('Verification email sent successfully.');
+        return 'Verification email sent successfully.';
+      } catch (error) {
+        console.error('Error sending verification email:', error);
+        return 'Error sending verification email.';
+      }      
+
+    } catch (error) {      
+      console.log(error.message);
+      return { message: 'Error Sending message.' };;
+    }
+  }
 
 }
 

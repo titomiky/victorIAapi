@@ -19,8 +19,7 @@ export class UserService {
     user.password = await bcrypt.hash(user.password, 10);
 
     const createdUser = new this.userModel(user);
-    const savedUser = await createdUser.save();
-    console.log(savedUser);
+    const savedUser = await createdUser.save();    
     const token = await this.generateToken(savedUser);    
     return token;    
   }
@@ -71,8 +70,7 @@ export class UserService {
       .exec();
   }
 
-  async createCandidateUser(id: string, user: UserDto) {
-    console.log(user);    
+  async createCandidateUser(id: string, user: UserDto) {    
     
     return await this.userModel
       .findByIdAndUpdate(id, user, {
