@@ -28,8 +28,8 @@ export class candidateUser {
   @Prop({ required: false })
   cvPdf: Buffer;
   
-  @Prop({ type: mongo.ObjectId })
-  createdByUserId?: mongo.ObjectId; 
+  @Prop()
+  createdByUserId?: string; 
   
 }
 

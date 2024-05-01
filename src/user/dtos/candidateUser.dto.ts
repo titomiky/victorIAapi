@@ -46,6 +46,6 @@ export class candidateUserDto {
 
   @ApiProperty()
   @IsOptional()    
-  createdByUserId?: mongo.ObjectId;     
+  createdByUserId?: string;     
 
 }
