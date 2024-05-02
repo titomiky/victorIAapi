@@ -10,8 +10,12 @@ async function bootstrap() {
   const expressApp = express();
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule, 
-    new ExpressAdapter(expressApp)
+    new ExpressAdapter(expressApp),
+    {cors: {
+      origin: '*',
+    }}
   );
+  
   
   const config = new DocumentBuilder()
   .setTitle('VictorIA API Documentation')
@@ -36,7 +40,7 @@ async function bootstrap() {
   };
 
   app.use(cors(corsOptions)); 
-
+  
   await app.listen(process.env.PORT);
 }
 
