@@ -4,14 +4,19 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as express from 'express';
 import * as path from 'path';
 import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
+import * as cors from 'cors'; // Import cors library
 
 async function bootstrap() {
   const expressApp = express();
   const app = await NestFactory.create<NestExpressApplication>(
-    AppModule,
+    AppModule, 
     new ExpressAdapter(expressApp),
+    {cors: {
+      origin: '*',
+    }}
   );
-
+  
+  
   const config = new DocumentBuilder()
   .setTitle('VictorIA API Documentation')
   .setDescription('VictorIA API Documentation')
