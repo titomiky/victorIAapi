@@ -115,9 +115,9 @@ export class UserController {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-
-    candidateUser.createdByUserId = userId;
+    
     user.candidateUser = candidateUser;    
+    user.candidateUser.createdByUserId = userId;
 
     return this.userService.createCandidateUser(userId, user);
   }

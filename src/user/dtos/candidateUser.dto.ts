@@ -1,6 +1,5 @@
 import { IsNotEmpty, IsString, IsNumber, IsOptional, IsDateString} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { mongo } from 'mongoose';
 
 
 export class candidateUserDto {
@@ -44,8 +43,5 @@ export class candidateUserDto {
   @IsOptional()  
   cvPdf: Buffer;
 
-  @ApiProperty()
-  @IsOptional()    
-  createdByUserId?: string;     
 
 }
