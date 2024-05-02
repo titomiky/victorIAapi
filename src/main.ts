@@ -33,7 +33,14 @@ async function bootstrap() {
   // Servir archivos estáticos desde la carpeta 'public'
   app.useStaticAssets(path.join(__dirname, '..', 'public'));
 
+  const corsOptions: cors.CorsOptions = {
+    origin: ['http://localhost:3000'], // Replace with allowed origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed request headers
+  };
 
+  app.use(cors(corsOptions)); 
+  
   await app.listen(process.env.PORT);
 }
 
