@@ -16,7 +16,7 @@ export class AppController {
   @Public()
   @Render('validateEmailByToken')
   validateEmail(@Param('validationToken') validationToken: string) {
-    console.log(validationToken);
+    
     return this.userService.validateEmail(validationToken);    
   }
 }

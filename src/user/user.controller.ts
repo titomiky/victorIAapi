@@ -262,12 +262,10 @@ export class UserController {
       const currentURL = `${protocol}://${hostname}`;
       console.log(`Current URL: ${currentURL}`);
             
-      const verificationLink = currentURL + "/validateEmailByToken/" + userId;
-      console.log(verificationLink);
+      const verificationLink = currentURL + "/validateEmailByToken/" + userId;      
       
       // Render the HTML email body using the EJS template
-      const templatePath = __dirname.replace('user', 'views/validateEmail.ejs');
-      console.log(templatePath);                      
+      const templatePath = __dirname.replace('user', 'views/validateEmail.ejs');      
 
       //const templateString = fs.readFileSync(templatePath, 'utf8');
       const templateData  = {
