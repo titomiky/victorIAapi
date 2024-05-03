@@ -1,6 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { CompetenceResult } from './session.competenceResult.schema';
-import { QuestionAnswer } from './session.questionanswer.schema';
+import { QuestionAnswer } from './session.questionAnswer.schema';
 
 @Schema()
 export class Session {
