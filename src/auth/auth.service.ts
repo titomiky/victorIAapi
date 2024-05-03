@@ -31,16 +31,19 @@ export class AuthService {
     }
   }
   
+
   async generateToken (user) {    
     let  onboarding = user.clientUser && typeof user.clientUser === 'object' || user.adminUser && typeof user.adminUser === 'object';
     if (onboarding === undefined) onboarding = true;
     else onboarding = false;
     
     const payload = {
+      name: this.getName(user),
+      surname: this.getSurname(user),
       email: user.email,
       userId: user._id,
       onBoarding: onboarding,
-    };    
+    };
     const token = await this.jwtService.signAsync(payload);
     return token;    
   }
@@ -86,5 +89,35 @@ export class AuthService {
     } catch {
         return null;
     }
+  }
+
+  getName (user: User): string {
+    let name: string;
+  
+    if (user.adminUser) {
+      name = user.adminUser.name;
+    } else if (user.clientUser) {
+      name = user.clientUser.name;
+    } else if (user.candidateUser) {
+      name = user.candidateUser.name;
+    } else {
+      name = null; // Or any default value if none of the users exist
+    }
+    return name;
+  }
+
+  getSurname (user: User): string {
+    let surname: string;
+  
+    if (user.adminUser) {
+      surname = user.adminUser.name;
+    } else if (user.clientUser) {
+      surname = user.clientUser.name;
+    } else if (user.candidateUser) {
+      surname = user.candidateUser.name;
+    } else {
+      surname = null; // Or any default value if none of the users exist
+    }
+    return surname;
   }
 }

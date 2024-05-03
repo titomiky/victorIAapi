@@ -19,8 +19,6 @@ import { UserService } from './user.service';
 import { UserDto } from './dtos/user.dto';
 import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation, ApiConsumes, ApiBody, ApiOkResponse } from '@nestjs/swagger';
 import { UserResponseDto } from './dtos/user.response.dto';
-import { loginUserDto } from './dtos/user.login.dto';
-import { AuthGuard } from '../auth/auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 import { Request } from 'express';
 import { Public } from '../auth/auth.controller';
@@ -32,15 +30,8 @@ import { CvPdfDto } from './dtos/CvPdf.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JobOffer } from './schemas/jobOffer.schema';
 import { JobOfferDto } from './dtos/jobOffer.dto';
-import { ObjectId} from 'mongodb';
 import * as ejs from 'ejs'; 
 import * as nodemailer from 'nodemailer';
-import { stringify } from 'querystring';
-//import html from 'adminjs/types/src/frontend/login-template';
-import path from 'path';
-import * as fs from 'fs'; 
-import { readFileSync } from 'fs';
-import { Console } from 'console';
 
 @Controller('users')
 @ApiTags('users')
@@ -57,7 +48,8 @@ export class UserController {
     @Req() request: Request,
   ) {
     try {  
-      return this.userService.create(createuser);
+      const savedUser = await this.userService.create(createuser);      
+      return this.authService.generateToken(savedUser);
       
     } catch (error) {      
       throw new HttpException(error, HttpStatus.CONFLICT); 
@@ -79,7 +71,8 @@ export class UserController {
     }
 
     user.adminUser = adminUser;     
-    return this.userService.createAdminUser(userId, user);
+    const savedAdminUser = await this.userService.createAdminUser(userId, user);
+    return this.authService.generateToken(savedAdminUser);
   }
 
   @Put('client')
@@ -98,7 +91,8 @@ export class UserController {
 
     user.clientUser = clientUser;
      
-    return this.userService.createClientUser(userId, user);
+    const savedClientUser = await this.userService.createClientUser(userId, user);
+    return this.authService.generateToken(savedClientUser);
   }
 
 
@@ -119,7 +113,8 @@ export class UserController {
     user.candidateUser = candidateUser;    
     user.candidateUser.createdByUserId = userId;
 
-    return this.userService.createCandidateUser(userId, user);
+    const savedCandidateUser = await this.userService.createCandidateUser(userId, user);
+    return this.authService.generateToken(savedCandidateUser);
   }
 
 

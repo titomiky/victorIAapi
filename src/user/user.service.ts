@@ -7,8 +7,6 @@ import { User } from './schemas/user.schema';
 import { UserDto } from './dtos/user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { UserModule } from './user.module';
-import { JobOffer } from './schemas/jobOffer.schema';
 import { JobOfferDto } from './dtos/jobOffer.dto';
 
 @Injectable()
@@ -19,9 +17,7 @@ export class UserService {
     user.password = await bcrypt.hash(user.password, 10);
 
     const createdUser = new this.userModel(user);
-    const savedUser = await createdUser.save();    
-    const token = await this.generateToken(savedUser);    
-    return token;    
+    return await createdUser.save();        
   }
 
   private removePassword( user) {
@@ -29,18 +25,7 @@ export class UserService {
     return result;
   }
 
-  async generateToken (user) {    
-    let  onboarding = user.clientUser && typeof user.clientUser === 'object' || user.adminUser && typeof user.adminUser === 'object';
-    if (onboarding === undefined) onboarding = true;
-    else onboarding = false;
-    const payload = {
-      email: user.email,
-      userId: user._id,
-      onBoarding: onboarding,
-    };
-    const token = await this.jwtService.signAsync(payload);
-    return token;    
-  }
+
 
   async update(id: string, user: UserDto) {
     user.password = await bcrypt.hash(user.password, 10);
@@ -53,7 +38,7 @@ export class UserService {
   }
 
   async validateEmail(id: string) {    
-    console.log(id);
+    
     return await this.userModel
       .findByIdAndUpdate(id, { emailValidatedDate: Date.now() }, {
         new: false,
@@ -130,30 +115,8 @@ export class UserService {
 
     return await this.userModel.updateOne(filter, update).exec();    
   }
+  
 
-
-
-  async login(email: string, password: string) {
-    try {
-      const foundUser = await this.userModel.findOne({
-        email: email,
-      }).select('-password').exec();
-      if (!foundUser) {
-        return null;
-      }
-
-      const isMatch = await bcrypt.compare(password, foundUser.password);
-      if (isMatch) {
-      
-        const token = await this.generateToken(foundUser);
-        return token;
-      
-      } else {
-        return null;
-      }
-    } catch (exception) {
-      throw exception;
-    }
-  }
+ 
 } 
  
