@@ -9,6 +9,8 @@ import { CompetenceModule } from './competence/competence.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CopyViewsService } from './copy-views.service';
+import { SessionModule } from './session/session.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { CopyViewsService } from './copy-views.service';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
-    UserModule, CompetenceModule, AuthModule
+    UserModule, CompetenceModule, AuthModule, SessionModule, ReportModule
   ],
   controllers: [AppController],
   providers: [AppService, CopyViewsService],
