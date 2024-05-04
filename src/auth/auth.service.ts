@@ -33,7 +33,7 @@ export class AuthService {
   
 
   async generateToken (user) {    
-    let  onboarding = user.clientUser && typeof user.clientUser === 'object' || user.adminUser && typeof user.adminUser === 'object';
+    let  onboarding = (user.clientUser && typeof user.clientUser === 'object') || (user.adminUser && typeof user.adminUser === 'object') || (user.candidateUser && typeof user.candidateUser === 'object');
     if (onboarding === undefined) onboarding = true;
     else onboarding = false;
     
