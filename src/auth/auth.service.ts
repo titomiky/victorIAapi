@@ -37,19 +37,19 @@ export class AuthService {
     if (onboarding === undefined) onboarding = true;
     else onboarding = false;
     
-    let isClient = (user.clientUser && typeof user.clientUser === 'object');
-    let isCandidate = (user.candidateUser && typeof user.candidateUser === 'object');
-    let isAdmin = (user.adminUser && typeof user.adminUser === 'object');
-
+    let role = '';
+    if (user.adminUser && typeof user.adminUser === 'object')  role = 'admin';    
+    if (user.clientUser && typeof user.clientUser === 'object') role = 'client';
+    if (user.candidateUser && typeof user.candidateUser === 'object') role = 'candidate';
+    
+    
     const payload = {
       name: this.getName(user),
       surname: this.getSurname(user),
       email: user.email,
       userId: user._id,
       onBoarding: onboarding,
-      isClient: isClient,
-      isCandidate: isCandidate,
-      isAdmin: isAdmin,
+      role: role,
     };
     const token = await this.jwtService.signAsync(payload);
     return token;    
