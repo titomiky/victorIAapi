@@ -37,12 +37,19 @@ export class AuthService {
     if (onboarding === undefined) onboarding = true;
     else onboarding = false;
     
+    let isClient = (user.clientUser && typeof user.clientUser === 'object');
+    let isCandidate = (user.candidateUser && typeof user.candidateUser === 'object');
+    let isAdmin = (user.adminUser && typeof user.adminUser === 'object');
+
     const payload = {
       name: this.getName(user),
       surname: this.getSurname(user),
       email: user.email,
       userId: user._id,
       onBoarding: onboarding,
+      isClient: isClient,
+      isCandidate: isCandidate,
+      isAdmin: isAdmin,
     };
     const token = await this.jwtService.signAsync(payload);
     return token;    
