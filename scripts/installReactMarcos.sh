@@ -44,8 +44,8 @@ sudo npm install -g typescript
 sudo npm install pm2@5.3.1 -g
 
 # Run victorIAmanu
-npm install --prefix /home/debian/GitHub/victorIAmanu
-cd /home/debian/GitHub/victorIAmanu
+npm install --prefix /home/debian/GitHub/victorIAmarcos
+cd /home/debian/GitHub/victorIAmarcos
 npm run build 
 
 #npm run --prefix /home/debian/GitHub/clientia start
