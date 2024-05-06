@@ -11,8 +11,7 @@ export class ReportController {
   @Get('jobOffer/:jobOfferId')
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Competencias del candidato conectado', description: 'Devuelve el valor de las competencias del candidato conectado' })
-  getCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): { [key: string]: number } {
-    console.log('123')
+  getCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): { [key: string]: number } {    
     return {
       competence1: 10,
       competence2: 20,
@@ -27,8 +26,7 @@ export class ReportController {
   @Get('candidates/:jobOfferId/:candidateId')
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Competencias del candidato de una oferta', description: 'Devuelve el valor de las competencias del candidato de una oferta del CLIENTE conectado' })
-  getClientCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string, @Param('candidateId') candidateId: string, @Req() request: Request): { [key: string]: number } {
-    console.log('todos12')
+  getClientCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string, @Param('candidateId') candidateId: string, @Req() request: Request): { [key: string]: number } {    
     return {
       competence1: 10,
       competence2: 20,
@@ -43,8 +41,7 @@ export class ReportController {
   @Get('joboffers/:jobOfferId')  
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Competencias de todos los candidatos apuntados a una oferta', description: 'Devuelve el valor de las competencias de TODOS los candidatos de una oferta del CLIENTE conectado' })
-  getReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): { [key: string]: any } {
-    console.log('todos')
+  getReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): { [key: string]: any } {    
     return [
       {
         name: 'Juan',
@@ -211,8 +208,7 @@ export class ReportController {
   @Get('clientActivity/:year')
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Estadísticas de uso de la plataforma de los clientes de un año', description: 'Devuelve las estadísticas del uso de la plataforma por los clientes en un año (usado por el ADMIN)' })
-  getClientActivity(@Param('year') year: string,  @Req() request: Request): { [key: string]: any } {
-    console.log('todos456');
+  getClientActivity(@Param('year') year: string,  @Req() request: Request): { [key: string]: any } {    
     return [
       {
       companyName: "Company 5",
