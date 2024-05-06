@@ -49,9 +49,9 @@ cd /home/debian/GitHub/victorIAmanu
 npm run build 
 
 #npm run --prefix /home/debian/GitHub/clientia start
-chmod +x /home/debian/GitHub/adminia/scripts/installNpmRunStart_VictorIAmanu.sh
+chmod +x /home/debian/GitHub/adminia/scripts/installNpmRunStart_VictorIAadmin.sh
 
-pm2 start /home/debian/GitHub/adminia/scripts/installNpmRunStart_VictorIAmanu.sh --name admin --daemon 
+pm2 start /home/debian/GitHub/adminia/scripts/installNpmRunStart_VictorIAadmin.sh --name admin --daemon 
 
 # nginx + ssl
 sudo apt update
