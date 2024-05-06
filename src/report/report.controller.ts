@@ -4,11 +4,11 @@ import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation, ApiConsumes, ApiBody
 import { Public } from 'src/auth/auth.controller';
 
 @ApiTags('reports')
-@Controller('competences')
+@Controller('reports')
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  @Get('jobOffer/:jobOfferId')
+  @Get('competences/:jobOfferId')
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Competencias del candidato conectado', description: 'Devuelve el valor de las competencias del candidato conectado' })
   getCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): { [key: string]: number } {    
@@ -38,7 +38,7 @@ export class ReportController {
     };
   }
 
-  @Get('joboffers/:jobOfferId')  
+  @Get('jobOffers/:jobOfferId')  
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Competencias de todos los candidatos apuntados a una oferta', description: 'Devuelve el valor de las competencias de TODOS los candidatos de una oferta del CLIENTE conectado' })
   getReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): { [key: string]: any } {    
