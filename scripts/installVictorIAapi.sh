@@ -57,18 +57,18 @@ npm install --prefix /home/debian/GitHub/victorIAapi
 tsc -p /home/debian/GitHub/victorIAapi
 
 # Before starting apps, mongodb script with users.
-sudo mongosh "mongodb://localhost:27017" < /home/debian/GitHub/adminia/db/init-mongo.js
+sudo mongosh "mongodb://localhost:27017" < /home/debian/GitHub/victorIAapi/db/init-mongo.js
 
 #npm run --prefix /home/debian/GitHub/clientia start
-chmod +x /home/debian/GitHub/adminia/scripts/installNpmRunStart_VictorIAapi.sh
+chmod +x /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAapi.sh
 
-pm2 start /home/debian/GitHub/adminia/scripts/installNpmRunStart_VictorIAapi.sh --name victoria --daemon 
+pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAapi.sh --name victorIAapi --daemon 
 
 # nginx + ssl
 sudo apt update
 sudo apt install nginx -y
 
-sudo cp /home/debian/GitHub/adminia/scripts/api.holaqueai.com /etc/nginx/sites-available/api.holaqueai.com
+sudo cp /home/debian/GitHub/victorIAapi/scripts/api.holaqueai.com /etc/nginx/sites-available/api.holaqueai.com
 
 sudo ln -s /etc/nginx/sites-available/api.holaqueai.com /etc/nginx/sites-enabled/api.holaqueai.com
 

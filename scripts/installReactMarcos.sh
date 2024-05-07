@@ -45,19 +45,20 @@ sudo npm install pm2@5.3.1 -g
 
 # Run victorIAmanu
 npm install --prefix /home/debian/GitHub/victorIAmarcos
+
 cd /home/debian/GitHub/victorIAmarcos
 npm run build 
 
 #npm run --prefix /home/debian/GitHub/clientia start
-chmod +x /home/debian/GitHub/adminia/scripts/installNpmRunStart_VictorIAadmin.sh
+chmod +x /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAadmin.sh
 
-pm2 start /home/debian/GitHub/adminia/scripts/installNpmRunStart_VictorIAadmin.sh --name admin --daemon 
+pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAadmin.sh --name victorIAadmin --daemon 
 
 # nginx + ssl
 sudo apt update
 sudo apt install nginx -y
 
-sudo cp /home/debian/GitHub/adminia/scripts/admin.holaqueai.com /etc/nginx/sites-available/admin.holaqueai.com
+sudo cp /home/debian/GitHub/victorIAapi/scripts/admin.holaqueai.com /etc/nginx/sites-available/admin.holaqueai.com
 
 sudo ln -s /etc/nginx/sites-available/admin.holaqueai.com /etc/nginx/sites-enabled/admin.holaqueai.com
 
