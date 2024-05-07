@@ -52,7 +52,7 @@ export class UserController {
       return this.authService.generateToken(savedUser);
       
     } catch (error) {      
-      throw new HttpException(error, HttpStatus.CONFLICT); 
+      return new HttpException(error, HttpStatus.CONFLICT); 
     }
   }
 
@@ -68,14 +68,14 @@ export class UserController {
       const user = await this.userService.findOne(userId);    
       
       if (!user) {
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+        return new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
       }
 
       user.adminUser = adminUser;     
       const savedAdminUser = await this.userService.createAdminUser(userId, user);
       return this.authService.generateToken(savedAdminUser);
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
@@ -91,7 +91,7 @@ export class UserController {
       const user = await this.userService.findOne(userId);    
       
       if (!user) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        return new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
 
       user.clientUser = clientUser;
@@ -100,7 +100,7 @@ export class UserController {
       return this.authService.generateToken(savedClientUser);
     
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
@@ -117,7 +117,7 @@ export class UserController {
       const user = await this.userService.findOne(userId);    
       
       if (!user) {
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+        return new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
       }
       
       user.candidateUser = candidateUser;    
@@ -126,7 +126,7 @@ export class UserController {
       const savedCandidateUser = await this.userService.createCandidateUser(userId, user);
       return this.authService.generateToken(savedCandidateUser);
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
@@ -143,19 +143,22 @@ export class UserController {
       const user = await this.userService.findOne(userId);    
       
       if (!user) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-      }
+        return new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }      
 
       const jobOffer = new JobOffer();
-      jobOffer.name = newJobOffer.name;
-      jobOffer.description = newJobOffer.description;
+      jobOffer.name = newJobOffer.name;      
+      jobOffer.description = newJobOffer.description;      
       jobOffer.competenceIds = newJobOffer.competenceIds;
-      
-      user.clientUser.jobOffers?.push(jobOffer);
-    
+            
+      if (user?.clientUser) {        
+        user.clientUser.jobOffers?.push(jobOffer);
+      } else {        
+        return new HttpException('Usuario no es cliente para poder crear ofertas', HttpStatus.UNAUTHORIZED);   
+      }
       return this.userService.createCandidateUser(userId, user);
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
@@ -170,14 +173,14 @@ export class UserController {
       const user = await this.userService.findOne(userId);    
       
       if (!user) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        return new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
 
       const jobOfferToUpdate = new JobOffer();
             
       return this.userService.updateJobOffer(userId, jobOfferId, newJobOffer);
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
@@ -192,12 +195,12 @@ export class UserController {
       const user = await this.userService.findOne(userId);    
       
       if (!user) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        return new HttpException('User not found', HttpStatus.NOT_FOUND);
       }    
 
       return this.userService.deleteJobOffer(userId, jobOfferId);
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
@@ -217,7 +220,7 @@ export class UserController {
       };    
       return this.userService.update(userId, updatedUser);
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
@@ -229,7 +232,7 @@ export class UserController {
     try {
       return this.userService.findAll();
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
@@ -240,7 +243,7 @@ export class UserController {
     try {
       return this.userService.findOne(id);
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
@@ -251,7 +254,7 @@ export class UserController {
     try {
      return this.userService.delete(id);
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
   
@@ -271,7 +274,7 @@ export class UserController {
     //const cv = await this.cvsService.createCV(cvFile, createCVDto);
       return { message: 'CV creado exitosamente' };
     } catch (error) {      
-      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
 
