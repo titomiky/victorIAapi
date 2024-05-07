@@ -50,23 +50,23 @@ cd /home/debian/GitHub/victorIAmarcos
 npm run build 
 
 #npm run --prefix /home/debian/GitHub/clientia start
-chmod +x /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAadmin.sh
+chmod +x /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAmarcos.sh
 
-pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAadmin.sh --name victorIAadmin --daemon 
+pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAmarcos.sh --name victorIAweb --daemon 
 
 # nginx + ssl
 sudo apt update
 sudo apt install nginx -y
 
-sudo cp /home/debian/GitHub/victorIAapi/scripts/admin.holaqueai.com /etc/nginx/sites-available/admin.holaqueai.com
+sudo cp /home/debian/GitHub/victorIAapi/scripts/web.holaqueai.com /etc/nginx/sites-available/web.holaqueai.com
 
-sudo ln -s /etc/nginx/sites-available/admin.holaqueai.com /etc/nginx/sites-enabled/admin.holaqueai.com
+sudo ln -s /etc/nginx/sites-available/web.holaqueai.com /etc/nginx/sites-enabled/web.holaqueai.com
 
 # certbot
 sudo apt update
 sudo apt install certbot python3-certbot-nginx -y
 
-sudo certbot --nginx -d admin.holaqueai.com --email titomiky@gmail.com --agree-tos --no-eff-email --non-interactive
+sudo certbot --nginx -d web.holaqueai.com --email titomiky@gmail.com --agree-tos --no-eff-email --non-interactive
 
 sudo certbot renew --dry-run
 

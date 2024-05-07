@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name c.holaqueai.com;
+    server_name client.holaqueai.com;
 
     location / {
         proxy_pass http://localhost:3200; # Redirige al puerto donde corre tu app en PM2
