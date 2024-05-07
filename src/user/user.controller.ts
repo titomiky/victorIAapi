@@ -63,16 +63,20 @@ export class UserController {
   async createAdmin(    
     @Body(new ValidationPipe()) adminUser: adminUserDto, @Req() request: Request
   ) {
-    const userId = await this.authService.getUserIdFromToken(request);    
-    const user = await this.userService.findOne(userId);    
-    
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
+    try {
+      const userId = await this.authService.getUserIdFromToken(request);    
+      const user = await this.userService.findOne(userId);    
+      
+      if (!user) {
+        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+      }
 
-    user.adminUser = adminUser;     
-    const savedAdminUser = await this.userService.createAdminUser(userId, user);
-    return this.authService.generateToken(savedAdminUser);
+      user.adminUser = adminUser;     
+      const savedAdminUser = await this.userService.createAdminUser(userId, user);
+      return this.authService.generateToken(savedAdminUser);
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
   @Put('client')
@@ -82,17 +86,22 @@ export class UserController {
   async createClient(    
     @Body(new ValidationPipe()) clientUser: clientUserDto, @Req() request: Request
   ) {
-    const userId = await this.authService.getUserIdFromToken(request);    
-    const user = await this.userService.findOne(userId);    
-    
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
+    try {
+      const userId = await this.authService.getUserIdFromToken(request);    
+      const user = await this.userService.findOne(userId);    
+      
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
 
-    user.clientUser = clientUser;
-     
-    const savedClientUser = await this.userService.createClientUser(userId, user);
-    return this.authService.generateToken(savedClientUser);
+      user.clientUser = clientUser;
+        
+      const savedClientUser = await this.userService.createClientUser(userId, user);
+      return this.authService.generateToken(savedClientUser);
+    
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
 
@@ -103,18 +112,22 @@ export class UserController {
   async createCandidate(    
     @Body(new ValidationPipe()) candidateUser: candidateUserDto, @Req() request: Request
   ) {
-    const userId = await this.authService.getUserIdFromToken(request);    
-    const user = await this.userService.findOne(userId);    
-    
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-    
-    user.candidateUser = candidateUser;    
-    user.candidateUser.createdByUserId = userId;
+    try {
+      const userId = await this.authService.getUserIdFromToken(request);    
+      const user = await this.userService.findOne(userId);    
+      
+      if (!user) {
+        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+      }
+      
+      user.candidateUser = candidateUser;    
+      user.candidateUser.createdByUserId = userId;
 
-    const savedCandidateUser = await this.userService.createCandidateUser(userId, user);
-    return this.authService.generateToken(savedCandidateUser);
+      const savedCandidateUser = await this.userService.createCandidateUser(userId, user);
+      return this.authService.generateToken(savedCandidateUser);
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
 
@@ -125,21 +138,25 @@ export class UserController {
   async createJobOffer(    
     @Body(new ValidationPipe()) newJobOffer: JobOfferDto, @Req() request: Request
   ) {
-    const userId = await this.authService.getUserIdFromToken(request);    
-    const user = await this.userService.findOne(userId);    
-    
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
+    try {
+      const userId = await this.authService.getUserIdFromToken(request);    
+      const user = await this.userService.findOne(userId);    
+      
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
 
-    const jobOffer = new JobOffer();
-    jobOffer.name = newJobOffer.name;
-    jobOffer.description = newJobOffer.description;
-    jobOffer.competenceIds = newJobOffer.competenceIds;
+      const jobOffer = new JobOffer();
+      jobOffer.name = newJobOffer.name;
+      jobOffer.description = newJobOffer.description;
+      jobOffer.competenceIds = newJobOffer.competenceIds;
+      
+      user.clientUser.jobOffers?.push(jobOffer);
     
-    user.clientUser.jobOffers?.push(jobOffer);
-  
-    return this.userService.createCandidateUser(userId, user);
+      return this.userService.createCandidateUser(userId, user);
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
   @Put('jobOffer/:id')
@@ -148,16 +165,20 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Updated jobOffer user ok', type: UserResponseDto })
   async updateJobOffer(    
     @Body(new ValidationPipe()) newJobOffer: JobOfferDto, @Req() request: Request, @Param('id') jobOfferId: string) {
-    const userId = await this.authService.getUserIdFromToken(request);    
-    const user = await this.userService.findOne(userId);    
-    
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
+    try {
+      const userId = await this.authService.getUserIdFromToken(request);    
+      const user = await this.userService.findOne(userId);    
+      
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
 
-    const jobOfferToUpdate = new JobOffer();
-          
-    return this.userService.updateJobOffer(userId, jobOfferId, newJobOffer);
+      const jobOfferToUpdate = new JobOffer();
+            
+      return this.userService.updateJobOffer(userId, jobOfferId, newJobOffer);
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
   @Delete('jobOffer/:id')
@@ -166,14 +187,18 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Deleted jobOffer ok', type: UserResponseDto })
   async deleteJobOffer(  @Param('id') jobOfferId: string,  @Req() request: Request
   ) {
-    const userId = await this.authService.getUserIdFromToken(request);    
-    const user = await this.userService.findOne(userId);    
-    
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }    
+    try {
+      const userId = await this.authService.getUserIdFromToken(request);    
+      const user = await this.userService.findOne(userId);    
+      
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }    
 
-    return this.userService.deleteJobOffer(userId, jobOfferId);
+      return this.userService.deleteJobOffer(userId, jobOfferId);
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
   @Put('changePassword')
@@ -183,13 +208,17 @@ export class UserController {
   async update(    
     @Body(new ValidationPipe()) updateuser: UserPasswordDto, @Req() request: Request
   ) {
-    const userId = await this.authService.getUserIdFromToken(request);
-    const email = await this.authService.getEmailFromToken(request);
-    const updatedUser : UserDto = {
-      password: updateuser.password,
-      email: email
-    };    
-    return this.userService.update(userId, updatedUser);
+    try {
+      const userId = await this.authService.getUserIdFromToken(request);
+      const email = await this.authService.getEmailFromToken(request);
+      const updatedUser : UserDto = {
+        password: updateuser.password,
+        email: email
+      };    
+      return this.userService.update(userId, updatedUser);
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
   @Get('list')
@@ -197,21 +226,33 @@ export class UserController {
   @ApiOperation({ summary: 'List users', description: 'List all users' })
   @ApiResponse({ status: 200, description: 'Returned users ok', type: UserResponseDto })
   async findAll() {
-    return this.userService.findAll();
+    try {
+      return this.userService.findAll();
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
   @Get(':id')
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'Returned user ok', type: UserResponseDto })
   async findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+    try {
+      return this.userService.findOne(id);
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
   @Delete(':id')
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'Deleted user ok', type: UserResponseDto })
   async delete(@Param('id') id: string) {    
-    return this.userService.delete(id);
+    try {
+     return this.userService.delete(id);
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
   
   @ApiConsumes('multipart/form-data', 'application/json')  
@@ -225,9 +266,13 @@ export class UserController {
     @Body() userId: string, 
     @Req() req: any, @Res() res: Response
   ) {
+    try {
     
     //const cv = await this.cvsService.createCV(cvFile, createCVDto);
-    return { message: 'CV creado exitosamente' };
+      return { message: 'CV creado exitosamente' };
+    } catch (error) {      
+      throw new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
   }
 
 

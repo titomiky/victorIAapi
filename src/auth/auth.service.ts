@@ -16,7 +16,7 @@ export class AuthService {
     try {      
       const foundUser = await this.userService.findByEmail(email);          
       if (!foundUser) {
-        return null;
+        throw new HttpException('Usuario no existe', HttpStatus.NOT_FOUND);
       }
       
       const isMatch = await bcrypt.compare(password, foundUser.password);
@@ -24,10 +24,10 @@ export class AuthService {
         const token = await this.generateToken(foundUser);
         return token;
       } else {
-        throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
+        throw new HttpException('Credenciales inválidas', HttpStatus.BAD_REQUEST);
       }
     } catch (exception) {
-      throw exception;
+      throw new HttpException('Error en el servicio', HttpStatus.SERVICE_UNAVAILABLE);
     }
   }
   
