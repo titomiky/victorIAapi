@@ -48,165 +48,106 @@ export class ReportController {
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Competencias de todos los candidatos apuntados a una oferta', description: 'Devuelve el valor de las competencias de TODOS los candidatos de una oferta del CLIENTE conectado' })
   getReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): { [key: string]: any } {    
+    const competences1 = 
+    [
+      { name: "competence1", value: 10 },
+      { name: "competence2", value: 20 },
+      { name: "competence3", value: 9 },
+      { name: "competence4", value: 51 },
+      { name: "competence5", value: 15 },
+      { name: "competence6", value: 26 },
+      { name: "competence7", value: 90 },
+      { name: "competence8", value: 34 },
+      { name: "competence9", value: 15 },
+    ];
+
+    const competences2 = 
+    [
+      { name: "competence1", value: 71 },
+      { name: "competence2", value: 22 },
+      { name: "competence3", value: 20 },
+      { name: "competence4", value: 67 },
+      { name: "competence5", value: 70 },
+      { name: "competence6", value: 20 },
+      { name: "competence7", value: 62 },
+      { name: "competence8", value: 9 },
+      { name: "competence9", value: 35 },
+    ];
+
+    const competences3 = 
+    [
+      { name: "competence1", value: 87 },
+      { name: "competence2", value: 42 },
+      { name: "competence3", value: 21 },
+      { name: "competence4", value: 6 },
+      { name: "competence5", value: 0 },
+      { name: "competence6", value: 10 },
+      { name: "competence7", value: 42 },
+      { name: "competence8", value: 91 },
+      { name: "competence9", value: 30 },
+    ];
+
+
     return [
       {
         name: 'Juan',
         surname: 'Perez',
         email: 'a@e.s',
         phoneNumber: '123123123',
-        competences: {
-          competencia1: 71,
-          competencia2: 22,
-          competencia3: 20,
-          competencia4: 67,
-          competencia5: 20,
-          competencia6: 70,
-          competencia7: 20,
-          competencia8: 62,
-          competencia9: 9,
-          competencia10: 35
-        },
+        competences: competences1,
       },
       {
         name: 'Manu',
         surname: 'Ruiz',
         email: 'abasd@ese.s',
         phoneNumber: '123123123',
-        competences: {
-          competencia1: 71,
-          competencia2: 22,
-          competencia3: 20,
-          competencia4: 67,
-          competencia5: 20,
-          competencia6: 70,
-          competencia7: 20,
-          competencia8: 62,
-          competencia9: 9,
-          competencia10: 35
-        },
+        competences: competences2,
       }, {
         name: 'Angel',
         surname: 'Rodriguez',
         email: 'best@es.be',
         phoneNumber: '123123123',
-        competences: {
-          competencia1: 87,
-          competencia2: 42,
-          competencia3: 68,
-          competencia4: 53,
-          competencia5: 63,
-          competencia6: 69,
-          competencia7: 60,
-          competencia8: 1,
-          competencia9: 35,
-          competencia10: 90
-        },
+        competences: competences3,
       },{
         name: 'Luis',
         surname: 'Rodriguez',
         email: 'best@es.be',
         phoneNumber: '123123123',
-        competences: {
-          competencia1: 48,
-          competencia2: 19,
-          competencia3: 9,
-          competencia4: 23,
-          competencia5: 38,
-          competencia6: 65,
-          competencia7: 37,
-          competencia8: 27,
-          competencia9: 26,
-          competencia10: 26
-        },
+        competences: competences2,
       },{
         name: "User834",
         surname: "LastName123",
         email: "user834.lastname123@example.com",
         phoneNumber: "358745883",
-        competences: {
-          competencia1: 48,
-          competencia2: 19,
-          competencia3: 9,
-          competencia4: 23,
-          competencia5: 38,
-          competencia6: 65,
-          competencia7: 37,
-          competencia8: 27,
-          competencia9: 26,
-          competencia10: 26
-        }
+        competences: competences3
       },
       {
         name: "User854",
         surname: "LastName705",
         email: "user854.lastname705@example.com",
         phoneNumber: "131417220",
-        competences: {
-          competencia1: 25,
-          competencia2: 35,
-          competencia3: 47,
-          competencia4: 63,
-          competencia5: 48,
-          competencia6: 86,
-          competencia7: 52,
-          competencia8: 53,
-          competencia9: 34,
-          competencia10: 79
-        }
+        competences: competences2
       },
       {
         name: "User809",
         surname: "LastName487",
         email: "user809.lastname487@example.com",
         phoneNumber: "141061041",
-        competences: {
-          competencia1: 87,
-          competencia2: 42,
-          competencia3: 68,
-          competencia4: 53,
-          competencia5: 63,
-          competencia6: 69,
-          competencia7: 60,
-          competencia8: 1,
-          competencia9: 35,
-          competencia10: 90
-        }
+        competences: competences1
       },
       {
         name: "User3",
         surname: "LastName984",
         email: "user3.lastname984@example.com",
         phoneNumber: "789423236",
-        competences: {
-          competencia1: 33,
-          competencia2: 53,
-          competencia3: 59,
-          competencia4: 27,
-          competencia5: 12,
-          competencia6: 26,
-          competencia7: 38,
-          competencia8: 20,
-          competencia9: 29,
-          competencia10: 41
-        }
+        competences: competences2
       },
       {
         name: "User782",
         surname: "LastName859",
         email: "user782.lastname859@example.com",
         phoneNumber: "513753937",
-        competences: {
-          competencia1: 71,
-          competencia2: 22,
-          competencia3: 20,
-          competencia4: 67,
-          competencia5: 20,
-          competencia6: 70,
-          competencia7: 20,
-          competencia8: 62,
-          competencia9: 9,
-          competencia10: 35
-        }
+        competences: competences1
       }
     ]
   }
@@ -215,76 +156,70 @@ export class ReportController {
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Estadísticas de uso de la plataforma de los clientes de un año', description: 'Devuelve las estadísticas del uso de la plataforma por los clientes en un año (usado por el ADMIN)' })
   getClientActivity(@Param('year') year: string,  @Req() request: Request): { [key: string]: any } {    
+    const statistics1 = 
+    [
+      { name: "numberOfJobOffers", value: 10 },
+      { name: "month", value: 20 },
+      { name: "numberOfSessions", value: 9 },
+      { name: "numberOfCandidates", value: 51 },
+    ];
+
+    const statistics2 = 
+    [
+      { name: "numberOfJobOffers", value: 2 },
+      { name: "month", value: 4 },
+      { name: "numberOfSessions", value: 8 },
+      { name: "numberOfCandidates", value: 10 },
+    ];
+
+    const statistics3 = 
+    [
+      { name: "numberOfJobOffers", value: 5 },
+      { name: "month", value: 4 },
+      { name: "numberOfSessions", value: 18 },
+      { name: "numberOfCandidates", value: 50 },
+    ];
+
     return [
       {
-      companyName: "Company 5",
-      numberOfJobOffers: 2,
-      month: 4,
-      numberOfSessions: 8,
-      numberOfCandidates: 10
+      companyName: "Company 5",      
+      statistics: statistics1      
       },
       {
       companyName: "Company 8",
-      numberOfJobOffers: 7,
-      month: 4,
-      numberOfSessions: 7,
-      numberOfCandidates: 87
+      statistics: statistics2      
       },
       {
       companyName: "Company 10",
-      numberOfJobOffers: 9,
-      month: 7,
-      numberOfSessions: 8,
-      numberOfCandidates: 43
+      statistics: statistics3      
       },
       {
       companyName: "Company 4",
-      numberOfJobOffers: 9,
-      month: 8,
-      numberOfSessions: 9,
-      numberOfCandidates: 84
+      statistics: statistics3
       },
       {
       companyName: "Company 10",
-      numberOfJobOffers: 8,
-      month: 8,
-      numberOfSessions: 9,
-      numberOfCandidates: 11
+      statistics: statistics2
       },
       {
       companyName: "Company 5",
-      numberOfJobOffers: 3,
-      month: 12,
-      numberOfSessions: 3,
-      numberOfCandidates: 79
+      statistics: statistics1
       },
       {
       companyName: "Company 6",
-      numberOfJobOffers: 1,
-      month: 3,
-      numberOfSessions: 10,
-      numberOfCandidates: 70
+      statistics: statistics1
       },
       {
       companyName: "Company 7",
-      numberOfJobOffers: 6,
-      month: 12,
-      numberOfSessions: 4,
-      numberOfCandidates: 84
+      statistics: statistics2
       },
       {
       companyName: "Company 8",
-      numberOfJobOffers: 3,
-      month: 12,
-      numberOfSessions: 9,
-      numberOfCandidates: 53
+      statistics: statistics1
       },
       {
       companyName: "Company 6",
-      numberOfJobOffers: 3,
-      month: 3,
-      numberOfSessions: 3,
-      numberOfCandidates: 81
+      statistics: statistics1
       }
     ]    
    }
