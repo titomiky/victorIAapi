@@ -111,9 +111,7 @@ export class UserService {
       email: candidate.email      
     }));
 
-
-    return candidateList;
-    //return await this.userModel.find().select('-password').exec();
+    return candidateList;    
   }
 
   async findOne(id: string) {
