@@ -96,6 +96,26 @@ export class UserService {
     return await this.userModel.find().select('-password').exec();
   }
 
+  async findAllCandidates() {
+
+    const projection = { "candidateUser._id": 1, "candidateUser.name": 1, "candidateUser.surname": 1, "email": 1 };
+
+    // Find candidates with a candidateUser field
+    const candidates = await this.userModel.find({ candidateUser: { $exists: true } }, projection);
+
+    // Extract relevant data from candidates
+    const candidateList = candidates.map(candidate => ({
+      candidateUserId: candidate._id,
+      name: candidate.candidateUser.name,
+      surname: candidate.candidateUser.surname,
+      email: candidate.email      
+    }));
+
+
+    return candidateList;
+    //return await this.userModel.find().select('-password').exec();
+  }
+
   async findOne(id: string) {
     return await this.userModel.findById(id).select('-password').exec();
   }

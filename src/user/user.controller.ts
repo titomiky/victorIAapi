@@ -237,6 +237,20 @@ export class UserController {
     }
   }
 
+  @Get('candidates')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List candidates', description: 'List all candidates' })
+  @ApiResponse({ status: 200, description: 'Returned candidates ok', type: User })
+  async findAllCandidates() {
+    try {
+      return this.userService.findAllCandidates();
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
+
+
   @Get(':id')
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'Returned user ok', type: UserResponseDto })
