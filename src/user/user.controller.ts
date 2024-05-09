@@ -32,6 +32,7 @@ import { JobOffer } from './schemas/jobOffer.schema';
 import { JobOfferDto } from './dtos/jobOffer.dto';
 import * as ejs from 'ejs'; 
 import * as nodemailer from 'nodemailer';
+import { User, UserSchema } from './schemas/user.schema';
 
 @Controller('users')
 @ApiTags('users')
@@ -227,7 +228,7 @@ export class UserController {
   @Get('list')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'List users', description: 'List all users' })
-  @ApiResponse({ status: 200, description: 'Returned users ok', type: UserResponseDto })
+  @ApiResponse({ status: 200, description: 'Returned users ok', type: User })
   async findAll() {
     try {
       return this.userService.findAll();

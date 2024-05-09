@@ -10,10 +10,10 @@ export class JobOffer {
   description: string;
 
   @Prop({ type: mongo.ObjectId, required: true })
-  competenceIds:  [mongo.ObjectId];
+  competenceIds:  [String];
     //ref: Competence,    
   @Prop([{ type: mongo.ObjectId }])
-  candidateIds?: [mongo.ObjectId];
+  candidateIds?: [String];
 }
 
 export const JobOfferSchema = SchemaFactory.createForClass(JobOffer);

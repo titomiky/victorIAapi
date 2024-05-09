@@ -16,10 +16,10 @@ export class JobOfferDto {
   @MaxLength(3000)
   description: string;
   
-  @ApiProperty({ type: [mongo.ObjectId]})
-  competenceIds: [mongo.ObjectId];
+  @ApiProperty({ type: [String]})
+  competenceIds: [string];
 
-  @ApiProperty({ type: [mongo.ObjectId]})
-  candidateIds?: [mongo.ObjectId];
+  @ApiProperty({ type: [String]})
+  candidateIds?: [String];
 }
 

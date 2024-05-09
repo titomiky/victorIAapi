@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Req } from '@nestjs/common';
+import { Controller, Get, Param, Req, Res } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation, ApiConsumes, ApiBody, ApiOkResponse } from '@nestjs/swagger';
 import { Public } from 'src/auth/auth.controller';
@@ -11,31 +11,37 @@ export class ReportController {
   @Get('competences/:jobOfferId')
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Competencias del candidato conectado', description: 'Devuelve el valor de las competencias del candidato conectado' })
-  getCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): { [key: string]: number } {    
-    return {
-      competence1: 10,
-      competence2: 20,
-      competence3: 9,
-      competence4: 51,
-      competence5: 15,
-      competence6: 26,
-      competence7: 90,      
-    };
+  getCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): any  {    
+    console.log('kk');
+    const competences = 
+    [
+      { name: "competence1", value: 10 },
+      { name: "competence2", value: 20 },
+      { name: "competence3", value: 9 },
+      { name: "competence4", value: 51 },
+      { name: "competence5", value: 15 },
+      { name: "competence6", value: 26 },
+      { name: "competence7", value: 90 },
+    ];
+    return competences;
   }
 
   @Get('candidates/:jobOfferId/:candidateId')
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Competencias del candidato de una oferta', description: 'Devuelve el valor de las competencias del candidato de una oferta del CLIENTE conectado' })
-  getClientCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string, @Param('candidateId') candidateId: string, @Req() request: Request): { [key: string]: number } {    
-    return {
-      competence1: 10,
-      competence2: 20,
-      competence3: 9,
-      competence4: 51,
-      competence5: 15,
-      competence6: 26,
-      competence7: 90,      
-    };
+  getClientCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string, @Param('candidateId') candidateId: string, @Req() request: Request): any {    
+    
+    const competences = 
+    [
+      { name: "competence1", value: 10 },
+      { name: "competence2", value: 20 },
+      { name: "competence3", value: 9 },
+      { name: "competence4", value: 51 },
+      { name: "competence5", value: 15 },
+      { name: "competence6", value: 26 },
+      { name: "competence7", value: 90 },
+    ];
+    return competences;
   }
 
   @Get('jobOffers/:jobOfferId')  
