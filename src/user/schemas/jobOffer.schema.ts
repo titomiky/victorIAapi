@@ -3,6 +3,10 @@ import { mongo } from 'mongoose';
 
 @Schema()
 export class JobOffer {
+  
+  @Prop({ type: mongo.ObjectId })
+  _id: [String];
+
   @Prop({ required: true})
   name: string;
 
@@ -14,6 +18,7 @@ export class JobOffer {
     //ref: Competence,    
   @Prop([{ type: mongo.ObjectId }])
   candidateIds?: [String];
+
 }
 
 export const JobOfferSchema = SchemaFactory.createForClass(JobOffer);

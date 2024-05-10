@@ -170,15 +170,15 @@ export class UserController {
   async updateJobOffer(    
     @Body(new ValidationPipe()) newJobOffer: JobOfferDto, @Req() request: Request, @Param('id') jobOfferId: string) {
     try {
+      console.log(jobOfferId);
       const userId = await this.authService.getUserIdFromToken(request);    
       const user = await this.userService.findOne(userId);    
       
       if (!user) {
         return new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
-
-      const jobOfferToUpdate = new JobOffer();
             
+      console.log(newJobOffer);
       return this.userService.updateJobOffer(userId, jobOfferId, newJobOffer);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
@@ -249,7 +249,44 @@ export class UserController {
     }
   }
 
+  @Get('jobOffers')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List jobOffers', description: 'List all jobOffers' })
+  @ApiResponse({ status: 200, description: 'Returned jobOffers ok', type: User })
+  async findAllJobOffers() {
+    try {      
+      return this.userService.findAllJobOffers();
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+  
 
+  @Get('jobOffersByClient/:clientId')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List jobOffers', description: 'List all jobOffers' })
+  @ApiResponse({ status: 200, description: 'Returned jobOffers ok', type: User })
+  async findAllJobOffersByClientId(@Param('clientId') clientId: string) {
+    try {
+      return this.userService.findAllJobOffersByClientId(clientId);
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
+
+  @Get('jobOffersByCandidate/:candidateId')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'List jobOffers', description: 'List all jobOffers' })
+  @ApiResponse({ status: 200, description: 'Returned jobOffers ok', type: User })
+  async findAllJobOffersByCandidateId(@Param('candidateId') candidateId: string) {
+    try {
+      console.log('findAllJobOffers')
+      return this.userService.findAllJobOffersByCandidateId(candidateId);
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
 
   @Get(':id')
   @ApiBearerAuth()

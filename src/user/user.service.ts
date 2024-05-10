@@ -8,6 +8,7 @@ import { UserDto } from './dtos/user.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { JobOfferDto } from './dtos/jobOffer.dto';
+import { JobOffer } from './schemas/jobOffer.schema';
 
 @Injectable()
 export class UserService {
@@ -74,6 +75,9 @@ export class UserService {
   }
 
   async updateJobOffer (userId: string, jobOfferId: string, jobOffer: JobOfferDto) {
+
+    //TODO: pending
+    
     return await this.userModel.updateOne (
       {
         "clientUser._id": new ObjectId(userId),
@@ -113,6 +117,79 @@ export class UserService {
 
     return candidateList;    
   }
+
+
+  async findAllJobOffers() {
+
+  
+    const users = await this.userModel.find({ 'clientUser': { $exists: true } });
+
+    const jobOffers = [];
+    for (const user of users) {
+      for (const jobOffer of user.clientUser.jobOffers) {
+        jobOffers.push({
+          jobOfferId: jobOffer._id,
+          name: jobOffer.name,
+          description: jobOffer.description,
+          numberOfCandidates: jobOffer.candidateIds.length,
+        });
+      }
+    }
+
+    return jobOffers;
+  }
+
+
+  async findAllJobOffersByClientId(clientUserId: string) {
+    console.log(clientUserId)
+    const user = await this.userModel.findOne({ 'clientUser._id': clientUserId });
+
+    if (!user) {
+      console.log('no user');
+      //res.status(404).send('Client user not found');
+      return null;
+    }
+    console.log(user);
+    
+    const jobOffers = [];
+    for (const jobOffer of user.clientUser.jobOffers) {
+      jobOffers.push({
+        _id: jobOffer._id,
+        name: jobOffer.name,
+        description: jobOffer.description,
+        numCandidates: jobOffer.candidateIds.length,
+      });
+    }
+
+    return jobOffers;
+
+  }
+
+  async findAllJobOffersByCandidateId(candidateId: string) {
+    const users = await this.userModel.find({
+      'clientUser.jobOffers.candidateIds': { $in: [candidateId] },
+    });
+
+    // Extract and format JobOffers data
+    const jobOffers = [];
+    for (const user of users) {
+      for (const jobOffer of user.clientUser.jobOffers) {
+        if (jobOffer.candidateIds.includes(candidateId)) {
+          jobOffers.push({
+            _id: jobOffer._id,
+            name: jobOffer.name,
+            description: jobOffer.description,
+            numCandidates: jobOffer.candidateIds.length,
+            clientUser: user.clientUser.name, // Add clientUser name
+          });
+        }
+      }
+    }
+
+    return jobOffers
+
+  }   
+
 
   async findOne(id: string) {
     return await this.userModel.findById(id).select('-password').exec();
