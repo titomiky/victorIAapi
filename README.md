@@ -11,3 +11,7 @@ sudo chmod +x installVictorIAapi.sh
 
 # Eliminar el script creado
 rm -rf installVictorIAapi.sh
+
+
+##### local environment
+source ~/.nvm/nvm.sh

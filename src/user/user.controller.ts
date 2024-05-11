@@ -134,7 +134,7 @@ export class UserController {
 
   @Post('jobOffer')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create/update job offer', description: 'Create/update a job offer. Send the complete array of competencies to update/delete competencies to the job offer' })
+  @ApiOperation({ summary: 'Create/update job offer', description: 'Create a job offer. Send the complete array of competencies to update/delete competencies to the job offer' })
   @ApiResponse({ status: 200, description: 'Created jobOffer user ok', type: UserResponseDto })
   async createJobOffer(    
     @Body(new ValidationPipe()) newJobOffer: JobOfferDto, @Req() request: Request
@@ -169,16 +169,14 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Updated jobOffer user ok', type: UserResponseDto })
   async updateJobOffer(    
     @Body(new ValidationPipe()) newJobOffer: JobOfferDto, @Req() request: Request, @Param('id') jobOfferId: string) {
-    try {
-      console.log(jobOfferId);
+    try {      
       const userId = await this.authService.getUserIdFromToken(request);    
       const user = await this.userService.findOne(userId);    
       
       if (!user) {
         return new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
-            
-      console.log(newJobOffer);
+                  
       return this.userService.updateJobOffer(userId, jobOfferId, newJobOffer);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
@@ -281,7 +279,6 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Returned jobOffers ok', type: User })
   async findAllJobOffersByCandidateId(@Param('candidateId') candidateId: string) {
     try {
-      console.log('findAllJobOffers')
       return this.userService.findAllJobOffersByCandidateId(candidateId);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
@@ -367,8 +364,7 @@ export class UserController {
         email: email,
         verificationLink: verificationLink,
       };
-      const html = await ejs.renderFile(templatePath, templateData)
-      console.log(html);
+      const html = await ejs.renderFile(templatePath, templateData)      
 
       // Define email options
       const message = {
@@ -382,8 +378,7 @@ export class UserController {
       // Send the email
       try {
         const transport = await nodemailer.createTransport(config);
-        const info = await transport.sendMail(message);
-        console.log('Verification email sent successfully.');
+        const info = await transport.sendMail(message);        
         return 'Verification email sent successfully.';
       } catch (error) {
         console.error('Error sending verification email:', error);
