@@ -81,7 +81,7 @@ export class UserService {
 
     // Si no se encuentra el cliente, lanzar un error
     if (!cliente) {
-      console.log('cliente found');
+      console.log('cliente not found');
       throw new Error('Cliente no encontrado');
     }
             
@@ -202,9 +202,45 @@ export class UserService {
     }
 
     return jobOffers
-
   }   
 
+  async findAllCandidatesByJobOfferId(jobOfferId: string) {        
+    const users = await this.userModel.find();  //TODO: improve query, try to find the jobOffer with a mongo query...
+
+    let candidateIds = [];
+    for (const user of users) {
+      if (user.clientUser?.jobOffers) {
+        for (let i = 0; i < user.clientUser.jobOffers?.length; i++) {
+          const item = user.clientUser.jobOffers[i];
+          console.log(`${item._id} - ` + jobOfferId);
+
+          if (`${item._id}` === jobOfferId) {
+            candidateIds = user.clientUser.jobOffers[i].candidateIds;
+            break;
+          }    
+        }
+      }
+    }
+
+    console.log()
+    const candidates = await this.userModel.find({
+      'clientUser.jobOffers.candidateIds': { $in: candidateIds },
+    });
+
+    // Extract relevant data from candidates
+    const candidateList = candidates.map(candidate => ({
+      candidateUserId: candidate._id,
+      name: candidate.candidateUser.name,
+      surname: candidate.candidateUser.surname,
+      email: candidate.email,
+      phoneNumber: candidate.candidateUser.phoneNumber
+    }));
+
+    return candidateList;    
+
+
+    return candidates;
+  } 
 
   async findOne(id: string) {
     return await this.userModel.findById(id).select('-password').exec();

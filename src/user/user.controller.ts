@@ -275,11 +275,25 @@ export class UserController {
 
   @Get('jobOffersByCandidate/:candidateId')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'List jobOffers', description: 'List all jobOffers' })
+  @ApiOperation({ summary: 'Lista las ofertas a las que se asignado un candidato', description: 'Lista las ofertas asignadas a un candidato' })
   @ApiResponse({ status: 200, description: 'Returned jobOffers ok', type: User })
   async findAllJobOffersByCandidateId(@Param('candidateId') candidateId: string) {
     try {
       return this.userService.findAllJobOffersByCandidateId(candidateId);
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
+  @Get('candidatesByJobOffer/:jobOfferId')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Lista de los candidatos de una oferta', description: 'Lista de los candidatos de una oferta' })
+  @ApiResponse({ status: 200, description: 'Returned candidates ok', type: User })
+  async findAllCandidatesByJobOfferId(@Param('jobOfferId') jobOfferId: string, @Req() request: Request) {
+    try {
+      const userId = await this.authService.getUserIdFromToken(request);  
+      return this.userService.findAllCandidatesByJobOfferId(jobOfferId);
+
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
