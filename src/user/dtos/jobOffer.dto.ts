@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, MaxLength, MinLength} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { mongo } from 'mongoose';
+import { ObjectId, mongo } from 'mongoose';
 
 export class JobOfferDto {
   @IsNotEmpty()
@@ -17,9 +17,10 @@ export class JobOfferDto {
   description: string;
   
   @ApiProperty({ type: [String]})
-  competenceIds: [string];
+  competenceIds?: [string];
 
   @ApiProperty({ type: [String]})
-  candidateIds?: [String];
+  candidateIds?: [String];  
+
 }
 

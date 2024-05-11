@@ -1,11 +1,11 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { mongo } from 'mongoose';
+import { ObjectId, mongo } from 'mongoose';
 
 @Schema()
 export class JobOffer {
   
   @Prop({ type: mongo.ObjectId })
-  _id: [String];
+  _id: ObjectId;
 
   @Prop({ required: true})
   name: string;
@@ -13,8 +13,8 @@ export class JobOffer {
   @Prop({ required: false })
   description: string;
 
-  @Prop({ type: mongo.ObjectId, required: true })
-  competenceIds:  [String];
+  @Prop({ type: mongo.ObjectId, required: false })
+  competenceIds?:  [String];
     //ref: Competence,    
   @Prop([{ type: mongo.ObjectId }])
   candidateIds?: [String];

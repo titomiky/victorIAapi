@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { ObjectId} from 'mongodb';
 
 import { User } from './schemas/user.schema';
@@ -77,23 +77,38 @@ export class UserService {
   async updateJobOffer (userId: string, jobOfferId: string, jobOffer: JobOfferDto) {
 
     //TODO: pending
-    
-    return await this.userModel.updateOne (
-      {
-        "clientUser._id": new ObjectId(userId),
-        "clientUser.jobOffers._id": new ObjectId(jobOfferId)
-      },
-      {
-        $set: {
-          "clientUser.jobOffers.$": {
-            //"_id": jobOffer,
-            "name": jobOffer.name,
-            "description": jobOffer.description,
-            "candidateIds": jobOffer.candidateIds,            
-          }
-        }
-      }
-    );
+    const cliente = await this.userModel.findById(userId);
+
+    // Si no se encuentra el cliente, lanzar un error
+    if (!cliente) {
+      console.log('cliente found');
+      throw new Error('Cliente no encontrado');
+    }
+            
+    console.log(cliente.clientUser.jobOffers.length);
+    let jobOfferIndex = -1;
+    for (let i = 0; i < cliente.clientUser.jobOffers.length; i++) {
+      const item = cliente.clientUser.jobOffers[i];
+      console.log(`${item._id} - ` + jobOfferId);
+
+      if (`${item._id}` === jobOfferId)
+        jobOfferIndex = i;
+    }
+        
+    console.log('jobOFferIndex: ' + jobOfferIndex);
+   // Si no se encuentra la jobOffer, lanzar un error
+   if (jobOfferIndex === -1) {
+      console.log('job offer not found');
+      //throw new Error('Oferta de trabajo no encontrada');
+    }
+      // Actualizar la jobOffer en el array de jobOffers del cliente
+      cliente.clientUser.jobOffers[jobOfferIndex].name  = jobOffer.name;
+      cliente.clientUser.jobOffers[jobOfferIndex].description  = jobOffer.description;
+      cliente.clientUser.jobOffers[jobOfferIndex].competenceIds  = jobOffer.competenceIds;
+      cliente.clientUser.jobOffers[jobOfferIndex].candidateIds  = jobOffer.candidateIds;
+
+      // Guardar los cambios en la base de datos
+      return await cliente.save();  
   }
 
   async findAll() {
