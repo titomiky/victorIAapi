@@ -249,7 +249,7 @@ export class UserController {
 
   @Get('jobOffers')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'List jobOffers', description: 'List all jobOffers' })
+  @ApiOperation({ summary: 'Lista de todas las oferta de trabajo', description: 'Lista de todas las ofertas de todos los clientes, de todo el sistema' })
   @ApiResponse({ status: 200, description: 'Returned jobOffers ok', type: User })
   async findAllJobOffers() {
     try {      
@@ -262,7 +262,7 @@ export class UserController {
 
   @Get('jobOffersByClient/:clientId')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'List jobOffers', description: 'List all jobOffers' })
+  @ApiOperation({ summary: 'Lista de las ofertas de trabajo de un CLIENTE', description: 'Lista las ofertas de trabajo publicadas por un cliente' })
   @ApiResponse({ status: 200, description: 'Returned jobOffers ok', type: User })
   async findAllJobOffersByClientId(@Param('clientId') clientId: string) {
     try {
