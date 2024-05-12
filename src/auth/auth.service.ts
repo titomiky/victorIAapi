@@ -37,11 +37,25 @@ export class AuthService {
     let  onboarding = (user.clientUser && typeof user.clientUser === 'object') || (user.adminUser && typeof user.adminUser === 'object') || (user.candidateUser && typeof user.candidateUser === 'object');
     if (onboarding === undefined) onboarding = true;
     else onboarding = false;
-    
+        
+    let adminId = undefined;
+    let candidateId = undefined;    
+    let clientId = undefined;
     let role = '';
-    if (user.adminUser && typeof user.adminUser === 'object')  role = 'admin';    
-    if (user.clientUser && typeof user.clientUser === 'object') role = 'client';
-    if (user.candidateUser && typeof user.candidateUser === 'object') role = 'candidate';    
+    if (user.adminUser && typeof user.adminUser === 'object')  {
+      role = 'admin';    
+      adminId = user.adminUser._id;      
+    }
+
+    if (user.clientUser && typeof user.clientUser === 'object') {
+      role = 'client';
+      clientId = user.clientUser._id;
+    }
+
+    if (user.candidateUser && typeof user.candidateUser === 'object') {
+      role = 'candidate';    
+      candidateId = user.candidateUser._id;
+    }
     
     const payload = {
       name: this.getName(user),
@@ -50,7 +64,15 @@ export class AuthService {
       userId: user._id,
       onBoarding: onboarding,
       role: role,
+      clientId: clientId,
+      adminId: adminId,
+      candidateId: candidateId
     };
+
+    if (!payload.adminId) delete payload.adminId;
+    if (!payload.clientId) delete payload.clientId;
+    if (!payload.candidateId) delete payload.candidateId;
+
     const token = await this.jwtService.signAsync(payload);
     return token;    
   }
