@@ -18,4 +18,6 @@ export class adminUserDto {
   @IsOptional()
   phoneNumber: string;
 
+  createdAt?: Date;
+  updatedAt?: Date;
 }

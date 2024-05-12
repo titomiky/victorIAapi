@@ -19,6 +19,28 @@ export class JobOffer {
   @Prop([{ type: mongo.ObjectId }])
   candidateIds?: [String];
 
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  updatedAt: Date;
+
 }
 
 export const JobOfferSchema = SchemaFactory.createForClass(JobOffer);
+
+JobOfferSchema.pre<JobOffer>('save', function(next) {
+
+  if (!this.createdAt) {
+    this.createdAt = new Date();;
+  }
+  this.updatedAt = new Date();;
+  next();
+});
+
+JobOfferSchema.pre<JobOffer>('findOneAndUpdate', function (next) {
+  console.log('findOneAndUpdate');  
+  this.updatedAt = new Date();
+  
+  next();
+});

@@ -71,8 +71,8 @@ export class UserController {
       if (!user) {
         return new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
       }
-
-      user.adminUser = adminUser;     
+ 
+      user.adminUser.updatedAt = new Date();
       const savedAdminUser = await this.userService.createAdminUser(userId, user);
       return this.authService.generateToken(savedAdminUser);
     } catch (error) {      

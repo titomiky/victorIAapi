@@ -43,5 +43,8 @@ export class clientUserDto {
   @ApiProperty()
   @IsOptional()
   companyNIF?: string;
+  
+  createdAt?: Date;
+  updatedAt?: Date;
 
 }

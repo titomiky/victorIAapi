@@ -26,49 +26,49 @@ export class UserService {
     return result;
   }
 
-
-
-  async update(id: string, user: UserDto) {
-    user.password = await bcrypt.hash(user.password, 10);
+  async update(userId: string, user: UserDto) {
+    const now = new Date();
+    user.password = await bcrypt.hash(user.password, 10);    
+    user.updatedAt = now;
 
     return await this.userModel
-      .findByIdAndUpdate(id, user, {
-        new: true,
-      }).select('-password')
+    .findOneAndUpdate({ _id: userId }, user, {
+      new: true,
+    }).select('-password')
       .exec();
   }
 
-  async validateEmail(id: string) {    
+  async validateEmail(userId: string) {    
     
     return await this.userModel
-      .findByIdAndUpdate(id, { emailValidatedDate: Date.now() }, {
+      .findOneAndUpdate({ _id: userId }, { emailValidatedDate: Date.now(), updatedAt: Date.now() }, {
         new: false,
       }).select('-password')
       .exec();
   }
 
-  async createAdminUser(id: string, user: UserDto) {
+  async createAdminUser(userId: string, user: UserDto) {
     
     return await this.userModel
-      .findByIdAndUpdate(id, user, {
+      .findOneAndUpdate({ _id: userId }, user, {
+        new: true,
+      }).select('-password')
+      .exec();      
+  }
+
+  async createClientUser(userId: string, user: UserDto) {
+    
+    return await this.userModel
+      .findOneAndUpdate({ _id: userId }, user, {
         new: true,
       }).select('-password')
       .exec();
   }
 
-  async createClientUser(id: string, user: UserDto) {
+  async createCandidateUser(userId: string, user: UserDto) {    
     
     return await this.userModel
-      .findByIdAndUpdate(id, user, {
-        new: true,
-      }).select('-password')
-      .exec();
-  }
-
-  async createCandidateUser(id: string, user: UserDto) {    
-    
-    return await this.userModel
-      .findByIdAndUpdate(id, user, {
+      .findOneAndUpdate({ _id: userId }, user, {
         new: true,
       }).select('-password')
       .exec();
@@ -84,8 +84,7 @@ export class UserService {
       console.log('cliente not found');
       throw new Error('Cliente no encontrado');
     }
-            
-    console.log(cliente.clientUser.jobOffers.length);
+                
     let jobOfferIndex = -1;
     for (let i = 0; i < cliente.clientUser.jobOffers.length; i++) {
       const item = cliente.clientUser.jobOffers[i];
@@ -106,6 +105,9 @@ export class UserService {
       cliente.clientUser.jobOffers[jobOfferIndex].description  = jobOffer.description;
       cliente.clientUser.jobOffers[jobOfferIndex].competenceIds  = jobOffer.competenceIds;
       cliente.clientUser.jobOffers[jobOfferIndex].candidateIds  = jobOffer.candidateIds;
+      const now = new Date();      
+      cliente.updatedAt = now;
+      cliente.clientUser.updatedAt = now;
 
       // Guardar los cambios en la base de datos
       return await cliente.save();  
@@ -136,7 +138,6 @@ export class UserService {
 
   async findAllJobOffers() {
 
-  
     const users = await this.userModel.find({ 'clientUser': { $exists: true } });
 
     const jobOffers = [];
@@ -177,7 +178,6 @@ export class UserService {
     }
 
     return jobOffers;
-
   }
 
   async findAllJobOffersByCandidateId(candidateId: string) {

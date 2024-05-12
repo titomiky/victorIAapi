@@ -43,5 +43,9 @@ export class candidateUserDto {
   @IsOptional()  
   cvPdf: Buffer;
 
-
+  @IsOptional()  
+  createdAt?: Date;
+  
+  @IsOptional()  
+  updatedAt?: Date;
 }

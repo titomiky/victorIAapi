@@ -3,7 +3,7 @@ import { JobOffer } from './jobOffer.schema';
 
 
 @Schema()
-export class clientUser {
+export class ClientUser {
   @Prop({ required: true })
   name: string;
 
@@ -30,6 +30,28 @@ export class clientUser {
 
   @Prop([{ type: JobOffer }])
   jobOffers?: [JobOffer];
+
+  @Prop({ type: Date, default: Date.now, required: false})
+  createdAt?: Date;
+
+  @Prop({ type: Date, default: Date.now, required: false})
+  updatedAt?: Date;
 }
 
-export const clientUserSchema = SchemaFactory.createForClass(clientUser);
+export const ClientUserSchema = SchemaFactory.createForClass(ClientUser);
+
+ClientUserSchema.pre<ClientUser>('save', function(next) {
+
+  if (!this.createdAt) {
+    this.createdAt = new Date();;
+  }
+  this.updatedAt = new Date();;
+  next();
+});
+
+ClientUserSchema.pre<ClientUser>('findOneAndUpdate', function (next) {
+  console.log('findOneAndUpdate');  
+  this.updatedAt = new Date();
+  
+  next();
+});

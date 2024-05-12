@@ -3,7 +3,7 @@ import { mongo } from 'mongoose';
 
 
 @Schema()
-export class candidateUser {
+export class CandidateUser {
   @Prop({ required: true })
   name: string;
 
@@ -30,7 +30,29 @@ export class candidateUser {
   
   @Prop()
   createdByUserId?: string; 
+
+  @Prop({ type: Date, default: Date.now, required: false })
+  createdAt?: Date;
+
+  @Prop({ type: Date, default: Date.now, required: false })
+  updatedAt?: Date;
   
 }
 
-export const candidateUserSchema = SchemaFactory.createForClass(candidateUser);
+export const CandidateUserSchema = SchemaFactory.createForClass(CandidateUser);
+
+CandidateUserSchema.pre<CandidateUser>('save', function(next) {
+
+  if (!this.createdAt) {
+    this.createdAt = new Date();;
+  }
+  this.updatedAt = new Date();;
+  next();
+});
+
+CandidateUserSchema.pre<CandidateUser>('findOneAndUpdate', function (next) {
+  console.log('findOneAndUpdate');  
+  this.updatedAt = new Date();
+  
+  next();
+});

@@ -1,10 +1,12 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { adminUser } from './adminUser.schema';
-import { clientUser } from './clientUser.schema';
-import { candidateUser } from './candidateUser.schema';
+import { AdminUser } from './adminUser.schema';
+import { ClientUser } from './clientUser.schema';
+import { CandidateUser } from './candidateUser.schema';
 
 
 @Schema()
+
+
 export class User {
   @Prop({ required: true, unique: true })
   email: string;
@@ -13,16 +15,41 @@ export class User {
   password: string;
 
   @Prop()
-  adminUser: adminUser;
+  adminUser: AdminUser;
 
   @Prop()
-  clientUser: clientUser;
+  clientUser: ClientUser;
 
   @Prop()
-  candidateUser: candidateUser;
+  candidateUser: CandidateUser;
 
   @Prop()
   emailValidatedDate: Date;
+
+  @Prop({ type: Date, default: Date.now, required: false })
+  createdAt?: Date;
+
+  @Prop({ type: Date, default: Date.now, required: false })
+  updatedAt?: Date;
+  
+    
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(User); 
+UserSchema.pre<User>('save', function(next) {
+
+  if (!this.createdAt) {
+    this.createdAt = new Date();;
+  }
+  this.updatedAt = new Date();;
+  next();
+});
+
+UserSchema.pre<User>('findOneAndUpdate', function (next) {
+  console.log('findOneAndUpdate');  
+  this.updatedAt = new Date();
+  
+  next();
+});
+
+
