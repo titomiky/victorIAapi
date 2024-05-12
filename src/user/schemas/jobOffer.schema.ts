@@ -4,9 +4,6 @@ import { ObjectId, mongo } from 'mongoose';
 @Schema()
 export class JobOffer {
   
-  @Prop({ type: mongo.ObjectId })
-  _id: ObjectId;
-
   @Prop({ required: true})
   name: string;
 
@@ -25,6 +22,8 @@ export class JobOffer {
   @Prop({ type: Date, default: Date.now })
   updatedAt: Date;
 
+  _id: any;
+  
 }
 
 export const JobOfferSchema = SchemaFactory.createForClass(JobOffer);
