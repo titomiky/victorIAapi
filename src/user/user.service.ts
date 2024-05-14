@@ -113,6 +113,31 @@ export class UserService {
       return await cliente.save();  
   }
 
+  async getJobOffer (userId: string, jobOfferId: string) {
+
+    //TODO: pending
+    const cliente = await this.userModel.findById(userId);
+
+    // Si no se encuentra el cliente, lanzar un error
+    if (!cliente) {      
+      throw new Error('Cliente no encontrado');
+    }
+                
+    let jobOfferIndex = -1;
+    for (let i = 0; i < cliente.clientUser?.jobOffers?.length; i++) {
+      const item = cliente.clientUser?.jobOffers[i];
+      //console.log(`${item._id} - ` + jobOfferId);
+
+      if (`${item._id}` === jobOfferId) {
+        jobOfferIndex = i;
+      }
+    }
+    console.log(jobOfferId);
+    console.log(jobOfferIndex);
+    return  cliente.clientUser?.jobOffers[jobOfferIndex];
+    
+  }
+
   async findAll() {
     return await this.userModel.find().select('-password').exec();
   }
@@ -242,7 +267,7 @@ export class UserService {
     return candidates;
   } 
 
-  async findOne(id: string) {
+  async findOne(id: string) {    
     return await this.userModel.findById(id).select('-password').exec();
   }
 

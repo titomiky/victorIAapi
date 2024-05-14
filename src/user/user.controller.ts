@@ -184,6 +184,28 @@ export class UserController {
     }
   }
 
+
+  @Get('jobOffer/:id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get job offer', description: 'Get a job offer. Send the complete array of competencies to update/delete competencies to the job offer' })
+  @ApiResponse({ status: 200, description: 'Received jobOffer user ok', type: UserResponseDto })
+  async getJobOffer(@Param('id') jobOfferId: string, @Req() request: Request) {
+    try {     
+            
+      const userId = await this.authService.getUserIdFromToken(request);                
+      const user = await this.userService.findOne(userId);    
+               
+      if (!user) {
+        return new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }      
+      return this.userService.getJobOffer(userId, jobOfferId);
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
+
+
   @Delete('jobOffer/:id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete job offer', description: 'Delete a job offer' })
