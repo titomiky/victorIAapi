@@ -86,8 +86,8 @@ export class UserService {
     }
                 
     let jobOfferIndex = -1;
-    for (let i = 0; i < cliente.clientUser.jobOffers.length; i++) {
-      const item = cliente.clientUser.jobOffers[i];
+    for (let i = 0; i < cliente.clientUser?.jobOffers?.length; i++) {
+      const item = cliente.clientUser?.jobOffers[i];
       console.log(`${item._id} - ` + jobOfferId);
 
       if (`${item._id}` === jobOfferId)

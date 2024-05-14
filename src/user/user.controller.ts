@@ -151,6 +151,7 @@ export class UserController {
       jobOffer.name = newJobOffer.name;      
       jobOffer.description = newJobOffer.description;      
       jobOffer.competenceIds = newJobOffer.competenceIds;
+      jobOffer.candidateIds = newJobOffer.candidateIds;
             
       if (user?.clientUser) {        
         user.clientUser.jobOffers?.push(jobOffer);
@@ -169,14 +170,14 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Updated jobOffer user ok', type: UserResponseDto })
   async updateJobOffer(    
     @Body(new ValidationPipe()) newJobOffer: JobOfferDto, @Req() request: Request, @Param('id') jobOfferId: string) {
-    try {      
-      const userId = await this.authService.getUserIdFromToken(request);    
+    try {            
+      const userId = await this.authService.getUserIdFromToken(request);          
       const user = await this.userService.findOne(userId);    
-      
+            
       if (!user) {
         return new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
-                  
+      
       return this.userService.updateJobOffer(userId, jobOfferId, newJobOffer);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
