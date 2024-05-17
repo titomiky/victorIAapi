@@ -221,7 +221,7 @@ export class UserService {
               description: jobOffer.description,
               numCandidates: jobOffer.candidateIds.length,
               clientUserName: user.clientUser.name, // Add clientUser name
-              competencesName: competences.map(competence => competence.name)
+              competencesNames: competences.map(competence => competence.name)
             });
           } catch(error) {
             console.log(error);
@@ -229,8 +229,6 @@ export class UserService {
         }
       }
     }
-
-
 
     return jobOffers
   }   
