@@ -287,7 +287,29 @@ export class UserService {
     return await this.userModel.updateOne(filter, update).exec();    
   }
   
+  async checkCandidateAssignedToJobOffer(candidateId, jobOfferId) {
 
+    try {      
+      const query = {
+        "clientUser.jobOffers": {
+          $elemMatch: {
+            _id: new ObjectId(jobOfferId),
+            candidateIds: new ObjectId(candidateId)
+          }
+        }
+      };
+  
+      console.log('checkCandidateAssignedToJobOffer');
+      const result = await this.userModel.findOne(query);
+      console.log(result);
+      
+      return (result != null)            
+  
+    } catch (error){
+      console.log(error);
+      return false;
+    }
+  }
  
 } 
  

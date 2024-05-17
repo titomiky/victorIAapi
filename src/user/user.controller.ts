@@ -365,6 +365,28 @@ export class UserController {
   }
 
 
+  @Get('linkToSession/:candidateId/:jobOfferId')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Devuelve el enlace para que el candidato realice la sessión', description: 'Devuelve el enlace para que el candidato realice la sessión' })
+  @ApiResponse({ status: 200, description: 'Returned link ok', type: User })
+  async getLinkToSession(@Param('candidateId') candidateId: string, @Param('jobOfferId') jobOfferId: string, @Req() request: Request) {
+    try {
+
+      //TODO: check if candidate has been asigned to the jobOffer
+      if (this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId)) {
+        const sessionBaseUrl = process.env.SESSION_BASE_URL;
+        const sessionUrl = `${sessionBaseUrl}/${candidateId}/${jobOfferId}`;
+        console.log(sessionUrl);
+        return sessionUrl;
+      } else {
+        return null;
+      }
+
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
   @Post('sendEmail')    
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Send an email to verify the account', description: 'Send an email to verify the account' })
