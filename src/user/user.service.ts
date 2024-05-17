@@ -151,7 +151,7 @@ export class UserService {
 
     // Extract relevant data from candidates
     const candidateList = candidates.map(candidate => ({
-      candidateUserId: candidate._id,
+      candidateUserId: candidate.candidateUser?._id,
       name: candidate.candidateUser.name,
       surname: candidate.candidateUser.surname,
       email: candidate.email      
@@ -232,25 +232,28 @@ export class UserService {
   async findAllCandidatesByJobOfferId(jobOfferId: string) {        
     const users = await this.userModel.find();  //TODO: improve query, try to find the jobOffer with a mongo query...
 
+    console.log('pepe')
     let candidateIds = [];
     for (const user of users) {
       if (user.clientUser?.jobOffers) {
-        for (let i = 0; i < user.clientUser.jobOffers?.length; i++) {
-          const item = user.clientUser.jobOffers[i];
-          console.log(`${item._id} - ` + jobOfferId);
+        for (let i = 0; i < user.clientUser?.jobOffers?.length; i++) {
+          const item = user.clientUser?.jobOffers[i];
+          //console.log(`${item._id} - ` + jobOfferId);
 
           if (`${item._id}` === jobOfferId) {
-            candidateIds = user.clientUser.jobOffers[i].candidateIds;
+            candidateIds = user.clientUser?.jobOffers[i].candidateIds;
             break;
           }    
         }
       }
     }
 
-    console.log()
+    console.log('pepe2')
     const candidates = await this.userModel.find({
       'clientUser.jobOffers.candidateIds': { $in: candidateIds },
     });
+    console.log(candidateIds);
+    console.log(candidates);
 
     // Extract relevant data from candidates
     const candidateList = candidates.map(candidate => ({

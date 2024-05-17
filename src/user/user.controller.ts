@@ -314,6 +314,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Returned candidates ok', type: User })
   async findAllCandidatesByJobOfferId(@Param('jobOfferId') jobOfferId: string, @Req() request: Request) {
     try {
+      console.log('kk')
       const userId = await this.authService.getUserIdFromToken(request);  
       return this.userService.findAllCandidatesByJobOfferId(jobOfferId);
 

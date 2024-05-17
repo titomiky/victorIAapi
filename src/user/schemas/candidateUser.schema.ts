@@ -36,6 +36,8 @@ export class CandidateUser {
 
   @Prop({ type: Date, default: Date.now, required: false })
   updatedAt?: Date;
+
+  _id?: string;
   
 }
 
