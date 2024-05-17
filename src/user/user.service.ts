@@ -254,7 +254,7 @@ export class UserService {
 
     // Extract relevant data from candidates
     const candidateList = candidates.map(candidate => ({
-      candidateUserId: candidate._id,
+      candidateId: candidate._id,
       name: candidate.candidateUser.name,
       surname: candidate.candidateUser.surname,
       email: candidate.email,
