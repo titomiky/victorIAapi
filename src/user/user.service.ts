@@ -9,10 +9,11 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { JobOfferDto } from './dtos/jobOffer.dto';
 import { JobOffer } from './schemas/jobOffer.schema';
+import { Competence } from 'src/competence/schemas/competence.schema';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>, private jwtService: JwtService) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>, @InjectModel(Competence.name) private competenceModel: Model<Competence>, private jwtService: JwtService) {}
 
   async create(user: UserDto) {
     user.password = await bcrypt.hash(user.password, 10);
@@ -200,21 +201,36 @@ export class UserService {
       'clientUser.jobOffers.candidateIds': { $in: [candidateId] },
     });
 
-    // Extract and format JobOffers data
+    // Extract and format JobOffers data    
     const jobOffers = [];
     for (const user of users) {
       for (const jobOffer of user.clientUser.jobOffers) {
         if (jobOffer.candidateIds.includes(candidateId)) {
-          jobOffers.push({
-            _id: jobOffer._id,
-            name: jobOffer.name,
-            description: jobOffer.description,
-            numCandidates: jobOffer.candidateIds.length,
-            clientUser: user.clientUser.name, // Add clientUser name
-          });
+          try {
+            console.log(jobOffer.competenceIds.length);
+            jobOffer.competenceIds.forEach(id => {
+              console.log(id);
+            });
+            const competenceIds = jobOffer.competenceIds.map(id => new ObjectId(id.toString()));        
+            const competences = await this.competenceModel.find({ _id: { $in: competenceIds } }).select('name').exec();
+            console.log(competences);
+
+            jobOffers.push({
+              _id: jobOffer._id,
+              name: jobOffer.name,
+              description: jobOffer.description,
+              numCandidates: jobOffer.candidateIds.length,
+              clientUserName: user.clientUser.name, // Add clientUser name
+              competencesName: competences.map(competence => competence.name)
+            });
+          } catch(error) {
+            console.log(error);
+          }
         }
       }
     }
+
+
 
     return jobOffers
   }   
