@@ -230,44 +230,45 @@ export class UserService {
   }   
 
   async findAllCandidatesByJobOfferId(jobOfferId: string) {        
-    const users = await this.userModel.find();  //TODO: improve query, try to find the jobOffer with a mongo query...
+    try {
+      const users = await this.userModel.find();  //TODO: improve query, try to find the jobOffer with a mongo query...
+      
+      let candidateIds = [];
+      for (const user of users) {
+        if (user.clientUser?.jobOffers) {
+          for (let i = 0; i < user.clientUser?.jobOffers?.length; i++) {
+            const item = user.clientUser?.jobOffers[i];
+            //console.log(`${item._id} - ` + jobOfferId);
 
-    console.log('pepe')
-    let candidateIds = [];
-    for (const user of users) {
-      if (user.clientUser?.jobOffers) {
-        for (let i = 0; i < user.clientUser?.jobOffers?.length; i++) {
-          const item = user.clientUser?.jobOffers[i];
-          //console.log(`${item._id} - ` + jobOfferId);
-
-          if (`${item._id}` === jobOfferId) {
-            candidateIds = user.clientUser?.jobOffers[i].candidateIds;
-            break;
-          }    
+            if (`${item._id}` === jobOfferId) {
+              candidateIds = user.clientUser?.jobOffers[i].candidateIds;
+              break;
+            }    
+          }
         }
       }
+
+      console.log(candidateIds);
+      const candidates = await this.userModel.find({
+        'candidateUser._id': { $in: candidateIds },
+      });
+      console.log('asdfs')
+      console.log(candidates);
+      // Extract relevant data from candidates
+      const candidateList = candidates.map(candidate => ({
+        candidateUserId: candidate.candidateUser._id,      
+        name: candidate.candidateUser.name,
+        surname: candidate.candidateUser.surname,
+        email: candidate.email,
+        phoneNumber: candidate.candidateUser.phoneNumber
+      }));
+
+      return candidateList;    
+    } catch(error) {
+      console.log(error);
+      return [];
     }
-
-    console.log('pepe2')
-    const candidates = await this.userModel.find({
-      'clientUser.jobOffers.candidateIds': { $in: candidateIds },
-    });
-    console.log(candidateIds);
-    console.log(candidates);
-
-    // Extract relevant data from candidates
-    const candidateList = candidates.map(candidate => ({
-      candidateUserId: candidate._id,      
-      name: candidate.candidateUser.name,
-      surname: candidate.candidateUser.surname,
-      email: candidate.email,
-      phoneNumber: candidate.candidateUser.phoneNumber
-    }));
-
-    return candidateList;    
-
-
-    return candidates;
+      
   } 
 
   async findOne(id: string) {    
