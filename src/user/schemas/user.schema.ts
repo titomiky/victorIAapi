@@ -45,8 +45,7 @@ UserSchema.pre<User>('save', function(next) {
   next();
 });
 
-UserSchema.pre<User>('findOneAndUpdate', function (next) {
-  console.log('findOneAndUpdate');  
+UserSchema.pre<User>('findOneAndUpdate', function (next) {  
   this.updatedAt = new Date();
   
   next();

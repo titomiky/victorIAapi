@@ -313,8 +313,7 @@ export class UserController {
   @ApiOperation({ summary: 'Lista de los candidatos de una oferta', description: 'Lista de los candidatos de una oferta' })
   @ApiResponse({ status: 200, description: 'Returned candidates ok', type: User })
   async findAllCandidatesByJobOfferId(@Param('jobOfferId') jobOfferId: string, @Req() request: Request) {
-    try {
-      console.log('kk')
+    try {      
       const userId = await this.authService.getUserIdFromToken(request);  
       return this.userService.findAllCandidatesByJobOfferId(jobOfferId);
 
@@ -377,7 +376,7 @@ export class UserController {
       if (this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId)) {
         const sessionBaseUrl = process.env.SESSION_BASE_URL;
         const sessionUrl = `${sessionBaseUrl}/${candidateId}/${jobOfferId}`;
-        console.log(sessionUrl);
+        
         return sessionUrl;
       } else {
         return null;
@@ -411,8 +410,7 @@ export class UserController {
       const hostname = req.headers.host;
       const isSecure = req.secure;
       const protocol = isSecure ? 'https' : 'http';
-      const currentURL = `${protocol}://${hostname}`;
-      console.log(`Current URL: ${currentURL}`);
+      const currentURL = `${protocol}://${hostname}`;      
             
       const verificationLink = currentURL + "/validateEmailByToken/" + userId;      
       
@@ -445,8 +443,7 @@ export class UserController {
         return 'Error sending verification email.';
       }      
 
-    } catch (error) {      
-      console.log(error.message);
+    } catch (error) {            
       return { message: 'Error Sending message.' };;
     }
   }

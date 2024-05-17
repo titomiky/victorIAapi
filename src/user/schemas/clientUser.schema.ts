@@ -50,7 +50,7 @@ ClientUserSchema.pre<ClientUser>('save', function(next) {
 });
 
 ClientUserSchema.pre<ClientUser>('findOneAndUpdate', function (next) {
-  console.log('findOneAndUpdate');  
+  
   this.updatedAt = new Date();
   
   next();

@@ -37,8 +37,7 @@ JobOfferSchema.pre<JobOffer>('save', function(next) {
   next();
 });
 
-JobOfferSchema.pre<JobOffer>('findOneAndUpdate', function (next) {
-  console.log('findOneAndUpdate');  
+JobOfferSchema.pre<JobOffer>('findOneAndUpdate', function (next) {  
   this.updatedAt = new Date();
   
   next();

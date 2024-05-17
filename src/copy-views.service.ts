@@ -9,8 +9,7 @@ export class CopyViewsService {
 
   async copyViews() {
     try {
-      await fs.copy('src/views', 'dist/views');
-      //console.log('La carpeta views se copió correctamente a dist/views');
+      await fs.copy('src/views', 'dist/views');      
     } catch (error) {
       console.error('Error al copiar la carpeta views:', error);
     }

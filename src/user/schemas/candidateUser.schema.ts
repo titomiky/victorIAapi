@@ -52,8 +52,7 @@ CandidateUserSchema.pre<CandidateUser>('save', function(next) {
   next();
 });
 
-CandidateUserSchema.pre<CandidateUser>('findOneAndUpdate', function (next) {
-  console.log('findOneAndUpdate');  
+CandidateUserSchema.pre<CandidateUser>('findOneAndUpdate', function (next) {  
   this.updatedAt = new Date();
   
   next();

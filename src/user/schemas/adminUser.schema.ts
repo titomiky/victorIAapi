@@ -21,11 +21,9 @@ export class AdminUser {
 
 export const AdminUserSchema = SchemaFactory.createForClass(AdminUser);
 
-AdminUserSchema.pre<AdminUser>('save', function(next) {
-  console.log('nuevo')
+AdminUserSchema.pre<AdminUser>('save', function(next) {  
   const now = new Date();    
   if (!this.createdAt) {
-    console.log('nuevo')
     this.createdAt = now;
   }
   this.updatedAt = now;
@@ -33,7 +31,6 @@ AdminUserSchema.pre<AdminUser>('save', function(next) {
 });
 
 AdminUserSchema.pre<AdminUser>('findOneAndUpdate', function (next) {
-  console.log('findOneAndUpdate');  
   const now = new Date();
   this.updatedAt = now;
   next();

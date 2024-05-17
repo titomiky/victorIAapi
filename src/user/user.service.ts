@@ -80,24 +80,20 @@ export class UserService {
     const cliente = await this.userModel.findById(userId);
 
     // Si no se encuentra el cliente, lanzar un error
-    if (!cliente) {
-      console.log('cliente not found');
+    if (!cliente) {      
       throw new Error('Cliente no encontrado');
     }
                 
     let jobOfferIndex = -1;
     for (let i = 0; i < cliente.clientUser?.jobOffers?.length; i++) {
       const item = cliente.clientUser?.jobOffers[i];
-      console.log(`${item._id} - ` + jobOfferId);
 
       if (`${item._id}` === jobOfferId)
         jobOfferIndex = i;
     }
-        
-    console.log('jobOFferIndex: ' + jobOfferIndex);
+            
    // Si no se encuentra la jobOffer, lanzar un error
-   if (jobOfferIndex === -1) {
-      console.log('job offer not found');
+   if (jobOfferIndex === -1) {      
       //throw new Error('Oferta de trabajo no encontrada');
     }
       // Actualizar la jobOffer en el array de jobOffers del cliente
@@ -125,15 +121,12 @@ export class UserService {
                 
     let jobOfferIndex = -1;
     for (let i = 0; i < cliente.clientUser?.jobOffers?.length; i++) {
-      const item = cliente.clientUser?.jobOffers[i];
-      //console.log(`${item._id} - ` + jobOfferId);
+      const item = cliente.clientUser?.jobOffers[i];    
 
       if (`${item._id}` === jobOfferId) {
         jobOfferIndex = i;
       }
     }
-    console.log(jobOfferId);
-    console.log(jobOfferIndex);
     return  cliente.clientUser?.jobOffers[jobOfferIndex];
     
   }
@@ -181,16 +174,13 @@ export class UserService {
   }
 
 
-  async findAllJobOffersByClientId(clientUserId: string) {
-    console.log(clientUserId)
+  async findAllJobOffersByClientId(clientUserId: string) {    
     const user = await this.userModel.findOne({ 'clientUser._id': clientUserId });
 
-    if (!user) {
-      console.log('no user');
-      //res.status(404).send('Client user not found');
+    if (!user) {      
+     
       return null;
-    }
-    console.log(user);
+    }    
     
     const jobOffers = [];
     for (const jobOffer of user.clientUser.jobOffers) {
@@ -237,8 +227,7 @@ export class UserService {
       for (const user of users) {
         if (user.clientUser?.jobOffers) {
           for (let i = 0; i < user.clientUser?.jobOffers?.length; i++) {
-            const item = user.clientUser?.jobOffers[i];
-            //console.log(`${item._id} - ` + jobOfferId);
+            const item = user.clientUser?.jobOffers[i];            
 
             if (`${item._id}` === jobOfferId) {
               candidateIds = user.clientUser?.jobOffers[i].candidateIds;
@@ -247,13 +236,10 @@ export class UserService {
           }
         }
       }
-
-      console.log(candidateIds);
+      
       const candidates = await this.userModel.find({
         'candidateUser._id': { $in: candidateIds },
       });
-      console.log('asdfs')
-      console.log(candidates);
       // Extract relevant data from candidates
       const candidateList = candidates.map(candidate => ({
         candidateUserId: candidate.candidateUser._id,      
@@ -264,8 +250,7 @@ export class UserService {
       }));
 
       return candidateList;    
-    } catch(error) {
-      console.log(error);
+    } catch(error) {      
       return [];
     }
       
@@ -292,7 +277,7 @@ export class UserService {
   }
   
   async checkCandidateAssignedToJobOffer(candidateId, jobOfferId) {
-
+  
     try {      
       const query = {
         "clientUser.jobOffers": {
@@ -303,14 +288,11 @@ export class UserService {
         }
       };
   
-      console.log('checkCandidateAssignedToJobOffer');
       const result = await this.userModel.findOne(query);
-      console.log(result);
       
       return (result != null)            
   
     } catch (error){
-      console.log(error);
       return false;
     }
   }
