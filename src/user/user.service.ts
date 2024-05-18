@@ -291,20 +291,27 @@ export class UserService {
   }
   
   async checkCandidateAssignedToJobOffer(candidateId, jobOfferId) {
-  
+    console.log('checking');
+    console.log(candidateId, jobOfferId);
     try {      
       const query = {
         "clientUser.jobOffers": {
           $elemMatch: {
-            _id: new ObjectId(jobOfferId),
-            candidateIds: new ObjectId(candidateId)
+            '_id': new ObjectId(jobOfferId),            
           }
         }
       };
   
-      const result = await this.userModel.findOne(query);
-      
-      return (result != null)            
+      const projection = { 'clientUser.jobOffers.$': 1 }; // Seleccionar solo la jobOffer que coincide
+      const result = await this.userModel.findOne(query);              
+        
+      if (result && result.clientUser && result.clientUser.jobOffers && result.clientUser.jobOffers.length > 0 && result.clientUser.jobOffers[0].candidateIds.includes(candidateId)) {        
+        console.log("El candidato y la oferta de trabajo sí existen en el documento.");
+        return true;                
+      } else {
+        console.log("El candidato y la oferta de trabajo no existen en el documento.");
+        return false;
+      }                 
   
     } catch (error){
       return false;
