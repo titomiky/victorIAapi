@@ -33,9 +33,10 @@ export class SessionService {
   }
 
   async getSessionLink(candidateId: string, jobOfferId: string): Promise<String> {    
+    console.log('kakita', candidateId, jobOfferId);
     const sessionBaseUrl = process.env.SESSION_BASE_URL;            
     const existingSession = await this.sessionModel.findOne({ jobOfferId: jobOfferId, candidateId: candidateId });      
-
+    console.log('existingSession: ' + existingSession)
     let sessionUrl = '';
     if (existingSession) {      
       sessionUrl = `${sessionBaseUrl}/${existingSession._id}`;
@@ -46,11 +47,10 @@ export class SessionService {
   
 
   async getOrCreateSession (candidateId: string, jobOfferId: string): Promise<any>  {
-    try {
-      console.log(candidateId, jobOfferId);
+    try {      
       // Buscar si existe un documento Session con jobOfferId='fefe' y candidateId='asdf'
       const existingSession = await this.sessionModel.findOne({ jobOfferId: jobOfferId, candidateId: candidateId });      
-
+      console.log('existingSession: '+ existingSession);
       // Si existe, devolver su _id
       if (existingSession) {
         return existingSession._id;
@@ -63,8 +63,6 @@ export class SessionService {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-
-      console.log('new newSession: ' + newSession);
 
       // Devolver el _id del documento creado
       return newSession._id;

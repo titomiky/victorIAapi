@@ -302,7 +302,7 @@ export class UserController {
   @ApiOperation({ summary: 'Lista las ofertas a las que se asignado un candidato', description: 'Lista las ofertas asignadas a un candidato' })
   @ApiResponse({ status: 200, description: 'Returned jobOffers ok', type: User })
   async findAllJobOffersByCandidateId(@Param('candidateId') candidateId: string) {
-    try {
+    try {      
       return this.userService.findAllJobOffersByCandidateId(candidateId);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 

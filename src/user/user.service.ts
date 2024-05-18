@@ -208,17 +208,23 @@ export class UserService {
     for (const user of users) {
       for (const jobOffer of user.clientUser.jobOffers) {
         if (jobOffer.candidateIds.includes(candidateId)) {
-          try {
-            console.log(jobOffer.competenceIds.length);
-            jobOffer.competenceIds.forEach(id => {
-              console.log(id);
-            });
-            const competenceIds = jobOffer.competenceIds.map(id => new ObjectId(id.toString()));        
-            const competences = await this.competenceModel.find({ _id: { $in: competenceIds } }).select('name').exec();            
 
-            console.log('ey', candidateId, jobOffer._id.toString());
+          console.log('found candidate ' + jobOffer.name);
+          try {
+            
+            console.log(jobOffer.competenceIds);
+            jobOffer.competenceIds.forEach(id => {
+              //console.log(id);
+            });
+            let competences = [];
+            try {
+              const competenceIds = jobOffer.competenceIds.map(id => new ObjectId(id.toString()));        
+              competences = await this.competenceModel.find({ _id: { $in: competenceIds } }).select('name').exec();            
+            }catch (error) {
+              //console.log(error);
+            }
+            
             const linkToSession = await this.sessionService.getSessionLink(candidateId, jobOffer._id.toString());
-            console.log('link', linkToSession);
 
             jobOffers.push({
               _id: jobOffer._id,
