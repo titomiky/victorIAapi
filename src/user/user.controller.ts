@@ -388,11 +388,11 @@ export class UserController {
     }
   }
 
-  @Post('sendEmail')    
+  @Post('sendEmailToVerifyAccount')    
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Send an email to verify the account', description: 'Send an email to verify the account' })
   @ApiResponse({ status: 201, description: 'Sent email ok', type: String })
-  async sendEmail (    
+  async sendEmailToVerifyAccount (    
     @Req() req: Request, @Res() res: Response
   ) {
     try {              
@@ -417,6 +417,67 @@ export class UserController {
       
       // Render the HTML email body using the EJS template
       const templatePath = __dirname.replace('user', 'views/validateEmail.ejs');      
+
+      //const templateString = fs.readFileSync(templatePath, 'utf8');
+      const templateData  = {
+        email: email,
+        verificationLink: verificationLink,
+      };
+      const html = await ejs.renderFile(templatePath, templateData)      
+
+      // Define email options
+      const message = {
+        from: 'info@stoical.be',
+        to: email,
+        subject: 'Verificación de email',
+        html: html,
+        text: 'hola'
+      };
+    
+      // Send the email
+      try {
+        const transport = await nodemailer.createTransport(config);
+        const info = await transport.sendMail(message);        
+        return 'Verification email sent successfully.';
+      } catch (error) {
+        console.error('Error sending verification email:', error);
+        return 'Error sending verification email.';
+      }      
+
+    } catch (error) {            
+      return { message: 'Error Sending message.' };;
+    }
+  }
+
+  @Post('sendEmailToChangePassword')    
+  @ApiBearerAuth()  
+  @ApiOperation({ summary: 'Send an email to change the password', description: 'Send an email to change the password' })
+  @ApiResponse({ status: 201, description: 'Sent email ok', type: String })
+  async sendEmailToChangePassword (    
+    @Req() req: Request, @Res() res: Response
+  ) {
+    try {              
+      const config = {
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        auth: {
+          user: process.env.EMAIL_AUTH_USER,
+          pass: process.env.EMAIL_AUTH_PASS
+        }
+      };
+
+      const userId = await this.authService.getUserIdFromToken(req);    
+      const email = await this.authService.getEmailFromToken(req);    
+      
+      const hostname = req.headers.host;
+      const isSecure = req.secure;
+      const protocol = isSecure ? 'https' : 'http';
+      const currentURL = `${protocol}://${hostname}`;      
+            
+      const verificationLink = currentURL + "/TODO/" + userId;      
+      
+      // Render the HTML email body using the EJS template
+      const templatePath = __dirname.replace('user', 'views/changePassword.ejs');      
 
       //const templateString = fs.readFileSync(templatePath, 'utf8');
       const templateData  = {
