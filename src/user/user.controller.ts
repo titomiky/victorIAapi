@@ -375,9 +375,8 @@ export class UserController {
       const candidateAssignedToJobOffer = await this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId);
       
       if (candidateAssignedToJobOffer) {        
-        const sessionId = await this.sessionService.getOrCreateSession(candidateId, jobOfferId);        
-        const sessionBaseUrl = process.env.SESSION_BASE_URL;        
-        const sessionUrl = `${sessionBaseUrl}/${sessionId}`;
+        const sessionId = await this.sessionService.getOrCreateSession(candidateId, jobOfferId);                
+        const sessionUrl =  await this.sessionService.getSessionLink(candidateId, jobOfferId);
         
         return sessionUrl;
       } else {
