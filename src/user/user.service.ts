@@ -9,11 +9,13 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { JobOfferDto } from './dtos/jobOffer.dto';
 import { JobOffer } from './schemas/jobOffer.schema';
-import { Competence } from 'src/competence/schemas/competence.schema';
+import { Competence } from '../competence/schemas/competence.schema';
+import { SessionService } from '../session/session.service';
+import { link } from 'fs';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>, @InjectModel(Competence.name) private competenceModel: Model<Competence>, private jwtService: JwtService) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>, @InjectModel(Competence.name) private competenceModel: Model<Competence>, private jwtService: JwtService, private sessionService: SessionService) {}
 
   async create(user: UserDto) {
     user.password = await bcrypt.hash(user.password, 10);
@@ -212,8 +214,11 @@ export class UserService {
               console.log(id);
             });
             const competenceIds = jobOffer.competenceIds.map(id => new ObjectId(id.toString()));        
-            const competences = await this.competenceModel.find({ _id: { $in: competenceIds } }).select('name').exec();
-            console.log(competences);
+            const competences = await this.competenceModel.find({ _id: { $in: competenceIds } }).select('name').exec();            
+
+            console.log('ey', candidateId, jobOffer._id.toString());
+            const linkToSession = await this.sessionService.getSessionLink(candidateId, jobOffer._id.toString());
+            console.log('link', linkToSession);
 
             jobOffers.push({
               _id: jobOffer._id,
@@ -221,7 +226,8 @@ export class UserService {
               description: jobOffer.description,
               numCandidates: jobOffer.candidateIds.length,
               clientUserName: user.clientUser.name, // Add clientUser name
-              competencesNames: competences.map(competence => competence.name)
+              competencesNames: competences.map(competence => competence.name),
+              linkToSession: linkToSession
             });
           } catch(error) {
             console.log(error);
