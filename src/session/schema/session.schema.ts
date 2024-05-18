@@ -8,15 +8,20 @@ export class Session {
   jobOfferId: string;
 
   @Prop({ required: true })
-  candidateUserId: string;
+  candidateId: string;
 
   @Prop()
-  createdDate: Date;
+  createdAt: Date;
+  
   @Prop()
-  startedDate: Date;
+  updatedAt: Date;
+  
   @Prop()
-  finishedDate: Date;
+  startedAt: Date;
 
+  @Prop()
+  finishedAt: Date;
+  
   @Prop([{ type: QuestionAnswer }])
   interview?: [QuestionAnswer];
 
@@ -26,3 +31,19 @@ export class Session {
 }
 
 export const SessionSchema = SchemaFactory.createForClass(Session);
+
+
+SessionSchema.pre<Session>('save', function(next) {
+
+  if (!this.createdAt) {
+    this.createdAt = new Date();;
+  }
+  this.updatedAt = new Date();;
+  next();
+});
+
+SessionSchema.pre<Session>('findOneAndUpdate', function (next) {  
+  this.updatedAt = new Date();
+  
+  next();
+});

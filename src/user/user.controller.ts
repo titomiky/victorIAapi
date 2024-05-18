@@ -33,11 +33,12 @@ import { JobOfferDto } from './dtos/jobOffer.dto';
 import * as ejs from 'ejs'; 
 import * as nodemailer from 'nodemailer';
 import { User, UserSchema } from './schemas/user.schema';
+import { SessionService } from '../session/session.service';
 
 @Controller('users')
 @ApiTags('users')
 export class UserController {
-  constructor(private userService: UserService, private authService: AuthService) {}
+  constructor(private userService: UserService, private sessionService: SessionService, private authService: AuthService) {}
 
 
   @Post()  
@@ -373,9 +374,10 @@ export class UserController {
     try {      
       const candidateAssignedToJobOffer = await this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId);
       
-      if (candidateAssignedToJobOffer) {
-        const sessionBaseUrl = process.env.SESSION_BASE_URL;
-        const sessionUrl = `${sessionBaseUrl}/${candidateId}/${jobOfferId}`;
+      if (candidateAssignedToJobOffer) {        
+        const sessionId = await this.sessionService.getOrCreateSession(candidateId, jobOfferId);        
+        const sessionBaseUrl = process.env.SESSION_BASE_URL;        
+        const sessionUrl = `${sessionBaseUrl}/${sessionId}`;
         
         return sessionUrl;
       } else {

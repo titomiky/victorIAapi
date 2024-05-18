@@ -5,7 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 import { SessionController } from './session.controller';
 import { SessionService } from './session.service';
 import { Session, SessionSchema } from '../session/schema/session.schema';
-import { JwtModule } from '@nestjs/jwt';
 
 
 @Module({
@@ -15,7 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
             name: Session.name,
             schema: SessionSchema,
           },
-        ]),
+        ]), 
       ],
       providers: [SessionService],
       controllers: [SessionController],  

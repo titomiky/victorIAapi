@@ -291,8 +291,6 @@ export class UserService {
   }
   
   async checkCandidateAssignedToJobOffer(candidateId, jobOfferId) {
-    console.log('checking');
-    console.log(candidateId, jobOfferId);
     try {      
       const query = {
         "clientUser.jobOffers": {
