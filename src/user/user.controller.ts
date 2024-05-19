@@ -439,15 +439,15 @@ export class UserController {
       // Send the email
       try {
         const transport = await nodemailer.createTransport(config);
-        const info = await transport.sendMail(message);        
-        return 'Verification email sent successfully.';
+        const info = await transport.sendMail(message);                
+        return res.status(HttpStatus.OK).send('Verification email sent successfully.');      
       } catch (error) {
-        console.error('Error sending verification email:', error);
-        return 'Error sending verification email.';
+        
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error sending verification email.');              
       }      
 
     } catch (error) {            
-      return { message: 'Error Sending message.' };;
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error sending verification email.');      
     }
   }
 
@@ -499,14 +499,15 @@ export class UserController {
       try {
         const transport = await nodemailer.createTransport(config);
         const info = await transport.sendMail(message);        
-        return 'Verification email sent successfully.';
+        return res.status(HttpStatus.OK).send('Verification email sent successfully.'); 
       } catch (error) {
-        console.error('Error sending verification email:', error);
-        return 'Error sending verification email.';
+        console.log(error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error sending verification email.');            
       }      
 
-    } catch (error) {            
-      return { message: 'Error Sending message.' };;
+    } catch (error) {      
+      console.log(error);      
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error sending verification email.');      
     }
   }
 
