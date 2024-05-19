@@ -258,8 +258,7 @@ export class UserService {
             const item = user.clientUser?.jobOffers[i];            
 
             if (`${item._id}` === jobOfferId) {
-              //console.log(`${item._id}`)
-              console.log(user.email)
+              //console.log(`${item._id}`)              
               candidateIds = user.clientUser?.jobOffers[i].candidateIds;
               break;
             }    

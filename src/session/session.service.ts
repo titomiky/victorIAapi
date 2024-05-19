@@ -48,7 +48,7 @@ export class SessionService {
     try {      
       // Buscar si existe un documento Session con jobOfferId='fefe' y candidateId='asdf'
       const existingSession = await this.sessionModel.findOne({ jobOfferId: jobOfferId, candidateId: candidateId });      
-      console.log('existingSession: '+ existingSession);
+      
       // Si existe, devolver su _id
       if (existingSession) {
         return existingSession._id;
@@ -64,8 +64,7 @@ export class SessionService {
 
       // Devolver el _id del documento creado
       return newSession._id;
-    } catch (error) {
-      console.log(error);
+    } catch (error) {      
       return null;
     }
 

@@ -373,22 +373,16 @@ export class UserController {
   @ApiOperation({ summary: 'Devuelve el enlace para que el candidato realice la sessión', description: 'Devuelve el enlace para que el candidato realice la sessión' })
   @ApiResponse({ status: 200, description: 'Returned link ok', type: User })
   async getLinkToSession(@Param('candidateId') candidateId: string, @Param('jobOfferId') jobOfferId: string, @Req() request: Request, @Res() response: Response) {
-    try {      
-      //console.log(candidateId) 
-      const candidateAssignedToJobOffer = await this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId);
-      console.log(candidateAssignedToJobOffer) 
+    try {            
+      const candidateAssignedToJobOffer = await this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId);      
       if (candidateAssignedToJobOffer) {       
         
-        const sessionId = await this.sessionService.getOrCreateSession(candidateId, jobOfferId);                        
-        console.log('sessionId ', sessionId)
-        const sessionUrl =  await this.sessionService.getSessionLink(candidateId, jobOfferId);
-        console.log('sessionUrl ', sessionUrl)
+        const sessionId = await this.sessionService.getOrCreateSession(candidateId, jobOfferId);                                
+        const sessionUrl =  await this.sessionService.getSessionLink(candidateId, jobOfferId);        
 
-        return response.send(sessionUrl);
-        //return sessionUrl;
+        return response.send(sessionUrl);        
       } else {
-        return response.status(HttpStatus.NOT_FOUND).send('Candidato no asignado a la oferta');
-        //return new HttpException('Candidato no asignado a la oferta', HttpStatus.NOT_FOUND); 
+        return response.status(HttpStatus.NOT_FOUND).send('Candidato no asignado a la oferta');        
       }
 
     } catch (error) {      
