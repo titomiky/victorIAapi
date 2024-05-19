@@ -34,6 +34,8 @@ import * as ejs from 'ejs';
 import * as nodemailer from 'nodemailer';
 import { User, UserSchema } from './schemas/user.schema';
 import { SessionService } from '../session/session.service';
+import { email } from './dtos/email.dto';
+import express, {Response} from 'express';
 
 @Controller('users')
 @ApiTags('users')
@@ -315,7 +317,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Returned candidates ok', type: User })
   async findAllCandidatesByJobOfferId(@Param('jobOfferId') jobOfferId: string, @Req() request: Request) {
     try {      
-      const userId = await this.authService.getUserIdFromToken(request);  
+      //const userId = await this.authService.getUserIdFromToken(request);  
       return this.userService.findAllCandidatesByJobOfferId(jobOfferId);
 
     } catch (error) {      
@@ -370,17 +372,23 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Devuelve el enlace para que el candidato realice la sessión', description: 'Devuelve el enlace para que el candidato realice la sessión' })
   @ApiResponse({ status: 200, description: 'Returned link ok', type: User })
-  async getLinkToSession(@Param('candidateId') candidateId: string, @Param('jobOfferId') jobOfferId: string, @Req() request: Request) {
+  async getLinkToSession(@Param('candidateId') candidateId: string, @Param('jobOfferId') jobOfferId: string, @Req() request: Request, @Res() response: Response) {
     try {      
+      //console.log(candidateId) 
       const candidateAssignedToJobOffer = await this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId);
-      
-      if (candidateAssignedToJobOffer) {        
-        const sessionId = await this.sessionService.getOrCreateSession(candidateId, jobOfferId);                
-        const sessionUrl =  await this.sessionService.getSessionLink(candidateId, jobOfferId);
+      console.log(candidateAssignedToJobOffer) 
+      if (candidateAssignedToJobOffer) {       
         
-        return sessionUrl;
+        const sessionId = await this.sessionService.getOrCreateSession(candidateId, jobOfferId);                        
+        console.log('sessionId ', sessionId)
+        const sessionUrl =  await this.sessionService.getSessionLink(candidateId, jobOfferId);
+        console.log('sessionUrl ', sessionUrl)
+
+        return response.send(sessionUrl);
+        //return sessionUrl;
       } else {
-        return new HttpException('Candidato no asignado a la oferta', HttpStatus.NOT_FOUND); 
+        return response.status(HttpStatus.NOT_FOUND).send('Candidato no asignado a la oferta');
+        //return new HttpException('Candidato no asignado a la oferta', HttpStatus.NOT_FOUND); 
       }
 
     } catch (error) {      
@@ -450,12 +458,12 @@ export class UserController {
   }
 
   @Post('sendEmailToChangePassword')    
-  @ApiBearerAuth()  
+  @Public()  
   @ApiOperation({ summary: 'Send an email to change the password', description: 'Send an email to change the password' })
   @ApiResponse({ status: 201, description: 'Sent email ok', type: String })
   async sendEmailToChangePassword (    
-    @Req() req: Request, @Res() res: Response
-  ) {
+    @Req() req: Request, @Res() res: Response,  @Body() email: email,
+  ) {    
     try {              
       const config = {
         host: process.env.EMAIL_HOST,
@@ -464,33 +472,31 @@ export class UserController {
           user: process.env.EMAIL_AUTH_USER,
           pass: process.env.EMAIL_AUTH_PASS
         }
-      };
-
-      const userId = await this.authService.getUserIdFromToken(req);    
-      const email = await this.authService.getEmailFromToken(req);    
+      };      
       
       const hostname = req.headers.host;
       const isSecure = req.secure;
       const protocol = isSecure ? 'https' : 'http';
       const currentURL = `${protocol}://${hostname}`;      
             
-      const verificationLink = currentURL + "/TODO/" + userId;      
+      const verificationLink = currentURL + "/TODO/" ;      
       
       // Render the HTML email body using the EJS template
       const templatePath = __dirname.replace('user', 'views/changePassword.ejs');      
 
       //const templateString = fs.readFileSync(templatePath, 'utf8');
       const templateData  = {
-        email: email,
+        email: email.email,
         verificationLink: verificationLink,
       };
       const html = await ejs.renderFile(templatePath, templateData)      
 
       // Define email options
+      console.log(email.email)
       const message = {
         from: 'info@stoical.be',
-        to: email,
-        subject: 'Verificación de email',
+        to: email.email,
+        subject: 'Cambio de contraseña',
         html: html,
         text: 'hola'
       };

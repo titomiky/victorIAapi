@@ -32,16 +32,14 @@ export class SessionService {
     return this.sessionModel.findByIdAndDelete(id).exec();
   }
 
-  async getSessionLink(candidateId: string, jobOfferId: string): Promise<String> {    
-    console.log('kakita', candidateId, jobOfferId);
+  async getSessionLink(candidateId: string, jobOfferId: string): Promise<String> {      
     const sessionBaseUrl = process.env.SESSION_BASE_URL;            
     const existingSession = await this.sessionModel.findOne({ jobOfferId: jobOfferId, candidateId: candidateId });      
-    console.log('existingSession: ' + existingSession)
+
     let sessionUrl = '';
     if (existingSession) {      
       sessionUrl = `${sessionBaseUrl}/${existingSession._id}`;
-    }
-   
+    }   
     return sessionUrl;  
   }
   

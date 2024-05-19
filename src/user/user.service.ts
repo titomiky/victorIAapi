@@ -223,7 +223,7 @@ export class UserService {
             }catch (error) {
               //console.log(error);
             }
-            
+
             const linkToSession = await this.sessionService.getSessionLink(candidateId, jobOffer._id.toString());
 
             jobOffers.push({
@@ -247,6 +247,8 @@ export class UserService {
 
   async findAllCandidatesByJobOfferId(jobOfferId: string) {        
     try {
+
+      console.log(jobOfferId)
       const users = await this.userModel.find();  //TODO: improve query, try to find the jobOffer with a mongo query...
       
       let candidateIds = [];
@@ -256,6 +258,8 @@ export class UserService {
             const item = user.clientUser?.jobOffers[i];            
 
             if (`${item._id}` === jobOfferId) {
+              //console.log(`${item._id}`)
+              console.log(user.email)
               candidateIds = user.clientUser?.jobOffers[i].candidateIds;
               break;
             }    
@@ -266,6 +270,7 @@ export class UserService {
       const candidates = await this.userModel.find({
         'candidateUser._id': { $in: candidateIds },
       });
+
       // Extract relevant data from candidates
       const candidateList = candidates.map(candidate => ({
         candidateUserId: candidate.candidateUser._id,      
@@ -303,26 +308,15 @@ export class UserService {
   }
   
   async checkCandidateAssignedToJobOffer(candidateId, jobOfferId) {
-    try {      
-      const query = {
-        "clientUser.jobOffers": {
-          $elemMatch: {
-            '_id': new ObjectId(jobOfferId),            
-          }
-        }
-      };
+    try {           
+      //console.log(candidateId)           
+      const candidates = await this.findAllCandidatesByJobOfferId(jobOfferId);
+      const candidateIds = await candidates.map(candidate => candidate.candidateUserId.toString());
+      //console.log(candidateIds)
   
-      const projection = { 'clientUser.jobOffers.$': 1 }; // Seleccionar solo la jobOffer que coincide
-      const result = await this.userModel.findOne(query);              
-        
-      if (result && result.clientUser && result.clientUser.jobOffers && result.clientUser.jobOffers.length > 0 && result.clientUser.jobOffers[0].candidateIds.includes(candidateId)) {        
-        console.log("El candidato y la oferta de trabajo sí existen en el documento.");
-        return true;                
-      } else {
-        console.log("El candidato y la oferta de trabajo no existen en el documento.");
-        return false;
-      }                 
-  
+      const result = candidateIds.includes(candidateId);              
+      return result;
+          
     } catch (error){
       return false;
     }
