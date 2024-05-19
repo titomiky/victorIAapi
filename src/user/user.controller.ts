@@ -36,6 +36,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { SessionService } from '../session/session.service';
 import { email } from './dtos/email.dto';
 import express, {Response} from 'express';
+import { UserCvPDf } from './dtos/userCvPDf.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -354,16 +355,31 @@ export class UserController {
   @UseInterceptors(FileInterceptor('file'))
   @Post('uploadCVpdf')
   async saveCVpdf(
-    @UploadedFile() cvFile: Express.Multer.File,
-    @Body() userId: string, 
+    @UploadedFile() file: Express.Multer.File,
+    @Body() userId: UserCvPDf, 
     @Req() req: any, @Res() res: Response
   ) {
-    try {
-    
-    //const cv = await this.cvsService.createCV(cvFile, createCVDto);
-      return { message: 'CV creado exitosamente' };
+    try {          
+      if (!file) {
+        throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
+      }
+        
+      if (file.mimetype !== 'application/pdf') {  
+        throw new HttpException('Only PDF files are allowed', HttpStatus.BAD_REQUEST);
+      }
+      
+      console.log('userID', userId.userId)
+      const user = await this.userService.uploadUserPdf(userId.userId, file);
+      
+      console.log(user);
+      if (!user) {
+        console.log('no user')
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+      
+      return res.status(HttpStatus.OK).send('File saved successfully.');      
     } catch (error) {      
-      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+      return res.status(HttpStatus.SERVICE_UNAVAILABLE).send('Servicio temporalmente deshabilitado.');      
     }
   }
 
@@ -501,12 +517,12 @@ export class UserController {
         const info = await transport.sendMail(message);        
         return res.status(HttpStatus.OK).send('Verification email sent successfully.'); 
       } catch (error) {
-        console.log(error);
+        //console.log(error);
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error sending verification email.');            
       }      
 
     } catch (error) {      
-      console.log(error);      
+      //console.log(error);      
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error sending verification email.');      
     }
   }

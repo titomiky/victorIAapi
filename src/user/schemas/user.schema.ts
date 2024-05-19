@@ -31,7 +31,9 @@ export class User {
 
   @Prop({ type: Date, default: Date.now, required: false })
   updatedAt?: Date;
-  
+
+  @Prop()
+  CVpdfId: string; // Referencia al ID del archivo en GridFS como cadena de texto
     
 }
 
