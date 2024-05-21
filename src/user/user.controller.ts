@@ -38,6 +38,7 @@ import { email } from './dtos/email.dto';
 import express, {Response} from 'express';
 import { UserCvPDf } from './dtos/userCvPDf.dto';
 import { adminClientCandidateUserDto } from './dtos/adminClientCandidateUser.dto';
+import { UserChangePasswordDto } from './dtos/user.changePassword.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -248,6 +249,28 @@ export class UserController {
         email: email
       };    
       return this.userService.update(userId, updatedUser);
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
+  @Put('changePasswordFromEmail')
+  @Public()
+  @ApiOperation({ summary: 'CHange the password of the user', description: 'Change the password of the logged user' })
+  @ApiResponse({ status: 200, description: 'Changed password ok', type: UserResponseDto })
+  async changePasswordFromEmail(    
+    @Body(new ValidationPipe()) updateUser: UserChangePasswordDto, @Req() request: Request
+  ) {
+    try {
+      const userId = updateUser.userId;      
+      const user = await this.userService.findOne(updateUser.userId);
+
+      if (!user ) return new HttpException('User not found', HttpStatus.NOT_FOUND);
+      const userToUpdate : UserDto = {
+        password: updateUser.password,   
+        email: user.email 
+      };    
+      return this.userService.update(userId, userToUpdate);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
@@ -531,7 +554,10 @@ export class UserController {
       const protocol = isSecure ? 'https' : 'http';
       const currentURL = `${protocol}://${hostname}`;      
             
-      const verificationLink = currentURL + "/TODO/" ;      
+      const user = await this.userService.findByEmail(email.email);
+      if (!user)  return res.status(HttpStatus.NOT_FOUND).send('Email not found.');
+      
+      const verificationLink = "http://localhost:3000/auth/reset-password/" + user._id.toString();      
       
       // Render the HTML email body using the EJS template
       const templatePath = __dirname.replace('user', 'views/changePassword.ejs');      
