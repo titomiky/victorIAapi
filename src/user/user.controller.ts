@@ -37,6 +37,7 @@ import { SessionService } from '../session/session.service';
 import { email } from './dtos/email.dto';
 import express, {Response} from 'express';
 import { UserCvPDf } from './dtos/userCvPDf.dto';
+import { adminClientCandidateUserDto } from './dtos/adminClientCandidateUser.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -328,7 +329,7 @@ export class UserController {
 
   @Get(':id')
   @ApiBearerAuth()
-  @ApiResponse({ status: 200, description: 'Returned user ok', type: UserResponseDto })
+  @ApiResponse({ status: 200, description: 'Returned user ok', type: adminClientCandidateUserDto })
   async findOne(@Param('id') id: string) {
     try {
       return this.userService.findOne(id);
@@ -389,11 +390,15 @@ export class UserController {
   @ApiOperation({ summary: 'Devuelve el enlace para que el candidato realice la sessión', description: 'Devuelve el enlace para que el candidato realice la sessión' })
   @ApiResponse({ status: 200, description: 'Returned link ok', type: User })
   async getLinkToSession(@Param('candidateId') candidateId: string, @Param('jobOfferId') jobOfferId: string, @Req() request: Request, @Res() response: Response) {
-    try {            
-      const candidateAssignedToJobOffer = await this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId);      
+    try {         
+      console.log('kk')   
+      const candidateAssignedToJobOffer = await this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId);     
+      
       if (candidateAssignedToJobOffer) {       
         
-        const sessionId = await this.sessionService.getOrCreateSession(candidateId, jobOfferId);                                
+        const sessionId = await this.sessionService.getOrCreateSession(candidateId, jobOfferId);    
+        console.log('sessionid', sessionId);
+        
         const sessionUrl =  await this.sessionService.getSessionLink(candidateId, jobOfferId);        
 
         return response.send(sessionUrl);        

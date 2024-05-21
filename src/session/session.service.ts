@@ -47,13 +47,13 @@ export class SessionService {
   async getOrCreateSession (candidateId: string, jobOfferId: string): Promise<any>  {
     try {      
       // Buscar si existe un documento Session con jobOfferId='fefe' y candidateId='asdf'
-      const existingSession = await this.sessionModel.findOne({ jobOfferId: jobOfferId, candidateId: candidateId });      
-      
+      const existingSession = await this.sessionModel.findOne({ jobOfferId: jobOfferId, candidateId: candidateId });          
       // Si existe, devolver su _id
       if (existingSession) {
         return existingSession._id;
       }
       
+      console.log('newSession1');
       // Si no existe, guardar el nuevo documento en la base de datos mongo
       const newSession = await this.sessionModel.create({
         jobOfferId: jobOfferId,
@@ -62,9 +62,11 @@ export class SessionService {
         updatedAt: new Date(),
       });
 
+      console.log('newSession', newSession);
       // Devolver el _id del documento creado
       return newSession._id;
-    } catch (error) {      
+    } catch (error) {     
+      console.log(error); 
       return null;
     }
 

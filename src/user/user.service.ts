@@ -231,7 +231,7 @@ export class UserService implements OnModuleInit {
     });
 
     // Extract and format JobOffers data    
-    const jobOffers = [];
+    const jobOffers = [];    
     for (const user of users) {
       for (const jobOffer of user.clientUser.jobOffers) {
         if (jobOffer.candidateIds.includes(candidateId)) {
@@ -246,8 +246,7 @@ export class UserService implements OnModuleInit {
               competences = await this.competenceModel.find({ _id: { $in: competenceIds } }).select('name').exec();            
             }catch (error) {
               //console.log(error);
-            }
-
+            }            
             const linkToSession = await this.sessionService.getSessionLink(candidateId, jobOffer._id.toString());
 
             jobOffers.push({

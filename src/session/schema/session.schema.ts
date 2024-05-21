@@ -22,10 +22,10 @@ export class Session {
   @Prop()
   finishedAt: Date;
   
-  @Prop([{ type: QuestionAnswer }])
+  @Prop([{ type: QuestionAnswer, required: false}])
   interview?: [QuestionAnswer];
 
-  @Prop([{ type: CompetenceResult }])
+  @Prop([{ type: CompetenceResult, required: false }])
   result?: [CompetenceResult];
  
 }
