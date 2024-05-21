@@ -103,7 +103,8 @@ export class UserController {
       user.clientUser = clientUser;
         
       const savedClientUser = await this.userService.createClientUser(userId, user);
-      return this.authService.generateToken(savedClientUser);
+      console.log('savedClientUser', savedClientUser);
+      return  this.authService.generateToken(savedClientUser);
     
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
@@ -130,6 +131,7 @@ export class UserController {
       user.candidateUser.createdByUserId = userId;
 
       const savedCandidateUser = await this.userService.createCandidateUser(userId, user);
+      console.log('savedCandidateUser', savedCandidateUser)
       return this.authService.generateToken(savedCandidateUser);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 

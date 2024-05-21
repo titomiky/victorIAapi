@@ -139,11 +139,11 @@ export class AuthService {
     let surname: string;
   
     if (user.adminUser) {
-      surname = user.adminUser.name;
+      surname = user.adminUser.surname;
     } else if (user.clientUser) {
-      surname = user.clientUser.name;
+      surname = user.clientUser.surname;
     } else if (user.candidateUser) {
-      surname = user.candidateUser.name;
+      surname = user.candidateUser.surname;
     } else {
       surname = null; // Or any default value if none of the users exist
     }
