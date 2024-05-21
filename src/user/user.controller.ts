@@ -332,11 +332,46 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Returned user ok', type: adminClientCandidateUserDto })
   async findOne(@Param('id') id: string) {
     try {
-      return this.userService.findOne(id);
+      return await this.userService.findOne(id);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }
+
+  @Get('client/:clientId')
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'Returned client ok', type: clientUserDto })
+  async findClient(@Param('clientId') clientId: string) {
+    try {
+      
+      const user = await this.userService.findClient(clientId);      
+      if (user && user.clientUser) {
+        return user.clientUser;
+      } else {
+        return null;
+      }
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
+
+  @Get('candidate/:candidateId')
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'Returned candidate ok', type: candidateUserDto })
+  async findCandidate(@Param('candidateId') candidateId: string) {
+    try {      
+      const user = await this.userService.findCandidate(candidateId);            
+      if (user && user.candidateUser) {
+        return user.candidateUser;
+      } else {        
+        return null;
+      }
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
 
   @Delete(':id')
   @ApiBearerAuth()

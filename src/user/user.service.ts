@@ -14,6 +14,7 @@ import { SessionService } from '../session/session.service';
 import { link } from 'fs';
 import { Readable } from 'stream';
 import * as Grid from 'gridfs-stream';
+import { Types } from 'mongoose'
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -311,6 +312,24 @@ export class UserService implements OnModuleInit {
 
   async findOne(id: string) {    
     return await this.userModel.findById(id).select('-password').exec();
+  }
+
+  async findClient(clientId: string) {    
+    try {      
+      const user = await this.userModel.findOne({ 'clientUser._id':  clientId}).exec();      
+      return user;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async findCandidate(candidateId: string) {    
+    try {            
+      const user = await this.userModel.findOne({ 'candidateUser._id':  candidateId}).exec();      
+      return user;
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async findByEmail(email: string) {
