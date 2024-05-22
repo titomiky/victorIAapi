@@ -166,18 +166,22 @@ export class UserController {
       
       //Confirm that competenceIds exist            
       const competenceIdsExist = await this.competenceService.checkIfCompetenceIdsExist(newJobOffer.competenceIds);         
-      if (!competenceIdsExist) {
-        return new HttpException('Competencias no existen', HttpStatus.NOT_FOUND);
+      if (competenceIdsExist) {
+        jobOffer.competenceIds = newJobOffer.competenceIds;                  
       }
       else {
-        jobOffer.competenceIds = newJobOffer.competenceIds;            
+        return new HttpException('Competencias no existen', HttpStatus.NOT_FOUND);
       }      
 
       //Confirm that candidateIds exist
       jobOffer.candidateIds = newJobOffer.candidateIds;
-      
-
-
+      const candidateIdsExist = await this.userService.checkIfCandidateIdsExist(newJobOffer.candidateIds);         
+      if (candidateIdsExist) {
+        jobOffer.candidateIds = newJobOffer.candidateIds;                  
+      }
+      else {
+        return new HttpException('Candidatos no existen', HttpStatus.NOT_FOUND);
+      }       
             
       if (user?.clientUser) {        
         user.clientUser.jobOffers?.push(jobOffer);

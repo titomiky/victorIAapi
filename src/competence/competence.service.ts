@@ -37,13 +37,9 @@ export class CompetenceService {
 
   async checkIfCompetenceIdsExist(ids: string[]) {
     try {      
-      const objectIds = ids.map(id => new ObjectId(id));    
-      // Buscar documentos que tengan _id en el array de objectIds
-      console.log(objectIds);
-      const competences = await this.competenceModel.find({ _id: { $in: objectIds } }).exec();    
-      console.log('competencesLenght', competences)  
-      // Verificar si el número de documentos encontrados coincide con el número de IDs proporcionados
-      return competences.length === ids.length;
+      const objectIds = ids.map(id => new ObjectId(id));          
+      const countCompetences = await this.competenceModel.countDocuments({ _id: { $in: objectIds } });                
+      return countCompetences === ids.length;
     } catch(error) {
       console.log(error)
       return false;

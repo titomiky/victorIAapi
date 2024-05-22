@@ -434,5 +434,21 @@ export class UserService implements OnModuleInit {
     readStream.pipe(res);
   }
  
+
+  async checkIfCandidateIdsExist(ids: string[]) {
+    try {      
+      const objectIds = ids.map(id => new ObjectId(id));              
+
+      // Buscar si todos los IDs existen en los subdocumentos candidateUser de User
+      const count = await this.userModel.countDocuments({
+        'candidateUser._id': { $in: objectIds }
+      });
+
+      return count === ids.length;     
+    } catch(error) {
+      console.log(error)
+      return false;
+    }
+  }
 } 
  

@@ -20,7 +20,7 @@ export class JobOfferDto {
   competenceIds?: [string];
 
   @ApiProperty({ type: [String]})
-  candidateIds?: [String];  
+  candidateIds?: [string];  
 
 }
 
