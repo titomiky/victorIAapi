@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, MaxLength, MinLength} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ObjectId, mongo } from 'mongoose';
+
 
 export class JobOfferDto {
   @IsNotEmpty()

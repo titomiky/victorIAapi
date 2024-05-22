@@ -40,12 +40,14 @@ import { UserCvPDf } from './dtos/userCvPDf.dto';
 import { adminClientCandidateUserDto } from './dtos/adminClientCandidateUser.dto';
 import { UserChangePasswordDto } from './dtos/user.changePassword.dto';
 import { CompetenceService } from '../competence/competence.service';
+import { Logger } from '@nestjs/common';
 
 @Controller('users')
 @ApiTags('users')
 export class UserController {
   constructor(private userService: UserService, private sessionService: SessionService, private authService: AuthService,  private competenceService: CompetenceService ) {}
 
+  private readonly logger = new Logger(UserService.name);
 
   @Post()  
   @Public()
@@ -56,6 +58,7 @@ export class UserController {
     @Req() request: Request,
   ) {
     try {  
+      this.logger.log(request);
       const savedUser = await this.userService.create(createuser);      
       return this.authService.generateToken(savedUser);
       
@@ -72,6 +75,7 @@ export class UserController {
     @Body(new ValidationPipe()) adminUser: adminUserDto, @Req() request: Request
   ) {
     try {      
+      this.logger.log(request);
       const userId = await this.authService.getUserIdFromToken(request);    
       const user = await this.userService.findOne(userId);    
       
@@ -99,6 +103,8 @@ export class UserController {
     @Body(new ValidationPipe()) clientUser: clientUserDto, @Req() request: Request
   ) {
     try {
+      this.logger.log(request);
+      
       const userId = await this.authService.getUserIdFromToken(request);    
       const user = await this.userService.findOne(userId);    
       

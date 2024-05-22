@@ -5,6 +5,8 @@ import * as express from 'express';
 import * as path from 'path';
 import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 import * as cors from 'cors'; // Import cors library
+import { Logger } from 'nestjs-pino';
+
 
 async function bootstrap() {
   const expressApp = express();
@@ -13,7 +15,7 @@ async function bootstrap() {
     new ExpressAdapter(expressApp),
     {cors: {
       origin: '*',
-    }}
+    }}, 
   );
   
   
@@ -40,6 +42,7 @@ async function bootstrap() {
   };
 
   app.use(cors(corsOptions)); 
+  app.useLogger(app.get(Logger));
   
   await app.listen(process.env.PORT);
 }

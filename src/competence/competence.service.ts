@@ -4,11 +4,15 @@ import { Model } from 'mongoose';
 
 import { Competence } from './schemas/competence.schema';
 import { CompetenceDto } from './dtos/competence.dto';
-import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
+const { ObjectId } = mongoose.Types;  
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class CompetenceService {
   constructor(@InjectModel(Competence.name) private competenceModel: Model<Competence>) {}
+
+  private readonly logger = new Logger(Competence.name);
 
   async create(competence: CompetenceDto) {
     const createdCompetence = new this.competenceModel(competence);
@@ -36,12 +40,12 @@ export class CompetenceService {
   }
 
   async checkIfCompetenceIdsExist(ids: string[]) {
-    try {      
-      const objectIds = ids.map(id => new ObjectId(id));          
+    try {            
+      const objectIds = ids.map(id => new ObjectId(id));                
       const countCompetences = await this.competenceModel.countDocuments({ _id: { $in: objectIds } });                
       return countCompetences === ids.length;
     } catch(error) {
-      console.log(error)
+      console.log('errorcito...', error)
       return false;
     }
   }

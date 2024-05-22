@@ -32,7 +32,7 @@ git clone https://titomiky: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@github.com/t
 
 cd ..
 
-# node 20.9.0 install
+# node 20.13.1 install
 curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt update
 sudo apt install -y nodejs
@@ -44,7 +44,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh > insta
 bash install_nvm.sh
 rm install_nvm.sh 
 source ~/.bashrc
-nvm install 20.9.0
+nvm install 20.13.1
 
 # npm install -y dotenv
 sudo npm install -g typescript

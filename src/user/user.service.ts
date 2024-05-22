@@ -1,7 +1,7 @@
 import { HttpException, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { ObjectId} from 'mongodb';
+const { ObjectId } = mongoose.Types;  
 
 import { User } from './schemas/user.schema';
 import { UserDto } from './dtos/user.dto';
@@ -14,7 +14,6 @@ import { SessionService } from '../session/session.service';
 import { link } from 'fs';
 import { Readable } from 'stream';
 import * as Grid from 'gridfs-stream';
-import { Types } from 'mongoose'
 
 @Injectable()
 export class UserService implements OnModuleInit {

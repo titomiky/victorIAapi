@@ -11,6 +11,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { CopyViewsService } from './copy-views.service';
 import { SessionModule } from './session/session.module';
 import { ReportModule } from './report/report.module';
+import { LoggerModule } from 'nestjs-pino';
+
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { ReportModule } from './report/report.module';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
+    LoggerModule.forRoot(),
     UserModule, CompetenceModule, AuthModule, SessionModule, ReportModule
   ],
   controllers: [AppController],

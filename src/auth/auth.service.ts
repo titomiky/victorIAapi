@@ -6,14 +6,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../user/schemas/user.schema';
 import { Model } from 'mongoose';
 import { Request } from 'express';
+import { Logger } from '@nestjs/common';
 
 
 @Injectable()
 export class AuthService {
   constructor(private userService: UserService, private jwtService: JwtService) {}
-
+  private readonly logger = new Logger(AuthService.name);
+  
   async signIn(email: string, password: string): Promise<any> {
     try {      
+      this.logger.log(email, password);
       const foundUser = await this.userService.findByEmail(email);          
       if (!foundUser) {
         throw new HttpException('Usuario no existe', HttpStatus.NOT_FOUND);

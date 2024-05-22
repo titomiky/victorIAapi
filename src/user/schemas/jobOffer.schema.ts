@@ -1,5 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { ObjectId, mongo } from 'mongoose';
+import mongoose from 'mongoose';
+const { ObjectId } = mongoose.Types;  
 
 @Schema()
 export class JobOffer {
@@ -10,10 +11,10 @@ export class JobOffer {
   @Prop({ required: false })
   description: string;
 
-  @Prop({ type: mongo.ObjectId, required: false })
+  @Prop({ type: ObjectId, required: false })
   competenceIds?:  [String];
     //ref: Competence,    
-  @Prop([{ type: mongo.ObjectId }])
+  @Prop([{ type: ObjectId }])
   candidateIds?: [String];
 
   @Prop({ type: Date, default: Date.now })
