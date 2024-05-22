@@ -33,8 +33,8 @@ export class UserService implements OnModuleInit {
   async initGridFS() {
     // Conecta a MongoDB utilizando la cadena de conexión
     await mongoose.connect(process.env.MONGODB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      //useNewUrlParser: true,
+      //useUnifiedTopology: true,
     }as any);
 
     // Inicializa GridFS con la conexión de Mongoose

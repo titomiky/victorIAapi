@@ -39,11 +39,12 @@ import express, {Response} from 'express';
 import { UserCvPDf } from './dtos/userCvPDf.dto';
 import { adminClientCandidateUserDto } from './dtos/adminClientCandidateUser.dto';
 import { UserChangePasswordDto } from './dtos/user.changePassword.dto';
+import { CompetenceService } from '../competence/competence.service';
 
 @Controller('users')
 @ApiTags('users')
 export class UserController {
-  constructor(private userService: UserService, private sessionService: SessionService, private authService: AuthService) {}
+  constructor(private userService: UserService, private sessionService: SessionService, private authService: AuthService,  private competenceService: CompetenceService ) {}
 
 
   @Post()  
@@ -161,9 +162,22 @@ export class UserController {
 
       const jobOffer = new JobOffer();
       jobOffer.name = newJobOffer.name;      
-      jobOffer.description = newJobOffer.description;      
-      jobOffer.competenceIds = newJobOffer.competenceIds;
+      jobOffer.description = newJobOffer.description;  
+      
+      //Confirm that competenceIds exist            
+      const competenceIdsExist = await this.competenceService.checkIfCompetenceIdsExist(newJobOffer.competenceIds);         
+      if (!competenceIdsExist) {
+        return new HttpException('Competencias no existen', HttpStatus.NOT_FOUND);
+      }
+      else {
+        jobOffer.competenceIds = newJobOffer.competenceIds;            
+      }      
+
+      //Confirm that candidateIds exist
       jobOffer.candidateIds = newJobOffer.candidateIds;
+      
+
+
             
       if (user?.clientUser) {        
         user.clientUser.jobOffers?.push(jobOffer);

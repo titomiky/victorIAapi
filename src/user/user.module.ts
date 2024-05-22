@@ -9,6 +9,7 @@ import { Competence, CompetenceSchema } from '../competence/schemas/competence.s
 import { SessionService } from '../session/session.service';
 import { SessionModule } from '../session/session.module';
 import { Injectable } from '@nestjs/common';
+import { CompetenceService } from '../competence/competence.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { Injectable } from '@nestjs/common';
       }
     ]), 
   ],
-  providers: [UserService, AuthService],
+  providers: [UserService, AuthService, CompetenceService],
   controllers: [UserController],  
   exports: [UserService],
 })
