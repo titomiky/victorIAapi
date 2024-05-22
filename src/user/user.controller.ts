@@ -170,7 +170,7 @@ export class UserController {
         jobOffer.competenceIds = newJobOffer.competenceIds;                  
       }
       else {
-        return new HttpException('Competencias no existen', HttpStatus.NOT_FOUND);
+        return new HttpException('Competencias no existen o duplicada', HttpStatus.NOT_FOUND);
       }      
 
       //Confirm that candidateIds exist
@@ -180,7 +180,7 @@ export class UserController {
         jobOffer.candidateIds = newJobOffer.candidateIds;                  
       }
       else {
-        return new HttpException('Candidatos no existen', HttpStatus.NOT_FOUND);
+        return new HttpException('Candidatos no existen o duplicados', HttpStatus.NOT_FOUND);
       }       
             
       if (user?.clientUser) {        
@@ -207,6 +207,18 @@ export class UserController {
       if (!user) {
         return new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
+
+      //Confirm that competenceIds exist            
+      const competenceIdsExist = await this.competenceService.checkIfCompetenceIdsExist(newJobOffer.competenceIds);         
+      if (!competenceIdsExist) {
+        return new HttpException('Competencias no existen o duplicadas', HttpStatus.NOT_FOUND);
+      }      
+
+      //Confirm that candidateIds exist      
+      const candidateIdsExist = await this.userService.checkIfCandidateIdsExist(newJobOffer.candidateIds);         
+      if (!candidateIdsExist) {
+        return new HttpException('Candidatos no existen o duplicadas', HttpStatus.NOT_FOUND);
+      }   
       
       return this.userService.updateJobOffer(userId, jobOfferId, newJobOffer);
     } catch (error) {      

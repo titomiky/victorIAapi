@@ -125,8 +125,8 @@ export class UserService implements OnModuleInit {
 
       if (`${item._id}` === jobOfferId)
         jobOfferIndex = i;
-    }
-            
+    }             
+
    // Si no se encuentra la jobOffer, lanzar un error
    if (jobOfferIndex === -1) {      
       //throw new Error('Oferta de trabajo no encontrada');
