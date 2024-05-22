@@ -70,16 +70,20 @@ export class UserController {
   async createAdmin(    
     @Body(new ValidationPipe()) adminUser: adminUserDto, @Req() request: Request
   ) {
-    try {
+    try {      
       const userId = await this.authService.getUserIdFromToken(request);    
       const user = await this.userService.findOne(userId);    
       
+      console.log(user);
       if (!user) {
         return new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-      }
- 
+      }      
+
+      user.updatedAt = new Date();      
+      user.adminUser = adminUser;
       user.adminUser.updatedAt = new Date();
       const savedAdminUser = await this.userService.createAdminUser(userId, user);
+      console.log(savedAdminUser);
       return this.authService.generateToken(savedAdminUser);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 

@@ -79,12 +79,16 @@ export class UserService implements OnModuleInit {
   }
 
   async createAdminUser(userId: string, user: UserDto) {
-    
+    try {
+    console.log('kkk')  
     return await this.userModel
       .findOneAndUpdate({ _id: userId }, user, {
         new: true,
       }).select('-password')
       .exec();      
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async createClientUser(userId: string, user: UserDto) {
