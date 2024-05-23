@@ -59,7 +59,7 @@ export class UserController {
     @Req() request: Request,
   ) {
     try {  
-      this.logger.log(request);
+      //this.logger.log(request);
       const savedUser = await this.userService.create(createuser);      
       return this.authService.generateToken(savedUser);
       
@@ -76,7 +76,7 @@ export class UserController {
     @Body(new ValidationPipe()) adminUser: adminUserDto, @Req() request: Request
   ) {
     try {      
-      this.logger.log(request);
+      //this.logger.log(request);
       const userId = await this.authService.getUserIdFromToken(request);    
       const user = await this.userService.findOne(userId);    
       
@@ -104,7 +104,7 @@ export class UserController {
     @Body(new ValidationPipe()) clientUser: clientUserDto, @Req() request: Request
   ) {
     try {
-      this.logger.log(request);
+      //this.logger.log(request);
 
       const userId = await this.authService.getUserIdFromToken(request);    
       const user = await this.userService.findOne(userId);    
@@ -143,8 +143,7 @@ export class UserController {
       user.candidateUser = candidateUser;    
       user.candidateUser.createdByUserId = userId;
 
-      const savedCandidateUser = await this.userService.createCandidateUser(userId, user);
-      console.log('savedCandidateUser', savedCandidateUser)
+      const savedCandidateUser = await this.userService.createCandidateUser(userId, user);      
       return this.authService.generateToken(savedCandidateUser);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
@@ -152,16 +151,16 @@ export class UserController {
   }
 
 
-  @Post('candidate')
+  @Post('candidateByClient')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create/update candidate user by a client', description: 'Create/update a candidate user a client' })
+  @ApiOperation({ summary: 'Create candidate user by a client', description: 'Create a candidate user a client' })
   @ApiResponse({ status: 200, description: 'Created candidate by client user ok', type: UserResponseDto })
   async createCandidateByClient(    
     @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request
   ) {
     try {
       const userId = await this.authService.getUserIdFromToken(request);    
-      const clientUser = await this.userService.findOne(userId);    
+      const clientUser = await this.userService.findOne(userId);          
       
       const createdCandidateUser = await this.userService.create(candidateUserByClient.user);            
       if (!createdCandidateUser) {
@@ -176,6 +175,39 @@ export class UserController {
 
       return this.authService.generateToken(clientUser);
     } catch (error) {      
+      console.log(error);
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
+  @Put('candidateByClient/:candidateId')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update candidate user by a client', description: 'Update a candidate user a client' })
+  @ApiResponse({ status: 200, description: 'Updated candidate by client user ok', type: UserResponseDto })
+  async updateCandidateByClient(    
+    @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request,  @Param('candidateId') candidateId: string
+  ) {
+    try {
+      const clientUserId = await this.authService.getUserIdFromToken(request);    
+      const clientUser = await this.userService.findOne(clientUserId);    
+      
+      if (!clientUserId) {
+        return new HttpException('Cliente no existe', HttpStatus.NOT_FOUND);
+      }
+
+      const candidateUser = await this.userService.findCandidate(candidateId);
+      if (!candidateUser) {
+        return new HttpException('Candidato no encontrado', HttpStatus.NOT_FOUND);
+      }
+      
+      candidateUser.email = candidateUserByClient.user.email;
+      candidateUser.candidateUser = candidateUserByClient.candidateUser;          
+
+      const savedCandidateUser = await this.userService.updateCandidateUser(candidateUser._id.toString(), candidateUser); 
+
+      return this.authService.generateToken(clientUser);
+    } catch (error) {      
+      console.log(error);
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }

@@ -58,11 +58,27 @@ export class UserService implements OnModuleInit {
 
   async update(userId: string, user: UserDto) {
     const now = new Date();
-    user.password = await bcrypt.hash(user.password, 10);    
+    if (user.password.length>0) {
+      user.password = await bcrypt.hash(user.password, 10);    
+    }
     user.updatedAt = now;
 
     return await this.userModel
     .findOneAndUpdate({ _id: userId }, user, {
+      new: true,
+    }).select('-password')
+      .exec();
+  }
+
+  async updateCandidate(candidateId: string, user: UserDto) {
+    const now = new Date();
+    if (user.password.length>0) {
+      user.password = await bcrypt.hash(user.password, 10);    
+    }
+    user.updatedAt = now;
+
+    return await this.userModel
+    .findOneAndUpdate({ 'candidateUser._id': candidateId }, user, {
       new: true,
     }).select('-password')
       .exec();
@@ -104,6 +120,15 @@ export class UserService implements OnModuleInit {
     return await this.userModel
       .findOneAndUpdate({ _id: userId }, user, {
         new: true,
+      }).select('-password')
+      .exec();
+  }
+
+  async updateCandidateUser(userId: string, user: UserDto) {    
+    
+    return await this.userModel
+      .findOneAndUpdate({ _id: userId }, user, {
+        new: false,
       }).select('-password')
       .exec();
   }

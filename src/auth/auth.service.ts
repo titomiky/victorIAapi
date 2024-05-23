@@ -16,7 +16,7 @@ export class AuthService {
   
   async signIn(email: string, password: string): Promise<any> {
     try {      
-      this.logger.log(email, password);
+      //this.logger.log(email, password);
       const foundUser = await this.userService.findByEmail(email);          
       if (!foundUser) {
         throw new HttpException('Usuario no existe', HttpStatus.NOT_FOUND);
@@ -37,48 +37,52 @@ export class AuthService {
 
   async generateToken (user) {    
 
-    let  onboarding = (user.clientUser && typeof user.clientUser === 'object') || (user.adminUser && typeof user.adminUser === 'object') || (user.candidateUser && typeof user.candidateUser === 'object');
-    if (onboarding === undefined) onboarding = true;
-    else onboarding = false;
-        
-    let adminId = undefined;
-    let candidateId = undefined;    
-    let clientId = undefined;
-    let role = '';
-    
-    if (user.candidateUser && typeof user.candidateUser === 'object') {
-      role = 'candidate';    
-      candidateId = user.candidateUser._id;
+    try {
+      let  onboarding = (user.clientUser && typeof user.clientUser === 'object') || (user.adminUser && typeof user.adminUser === 'object') || (user.candidateUser && typeof user.candidateUser === 'object');
+      if (onboarding === undefined) onboarding = true;
+      else onboarding = false;
+          
+      let adminId = undefined;
+      let candidateId = undefined;    
+      let clientId = undefined;
+      let role = '';
+      
+      if (user.candidateUser && typeof user.candidateUser === 'object') {
+        role = 'candidate';    
+        candidateId = user.candidateUser._id;
+      }
+
+      if (user.clientUser && typeof user.clientUser === 'object') {
+        role = 'client';
+        clientId = user.clientUser._id;
+      }
+      
+      if (user.adminUser && typeof user.adminUser === 'object')  {
+        role = 'admin';    
+        adminId = user.adminUser._id;      
+      }    
+      
+      const payload = {
+        name: this.getName(user),
+        surname: this.getSurname(user),
+        email: user.email,
+        userId: user._id,
+        onBoarding: onboarding,
+        role: role,
+        clientId: clientId,
+        adminId: adminId,
+        candidateId: candidateId
+      };
+
+      if (!payload.adminId) delete payload.adminId;
+      if (!payload.clientId) delete payload.clientId;
+      if (!payload.candidateId) delete payload.candidateId;
+
+      const token = await this.jwtService.signAsync(payload);
+      return token;    
+    } catch (error) {      
+      return new HttpException('Error de servicio al generar el token', HttpStatus.INTERNAL_SERVER_ERROR); ;
     }
-
-    if (user.clientUser && typeof user.clientUser === 'object') {
-      role = 'client';
-      clientId = user.clientUser._id;
-    }
-
-    if (user.adminUser && typeof user.adminUser === 'object')  {
-      role = 'admin';    
-      adminId = user.adminUser._id;      
-    }    
-    
-    const payload = {
-      name: this.getName(user),
-      surname: this.getSurname(user),
-      email: user.email,
-      userId: user._id,
-      onBoarding: onboarding,
-      role: role,
-      clientId: clientId,
-      adminId: adminId,
-      candidateId: candidateId
-    };
-
-    if (!payload.adminId) delete payload.adminId;
-    if (!payload.clientId) delete payload.clientId;
-    if (!payload.candidateId) delete payload.candidateId;
-
-    const token = await this.jwtService.signAsync(payload);
-    return token;    
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
