@@ -45,9 +45,10 @@ export class AuthService {
     let candidateId = undefined;    
     let clientId = undefined;
     let role = '';
-    if (user.adminUser && typeof user.adminUser === 'object')  {
-      role = 'admin';    
-      adminId = user.adminUser._id;      
+    
+    if (user.candidateUser && typeof user.candidateUser === 'object') {
+      role = 'candidate';    
+      candidateId = user.candidateUser._id;
     }
 
     if (user.clientUser && typeof user.clientUser === 'object') {
@@ -55,10 +56,10 @@ export class AuthService {
       clientId = user.clientUser._id;
     }
 
-    if (user.candidateUser && typeof user.candidateUser === 'object') {
-      role = 'candidate';    
-      candidateId = user.candidateUser._id;
-    }
+    if (user.adminUser && typeof user.adminUser === 'object')  {
+      role = 'admin';    
+      adminId = user.adminUser._id;      
+    }    
     
     const payload = {
       name: this.getName(user),
