@@ -41,6 +41,7 @@ import { adminClientCandidateUserDto } from './dtos/adminClientCandidateUser.dto
 import { UserChangePasswordDto } from './dtos/user.changePassword.dto';
 import { CompetenceService } from '../competence/competence.service';
 import { Logger } from '@nestjs/common';
+import { candidateUserByClientDto } from './dtos/candidateUserByClient.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -104,7 +105,7 @@ export class UserController {
   ) {
     try {
       this.logger.log(request);
-      
+
       const userId = await this.authService.getUserIdFromToken(request);    
       const user = await this.userService.findOne(userId);    
       
@@ -145,6 +146,35 @@ export class UserController {
       const savedCandidateUser = await this.userService.createCandidateUser(userId, user);
       console.log('savedCandidateUser', savedCandidateUser)
       return this.authService.generateToken(savedCandidateUser);
+    } catch (error) {      
+      return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
+    }
+  }
+
+
+  @Post('candidate')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create/update candidate user by a client', description: 'Create/update a candidate user a client' })
+  @ApiResponse({ status: 200, description: 'Created candidate by client user ok', type: UserResponseDto })
+  async createCandidateByClient(    
+    @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request
+  ) {
+    try {
+      const userId = await this.authService.getUserIdFromToken(request);    
+      const clientUser = await this.userService.findOne(userId);    
+      
+      const createdCandidateUser = await this.userService.create(candidateUserByClient.user);            
+      if (!createdCandidateUser) {
+        return new HttpException('Usuario no creado o ya existe', HttpStatus.NOT_FOUND);
+      }
+      
+      createdCandidateUser.candidateUser = candidateUserByClient.candidateUser;
+      createdCandidateUser.candidateUser.createdByUserId = userId;
+
+      const savedCandidateUser = await this.userService.createCandidateUser(createdCandidateUser._id.toString(), createdCandidateUser);
+      console.log('savedCandidateUser', savedCandidateUser)
+
+      return this.authService.generateToken(clientUser);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
