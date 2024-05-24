@@ -199,19 +199,39 @@ export class UserService implements OnModuleInit {
     const projection = { "candidateUser._id": 1, "candidateUser.name": 1, "candidateUser.surname": 1, "email": 1 };
 
     // Find candidates with a candidateUser field
-    const candidates = await this.userModel.find({ candidateUser: { $exists: true } }, projection);
+    const candidates = await this.userModel.find({ candidateUser: { $exists: true } } /*, projection*/);
 
     // Extract relevant data from candidates
     const candidateList = candidates.map(candidate => ({
       candidateUserId: candidate.candidateUser?._id,
       name: candidate.candidateUser.name,
       surname: candidate.candidateUser.surname,
-      email: candidate.email      
+      email: candidate.email,            
+      currentSalary: candidate.candidateUser.currentSalary,
+      desiredSalary: candidate.candidateUser.desiredSalary,      
+      age: this.getAge(candidate.candidateUser.birthDate),
+
     }));
 
     return candidateList;    
   }
 
+  getAge (birthDate) {
+    const today = new Date();
+    const birthDateObj = new Date(birthDate);
+    
+    let age = today.getFullYear() - birthDateObj.getFullYear();
+    
+    const monthDiff = today.getMonth() - birthDateObj.getMonth();
+    const dayDiff = today.getDate() - birthDateObj.getDate();
+
+    // Ajustar la edad si el mes o el día del cumpleaños aún no ha ocurrido este año
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+
+    return age;
+  }
 
   async findAllJobOffers() {
 

@@ -10,7 +10,7 @@ export class ReportController {
 
   @Get('competences/:jobOfferId')
   @ApiBearerAuth()  
-  @ApiOperation({ summary: 'Competencias del candidato conectado', description: 'Devuelve el valor de las competencias del candidato conectado' })
+  @ApiOperation({ summary: 'Competencias del candidato conectado', description: 'Devuelve el valor de las competencias del candidato conectado en la oferta jobOfferId' })
   getCandidateCompetenceReport(@Param('jobOfferId') jobOfferId: string,  @Req() request: Request): any  {    
     
     const competences = 
@@ -41,7 +41,11 @@ export class ReportController {
       { name: "competence6", value: 26 },
       { name: "competence7", value: 90 },
     ];
-    return competences;
+    return {
+      "jobOfferName": "Oferta Developer",
+      "candidateName": "Juan Perez",
+      competences
+    }
   }
 
   @Get('jobOffers/:jobOfferId')  
