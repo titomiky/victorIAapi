@@ -36,7 +36,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { SessionService } from '../session/session.service';
 import { email } from './dtos/email.dto';
 import express, {Response} from 'express';
-import { UserCvPDf } from './dtos/userCvPDf.dto';
+import { CandidateCvPDf } from './dtos/candidateCvPDf.dto';
 import { adminClientCandidateUserDto } from './dtos/adminClientCandidateUser.dto';
 import { UserChangePasswordDto } from './dtos/user.changePassword.dto';
 import { CompetenceService } from '../competence/competence.service';
@@ -517,7 +517,7 @@ export class UserController {
   @Post('uploadCVpdf')
   async saveCVpdf(
     @UploadedFile() file: Express.Multer.File,
-    @Body() userId: UserCvPDf, 
+    @Body() candidateCvPdf: CandidateCvPDf, 
     @Req() req: any, @Res() res: Response
   ) {
     try {          
@@ -529,8 +529,8 @@ export class UserController {
         throw new HttpException('Only PDF files are allowed', HttpStatus.BAD_REQUEST);
       }
       
-      console.log('userID', userId.userId)
-      const user = await this.userService.uploadUserPdf(userId.userId, file);
+      console.log('userID', candidateCvPdf.candidateId)
+      const user = await this.userService.uploadUserPdf(candidateCvPdf.candidateId, file);
       
       console.log(user);
       if (!user) {

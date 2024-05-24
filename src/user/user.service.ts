@@ -348,7 +348,11 @@ export class UserService implements OnModuleInit {
         name: candidate.candidateUser.name,
         surname: candidate.candidateUser.surname,
         email: candidate.email,
-        phoneNumber: candidate.candidateUser.phoneNumber
+        phoneNumber: candidate.candidateUser.phoneNumber,
+        currentSalary: candidate.candidateUser.currentSalary,
+        desiredSalary: candidate.candidateUser.desiredSalary,      
+        age: this.getAge(candidate.candidateUser.birthDate),
+
       }));
 
       return candidateList;    

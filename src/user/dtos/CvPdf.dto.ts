@@ -17,5 +17,5 @@ file: File;
 @IsNotEmpty()
 @IsString()
 @ApiProperty()
-userId: string;
+candidateId: string;
 }

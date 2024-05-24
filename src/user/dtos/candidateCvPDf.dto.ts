@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsString, MinLength, MaxLength, IsEmail, IsOptional} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserCvPDf {
+export class CandidateCvPDf {
   @IsNotEmpty()
   @IsEmail()
   @ApiProperty()
-  userId: string;
+  candidateId: string;
   
 }
 
