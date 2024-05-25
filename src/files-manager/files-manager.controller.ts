@@ -15,17 +15,17 @@ export class FilesManagerController {
 
 
   
-  @ApiConsumes('multipart/form-data', 'application/json')  
-  @ApiBody({ type: CvPdfDto, required: true })
-  @ApiOkResponse({ status: 201 })
-  @Public()
-  @UseInterceptors(FileInterceptor('file'))
-  @Post('upload')    
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() candidateCvPdf: CandidateCvPDf
-) {
-    const fileUrl = await this.s3Service.uploadFile(file);
-    return { url: fileUrl };
-  }
+//   @ApiConsumes('multipart/form-data', 'application/json')  
+//   @ApiBody({ type: CvPdfDto, required: true })
+//   @ApiOkResponse({ status: 201 })
+//   @Public()
+//   @UseInterceptors(FileInterceptor('file'))
+//   @Post('upload')    
+//   async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() candidateCvPdf: CandidateCvPDf
+// ) {
+//     const fileUrl = await this.s3Service.uploadFile(file);
+//     return { url: fileUrl };
+//   }
 
 //   @Get('download/:fileKey')
 //   async downloadFile(@Param('fileKey') fileKey: string, @Res() res: Response) {

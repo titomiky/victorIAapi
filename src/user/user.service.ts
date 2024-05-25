@@ -187,6 +187,7 @@ export class UserService {
       currentSalary: candidate.candidateUser.currentSalary,
       desiredSalary: candidate.candidateUser.desiredSalary,      
       age: this.getAge(candidate.candidateUser.birthDate),
+      cVpdfUrl: candidate.candidateUser.cvPdfUrl
 
     }));
 
@@ -329,7 +330,7 @@ export class UserService {
         currentSalary: candidate.candidateUser.currentSalary,
         desiredSalary: candidate.candidateUser.desiredSalary,      
         age: this.getAge(candidate.candidateUser.birthDate),
-
+        cVpdfUrl: candidate.candidateUser.cvPdfUrl
       }));
 
       return candidateList;    
@@ -411,7 +412,7 @@ export class UserService {
   {
     try {
       const user = await this.userModel.findOne({ 'candidateUser._id':  candidateId}).exec();      
-      user.CVpdfId = cvPdfUrl;
+      user.CVpdfUrl = cvPdfUrl;
       return await user.save();
     }catch(error) {
       console.log(error);
