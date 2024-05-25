@@ -23,7 +23,7 @@ export class FilesManagerController {
   @Post('upload')    
   async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() candidateCvPdf: CandidateCvPDf
 ) {
-    const fileUrl = await this.s3Service.uploadFile(file, candidateCvPdf.candidateId);
+    const fileUrl = await this.s3Service.uploadFile(file);
     return { url: fileUrl };
   }
 

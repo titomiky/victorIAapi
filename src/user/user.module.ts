@@ -10,10 +10,13 @@ import { SessionService } from '../session/session.service';
 import { SessionModule } from '../session/session.module';
 import { Injectable } from '@nestjs/common';
 import { CompetenceService } from '../competence/competence.service';
+import { FilesManagerService } from 'src/files-manager/files-manager.service';
+import { FilesManagerModule } from 'src/files-manager/files-manager.module';
 
 @Module({
   imports: [
     SessionModule,
+    FilesManagerModule,
     MongooseModule.forFeature([
       {
         name: User.name,
@@ -24,7 +27,7 @@ import { CompetenceService } from '../competence/competence.service';
       }
     ]), 
   ],
-  providers: [UserService, AuthService, CompetenceService],
+  providers: [UserService, AuthService, CompetenceService, FilesManagerService],
   controllers: [UserController],  
   exports: [UserService],
 })

@@ -14,11 +14,12 @@ import { SessionService } from '../session/session.service';
 import { link } from 'fs';
 import { Readable } from 'stream';
 import * as Grid from 'gridfs-stream';
+import { FilesManagerService } from 'src/files-manager/files-manager.service';
 
 @Injectable()
 export class UserService {
   
-  constructor(@InjectModel(User.name) private userModel: Model<User>, @InjectModel(Competence.name) private competenceModel: Model<Competence>, private jwtService: JwtService, private sessionService: SessionService) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>, @InjectModel(Competence.name) private competenceModel: Model<Competence>, private jwtService: JwtService, private sessionService: SessionService, private fileManagerService: FilesManagerService) {}
 
   async create(user: UserDto) {
     user.password = await bcrypt.hash(user.password, 10);
@@ -404,6 +405,18 @@ export class UserService {
       console.log(error)
       return false;
     }
+  }
+
+  async setCvPdfFileUrlToCandidate(cvPdfUrl:  string, candidateId: string )
+  {
+    try {
+      const user = await this.userModel.findOne({ 'candidateUser._id':  candidateId}).exec();      
+      user.CVpdfId = cvPdfUrl;
+      return await user.save();
+    }catch(error) {
+      console.log(error);
+    }
+
   }
 } 
  

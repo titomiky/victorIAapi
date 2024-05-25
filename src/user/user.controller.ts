@@ -42,11 +42,12 @@ import { UserChangePasswordDto } from './dtos/user.changePassword.dto';
 import { CompetenceService } from '../competence/competence.service';
 import { Logger } from '@nestjs/common';
 import { candidateUserByClientDto } from './dtos/candidateUserByClient.dto';
+import { FilesManagerService } from 'src/files-manager/files-manager.service';
 
 @Controller('users')
 @ApiTags('users')
 export class UserController {
-  constructor(private userService: UserService, private sessionService: SessionService, private authService: AuthService,  private competenceService: CompetenceService ) {}
+  constructor(private userService: UserService, private sessionService: SessionService, private authService: AuthService,  private competenceService: CompetenceService, private filemanagerService: FilesManagerService) {}  
 
   private readonly logger = new Logger(UserService.name);
 
@@ -657,6 +658,20 @@ export class UserController {
       //console.log(error);      
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error sending verification email.');      
     }
+  }
+
+  @ApiConsumes('multipart/form-data', 'application/json')  
+  @ApiBody({ type: CvPdfDto, required: true })
+  @ApiOkResponse({ status: 201 })
+  @Public()
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('upload')    
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() candidateCvPdf: CandidateCvPDf
+) {
+    const fileUrl = await this.filemanagerService.uploadFile (file);
+
+    const user = await this.userService.setCvPdfFileUrlToCandidate (fileUrl, candidateCvPdf.candidateId);
+    return { url: fileUrl };
   }
 
 }

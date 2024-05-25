@@ -15,13 +15,12 @@ export class FilesManagerService {
     });
   }
 
-  async uploadFile(file: Express.Multer.File, candidateId: String): Promise<string> {
+  async uploadFile(file: Express.Multer.File): Promise<string> {
     const params = {
-      Bucket: awsConfig.bucketName,
+      Bucket: process.env.AWS_BUCKET_NAME,
       Key: `${Date.now()}-${file.originalname}`,
       Body: file.buffer,
-      ContentType: file.mimetype,
-      //ACL: 'public-read'  // Hacer el archivo público al subirlo
+      ContentType: file.mimetype,      
     };
     
     const uploadResult = await this.s3.upload(params).promise();
