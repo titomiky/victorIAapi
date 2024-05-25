@@ -509,49 +509,13 @@ export class UserController {
     }
   }
   
-  @ApiConsumes('multipart/form-data', 'application/json')  
-  @ApiBody({ type: CvPdfDto, required: true })
-  @ApiOkResponse({ status: 201 })
-  @ApiBearerAuth()
-  @UseInterceptors(FileInterceptor('file'))
-  @Post('uploadCVpdf')
-  async saveCVpdf(
-    @UploadedFile() file: Express.Multer.File,
-    @Body() candidateCvPdf: CandidateCvPDf, 
-    @Req() req: any, @Res() res: Response
-  ) {
-    try {          
-      if (!file) {
-        throw new HttpException('File is required', HttpStatus.BAD_REQUEST);
-      }
-        
-      if (file.mimetype !== 'application/pdf') {  
-        throw new HttpException('Only PDF files are allowed', HttpStatus.BAD_REQUEST);
-      }
-      
-      console.log('userID', candidateCvPdf.candidateId)
-      const user = await this.userService.uploadUserPdf(candidateCvPdf.candidateId, file);
-      
-      console.log(user);
-      if (!user) {
-        console.log('no user')
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-      }
-      
-      return res.status(HttpStatus.OK).send('File saved successfully.');      
-    } catch (error) {      
-      return res.status(HttpStatus.SERVICE_UNAVAILABLE).send('Servicio temporalmente deshabilitado.');      
-    }
-  }
-
 
   @Get('linkToSession/:candidateId/:jobOfferId')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Devuelve el enlace para que el candidato realice la sessión', description: 'Devuelve el enlace para que el candidato realice la sessión' })
   @ApiResponse({ status: 200, description: 'Returned link ok', type: User })
   async getLinkToSession(@Param('candidateId') candidateId: string, @Param('jobOfferId') jobOfferId: string, @Req() request: Request, @Res() response: Response) {
-    try {         
-      console.log('kk')   
+    try {               
       const candidateAssignedToJobOffer = await this.userService.checkCandidateAssignedToJobOffer(candidateId, jobOfferId);     
       
       if (candidateAssignedToJobOffer) {       

@@ -16,33 +16,9 @@ import { Readable } from 'stream';
 import * as Grid from 'gridfs-stream';
 
 @Injectable()
-export class UserService implements OnModuleInit {
-  private gfs: Grid.Grid;
+export class UserService {
+  
   constructor(@InjectModel(User.name) private userModel: Model<User>, @InjectModel(Competence.name) private competenceModel: Model<Competence>, private jwtService: JwtService, private sessionService: SessionService) {}
-
-  async onModuleInit() {
-
-    try {
-      await this.initGridFS();
-    } catch (error) {
-      console.error('Error initializing GridFS:', error);
-    }        
-  }
-
-  async initGridFS() {
-    // Conecta a MongoDB utilizando la cadena de conexión
-    await mongoose.connect(process.env.MONGODB_URL, {
-      //useNewUrlParser: true,
-      //useUnifiedTopology: true,
-    }as any);
-
-    // Inicializa GridFS con la conexión de Mongoose
-    const connection = mongoose.connection;
-    this.gfs = Grid(connection.db, mongoose.mongo);
-    this.gfs.collection('uploads');
-
-    // Ahora puedes utilizar 'this.gfs' para trabajar con GridFS
-  }
 
   async create(user: UserDto) {
     user.password = await bcrypt.hash(user.password, 10);
@@ -401,11 +377,9 @@ export class UserService implements OnModuleInit {
   }
   
   async checkCandidateAssignedToJobOffer(candidateId, jobOfferId) {
-    try {           
-      //console.log(candidateId)           
+    try {                 
       const candidates = await this.findAllCandidatesByJobOfferId(jobOfferId);
-      const candidateIds = await candidates.map(candidate => candidate.candidateUserId.toString());
-      //console.log(candidateIds)
+      const candidateIds = await candidates.map(candidate => candidate.candidateUserId.toString());      
   
       const result = candidateIds.includes(candidateId);              
       return result;
@@ -413,73 +387,6 @@ export class UserService implements OnModuleInit {
     } catch (error){
       return false;
     }
-  }
-
-  async uploadUserPdf(userId: string, file: Express.Multer.File): Promise<User> {
-    try {
-      console.log('userid', userId)
-      const { originalname, buffer } = file;
-      const readableFile = new Readable();
-      readableFile.push(buffer);
-      readableFile.push(null);
-      
-      console.log('uploadUserPdf 1111 ', originalname)
-      const writeStream = this.gfs.createWriteStream({
-        filename: originalname,
-        content_type: file.mimetype,
-        _id: new ObjectId(),
-      });
-
-      // Maneja el flujo de escritura para guardar datos en el archivo
-      writeStream.on('close', (file) => {
-        // El archivo se ha guardado correctamente en GridFS
-        console.log('Archivo guardado en GridFS:', file);
-      });
-
-      writeStream.on('error', (error) => {
-        // Maneja cualquier error que ocurra durante la escritura del archivo
-        console.error('Error al guardar archivo en GridFS:', error);
-      });
-
-      // Escribe datos en el flujo de escritura
-      writeStream.write('Datos a escribir en el archivo');
-      writeStream.end(); 
-
-      console.log('uploadUserPdf 2222 ')
-      readableFile.pipe(writeStream);
-
-      console.log('uploadUserPdf 2')
-      return new Promise((resolve, reject) => {
-        writeStream.on('finish', async () => {
-          const user = await this.userModel.findByIdAndUpdate(
-            userId,
-            { CVpdfId: writeStream.id },
-            { new: true },
-          );
-          resolve(user);
-        });
-
-        writeStream.on('error', (err) => {
-          console.log(err)
-          reject(err);
-        });
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async downloadUserPdf(userId: string, res): Promise<void> {
-    const user = await this.userModel.findById(userId).exec();
-    if (!user || !user.CVpdfId) {
-      throw new Error('File not found');
-    }
-
-    const readStream = this.gfs.createReadStream({
-      _id: user.CVpdfId,
-    });
-
-    readStream.pipe(res);
   }
  
 

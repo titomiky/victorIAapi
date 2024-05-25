@@ -42,7 +42,7 @@ async function bootstrap() {
   };
 
   app.use(cors(corsOptions)); 
-  app.useLogger(app.get(Logger));
+  //app.useLogger(app.get(Logger));
   
   await app.listen(process.env.PORT);
 }
