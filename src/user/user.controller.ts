@@ -666,7 +666,7 @@ export class UserController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiBearerAuth()  
   @ApiOperation({ summary: 'Sube el fichero pdf del curriculum del candidato', description: 'Sube el fichero pdf del curriculum del candidato y devuelve la url pública de aws del cv con key en el nombre del fichero' })
-  @Post('uploadCvPdf')    
+  @Post('uploadCVpdf')    
   async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() candidateCvPdf: CandidateCvPDf
 ) {
     const fileUrl = await this.filemanagerService.uploadFile (file);
