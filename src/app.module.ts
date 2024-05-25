@@ -12,6 +12,7 @@ import { CopyViewsService } from './copy-views.service';
 import { SessionModule } from './session/session.module';
 import { ReportModule } from './report/report.module';
 import { LoggerModule } from 'nestjs-pino';
+import { FilesManagerModule } from './files-manager/files-manager.module';
 
 
 @Module({
@@ -26,7 +27,7 @@ import { LoggerModule } from 'nestjs-pino';
       signOptions: { expiresIn: '1d' },
     }),
     LoggerModule.forRoot(),
-    UserModule, CompetenceModule, AuthModule, SessionModule, ReportModule
+    UserModule, CompetenceModule, AuthModule, SessionModule, ReportModule, FilesManagerModule
   ],
   controllers: [AppController],
   providers: [AppService, CopyViewsService],

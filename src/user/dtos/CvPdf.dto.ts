@@ -6,7 +6,7 @@ export class CvPdfDto {
 @ApiProperty({
     type: 'string',
     format: 'binary',
-    description: 'Excel file to import',
+    description: 'Pdf file to import',
     required: true,
 })
 @IsNotEmpty()

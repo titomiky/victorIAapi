@@ -40,8 +40,9 @@ export class candidateUserDto {
   cvText: string;
 
   @ApiProperty()
+  @IsString()
   @IsOptional()  
-  cvPdf: Buffer;
+  cvPdfUrl: string;
 
   @IsOptional()  
   createdAt?: Date;

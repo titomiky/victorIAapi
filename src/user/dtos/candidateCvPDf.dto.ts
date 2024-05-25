@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CandidateCvPDf {
   @IsNotEmpty()
-  @IsEmail()
+  @IsString()  
   @ApiProperty()
   candidateId: string;
   
