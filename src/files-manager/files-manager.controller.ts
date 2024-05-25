@@ -27,24 +27,24 @@ export class FilesManagerController {
     return { url: fileUrl };
   }
 
-  @Get('download/:fileKey')
-  async downloadFile(@Param('fileKey') fileKey: string, @Res() res: Response) {
-    try {
-        const file = await this.s3Service.downloadFile(fileKey);
+//   @Get('download/:fileKey')
+//   async downloadFile(@Param('fileKey') fileKey: string, @Res() res: Response) {
+//     try {
+//         const file = await this.s3Service.downloadFile(fileKey);
 
-        // Si el cuerpo del archivo es un string, conviértelo a un Buffer
-        const body = typeof file.Body === 'string' ? Buffer.from(file.Body, 'utf-8') : file.Body;
+//         // Si el cuerpo del archivo es un string, conviértelo a un Buffer
+//         const body = typeof file.Body === 'string' ? Buffer.from(file.Body, 'utf-8') : file.Body;
 
-        res.set({
-        'Content-Type': file.ContentType,
-        'Content-Length': file.ContentLength,
-        'Content-Disposition': `attachment; filename="${fileKey}"`,
-        });
+//         res.set({
+//         'Content-Type': file.ContentType,
+//         'Content-Length': file.ContentLength,
+//         'Content-Disposition': `attachment; filename="${fileKey}"`,
+//         });
 
-        res.send(body);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send(error);
-    }
-  }
+//         res.send(body);
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send(error);
+//     }
+//   }
 }
