@@ -410,9 +410,12 @@ export class UserService {
 
   async setCvPdfFileUrlToCandidate(cvPdfUrl:  string, candidateId: string )
   {
-    try {
+    try {      
+      console.log('candidateId', candidateId);
       const user = await this.userModel.findOne({ 'candidateUser._id':  candidateId}).exec();      
-      user.CVpdfUrl = cvPdfUrl;
+      console.log(user.candidateUser);
+      user.candidateUser.cvPdfUrl = cvPdfUrl;
+      console.log(user.candidateUser);
       return await user.save();
     }catch(error) {
       console.log(error);
