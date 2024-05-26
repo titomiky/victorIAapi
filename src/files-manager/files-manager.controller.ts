@@ -4,8 +4,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesManagerService } from './files-manager.service';
 import { Response } from 'express';
 import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation, ApiConsumes, ApiBody, ApiOkResponse } from '@nestjs/swagger';
-import { CandidateCvPDf } from '../user/dtos/candidateCvPDf.dto';
-import { CvPdfDto } from '../user/dtos/CvPdf.dto';
+import { CandidateCvPdfDto } from '../user/dtos/candidateCvPdf.dto';
 import { Public } from '../auth/auth.controller';
 
 @ApiTags('files')
