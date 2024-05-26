@@ -12,9 +12,8 @@ export class CandidateCvPdfDto {
     format: 'binary',
     description: 'Pdf file to import',
     required: true,
-  })
-  @IsNotEmpty()
-  file: File;
+  })  
+  file?: File;
 
 }
 
