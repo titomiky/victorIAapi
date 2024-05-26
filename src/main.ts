@@ -6,7 +6,7 @@ import * as path from 'path';
 import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 import * as cors from 'cors'; // Import cors library
 import { Logger } from 'nestjs-pino';
-
+import bodyParser from 'body-parser';
 
 async function bootstrap() {
   const expressApp = express();
@@ -43,6 +43,7 @@ async function bootstrap() {
 
   app.use(cors(corsOptions)); 
   //app.useLogger(app.get(Logger));
+  //app.use(bodyParser.json());
   
   await app.listen(process.env.PORT);
 }

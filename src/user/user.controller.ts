@@ -42,6 +42,7 @@ import { CompetenceService } from '../competence/competence.service';
 import { Logger } from '@nestjs/common';
 import { candidateUserByClientDto } from './dtos/candidateUserByClient.dto';
 import { FilesManagerService } from 'src/files-manager/files-manager.service';
+import bodyParser from 'body-parser';
 
 @Controller('users')
 @ApiTags('users')
@@ -151,29 +152,45 @@ export class UserController {
   }
 
 
-  @Post('candidateByClient')
+  
+  @ApiConsumes('multipart/form-data', 'application/json')  
+  @ApiBody({ type: candidateUserByClientDto, required: true })
+  @UseInterceptors(FileInterceptor('file'))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create candidate user by a client', description: 'Create a candidate user a client' })
   @ApiResponse({ status: 200, description: 'Created candidate by client user ok', type: UserResponseDto })
-  async createCandidateByClient(    
+  @Post('candidateByClient')
+  async createCandidateByClient(
+    @UploadedFile() file: Express.Multer.File,
     @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request
   ) {
     try {
+      
+      let candidateUser = new candidateUserByClientDto;      
+      candidateUser.user = (JSON.parse(request.body.user.replace(/\r?\n|\r/g, '')));
+      candidateUser.candidateUser = (JSON.parse(request.body.candidateUser.replace(/\r?\n|\r/g, '')))                     
+
+      console.log('candidateUser', candidateUser);
       const userId = await this.authService.getUserIdFromToken(request);    
       const clientUser = await this.userService.findOne(userId);          
       
-      const createdCandidateUser = await this.userService.create(candidateUserByClient.user);            
+      const createdCandidateUser = await this.userService.create(candidateUser.user);            
       if (!createdCandidateUser) {
         return new HttpException('Usuario no creado o ya existe', HttpStatus.NOT_FOUND);
       }
       
-      createdCandidateUser.candidateUser = candidateUserByClient.candidateUser;
+      createdCandidateUser.candidateUser = candidateUser.candidateUser;
       createdCandidateUser.candidateUser.createdByUserId = userId;
+
+      const fileUrl = await this.filemanagerService.uploadFile (file);
+      console.log('fileUrl', fileUrl);
+      createdCandidateUser.candidateUser.cvPdfUrl = fileUrl;
 
       const savedCandidateUser = await this.userService.createCandidateUser(createdCandidateUser._id.toString(), createdCandidateUser);      
 
       return this.authService.generateToken(clientUser);
-    } catch (error) {            
+    } catch (error) {        
+      console.log('errorcito', error)    
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
   }

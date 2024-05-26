@@ -7,15 +7,14 @@ export class CandidateCvPdfDto {
   @ApiProperty()
   candidateId: string;
   
-
   @ApiProperty({
     type: 'string',
     format: 'binary',
     description: 'Pdf file to import',
     required: true,
-})
-@IsNotEmpty()
-file: File;
+  })
+  @IsNotEmpty()
+  file: File;
 
 }
 

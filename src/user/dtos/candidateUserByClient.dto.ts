@@ -14,4 +14,13 @@ export class candidateUserByClientDto {
   @ApiProperty()
   candidateUser: candidateUserDto;
  
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Pdf file to import',
+    required: false,
+  })  
+  file: File;
+
 }
+  
