@@ -126,14 +126,12 @@ export class UserController {
   }
 
 
-  @Put('candidate')
-  @ApiConsumes('multipart/form-data', 'application/json')  
-  @UseInterceptors(FileInterceptor('file'))
+  @Put('candidate')    
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create/update candidate user', description: 'Create/update a candidate user' })
   @ApiResponse({ status: 200, description: 'Created candidate user ok', type: UserResponseDto })
-  async createCandidate(     @UploadedFile() file: Express.Multer.File,
-    @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request
+  async createCandidate(
+     @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request
   ) {
     try {
       const userId = await this.authService.getUserIdFromToken(request);    
@@ -142,16 +140,10 @@ export class UserController {
       if (!user) {
         return new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
       }
-            
-      let candidateUser = new candidateUserDto;      
-      candidateUser = (JSON.parse(request.body.user.replace(/\r?\n|\r/g, '')));      
-
+                  
       user.candidateUser = candidateUserByClient.candidateUser;    
       user.candidateUser.createdByUserId = userId;
-
-      const fileUrl = await this.filemanagerService.uploadFile (file);      
-      user.candidateUser.cvPdfUrl = fileUrl;
-
+      
       const savedCandidateUser = await this.userService.createCandidateUser(userId, user);      
       return this.authService.generateToken(savedCandidateUser);
     } catch (error) {      
@@ -161,37 +153,26 @@ export class UserController {
 
 
   
-  @ApiConsumes('multipart/form-data', 'application/json')  
-  @ApiBody({ type: candidateUserByClientDto, required: true })
-  @UseInterceptors(FileInterceptor('file'))
+  @ApiBody({ type: candidateUserByClientDto, required: true })  
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create candidate user by a client', description: 'Create a candidate user a client' })
   @ApiResponse({ status: 200, description: 'Created candidate by client user ok', type: UserResponseDto })
   @Post('candidateByClient')
-  async createCandidateByClient(
-    @UploadedFile() file: Express.Multer.File,
+  async createCandidateByClient(    
     @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request
   ) {
-    try {
+    try {                         
       
-      let candidateUser = new candidateUserByClientDto;      
-      candidateUser.user = (JSON.parse(request.body.user.replace(/\r?\n|\r/g, '')));
-      candidateUser.candidateUser = (JSON.parse(request.body.candidateUser.replace(/\r?\n|\r/g, '')))                     
-
-      console.log('candidateUser', candidateUser);
       const userId = await this.authService.getUserIdFromToken(request);    
       const clientUser = await this.userService.findOne(userId);          
       
-      const createdCandidateUser = await this.userService.create(candidateUser.user);            
+      const createdCandidateUser = await this.userService.create(candidateUserByClient.user);            
       if (!createdCandidateUser) {
         return new HttpException('Usuario no creado o ya existe', HttpStatus.NOT_FOUND);
       }
       
-      createdCandidateUser.candidateUser = candidateUser.candidateUser;
+      createdCandidateUser.candidateUser = candidateUserByClient.candidateUser;
       createdCandidateUser.candidateUser.createdByUserId = userId;
-
-      const fileUrl = await this.filemanagerService.uploadFile (file);      
-      createdCandidateUser.candidateUser.cvPdfUrl = fileUrl;
 
       const savedCandidateUser = await this.userService.createCandidateUser(createdCandidateUser._id.toString(), createdCandidateUser);      
 
@@ -202,13 +183,11 @@ export class UserController {
     }
   }
 
-  @Put('candidateByClient/:candidateId')
-  @ApiConsumes('multipart/form-data', 'application/json')  
+  @Put('candidateByClient/:candidateId')  
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update candidate user by a client', description: 'Update a candidate user a client' })
   @ApiResponse({ status: 200, description: 'Updated candidate by client user ok', type: UserResponseDto })
-  async updateCandidateByClient( 
-    @UploadedFile() file: Express.Multer.File,
+  async updateCandidateByClient(     
     @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request,  @Param('candidateId') candidateId: string
   ) {
     try {
@@ -223,18 +202,10 @@ export class UserController {
       const candidateUser = await this.userService.findCandidate(candidateId);
       if (!candidateUser) {
         return new HttpException('Candidato no encontrado', HttpStatus.NOT_FOUND);
-      }
-      
-      let candidateUserByClient = new candidateUserByClientDto;      
-      candidateUserByClient.user = (JSON.parse(request.body.user.replace(/\r?\n|\r/g, '')));
-      candidateUserByClient.candidateUser = (JSON.parse(request.body.candidateUser.replace(/\r?\n|\r/g, '')))      
-
+      }      
       
       candidateUser.email = candidateUserByClient.user.email;
-      candidateUser.candidateUser = candidateUserByClient.candidateUser;     
-
-      const fileUrl = await this.filemanagerService.uploadFile (file);      
-      candidateUser.candidateUser.cvPdfUrl = fileUrl;    
+      candidateUser.candidateUser = candidateUserByClient.candidateUser;      
 
       const savedCandidateUser = await this.userService.updateCandidateUser(candidateUser._id.toString(), candidateUser); 
 

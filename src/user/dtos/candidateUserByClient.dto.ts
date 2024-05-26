@@ -13,14 +13,6 @@ export class candidateUserByClientDto {
   @IsNotEmpty()  
   @ApiProperty()
   candidateUser: candidateUserDto;
- 
-  @ApiProperty({
-    type: 'string',
-    format: 'binary',
-    description: 'Pdf file to import',
-    required: false,
-  })  
-  file: File;
 
 }
   

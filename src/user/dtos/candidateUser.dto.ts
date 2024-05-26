@@ -50,12 +50,4 @@ export class candidateUserDto {
   @IsOptional()  
   updatedAt?: Date;
 
-  @ApiProperty({
-    type: 'string',
-    format: 'binary',
-    description: 'Pdf file to import',
-    required: true,
-  })
-  @IsNotEmpty()
-  file: File;
 }
