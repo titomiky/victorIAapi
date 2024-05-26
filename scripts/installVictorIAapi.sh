@@ -28,7 +28,7 @@ sudo apt install -y git
 # git clone repos
 mkdir GitHub
 cd GitHub
-git clone https://titomiky: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@github.com/titomiky/victorIAapi.git
+git clone https://titomiky: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@github.com/titomiky/victorIAapi.git
 
 cd ..
 
