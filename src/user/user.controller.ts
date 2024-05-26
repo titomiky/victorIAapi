@@ -35,7 +35,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { SessionService } from '../session/session.service';
 import { email } from './dtos/email.dto';
 import express, {Response} from 'express';
-import { CandidateCvPdfDto } from './dtos/candidateCvPdf.dto';
+import { CandidateCvPdfDto } from '../user/dtos/candidateCvPdf.dto';
 import { adminClientCandidateUserDto } from './dtos/adminClientCandidateUser.dto';
 import { UserChangePasswordDto } from './dtos/user.changePassword.dto';
 import { CompetenceService } from '../competence/competence.service';
