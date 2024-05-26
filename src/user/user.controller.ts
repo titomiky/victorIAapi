@@ -35,7 +35,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { SessionService } from '../session/session.service';
 import { email } from './dtos/email.dto';
 import express, {Response} from 'express';
-import { CandidateCvDto } from './dtos/candidateCv.dto';
+import { CandidateCvPdfDto } from './dtos/candidateCvPdf.dto';
 import { adminClientCandidateUserDto } from './dtos/adminClientCandidateUser.dto';
 import { UserChangePasswordDto } from './dtos/user.changePassword.dto';
 import { CompetenceService } from '../competence/competence.service';
@@ -684,13 +684,13 @@ export class UserController {
   }
 
   @ApiConsumes('multipart/form-data', 'application/json')  
-  @ApiBody({ type: CandidateCvDto, required: true })
+  @ApiBody({ type: CandidateCvPdfDto, required: true })
   @ApiOkResponse({ status: 201 })  
   @UseInterceptors(FileInterceptor('file'))
   @Public()
   @ApiOperation({ summary: 'Sube el fichero pdf del curriculum del candidato', description: 'Sube el fichero pdf del curriculum del candidato y devuelve la url pública de aws del cv con key en el nombre del fichero' })
   @Post('uploadCVpdf')    
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() candidateCvPdf: CandidateCvDto
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() candidateCvPdf: CandidateCvPdfDto
 ) {
     const fileUrl = await this.filemanagerService.uploadFile (file);
 
