@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, MinLength, MaxLength, IsEmail, IsOptional} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CandidateCvPdfDto {
+export class CandidateCvDto {
   @IsNotEmpty()
   @IsString()  
   @ApiProperty()
