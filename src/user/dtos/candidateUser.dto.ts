@@ -42,11 +42,20 @@ export class candidateUserDto {
   @ApiProperty()
   @IsString()
   @IsOptional()  
-  cvPdfUrl: string;
+  cvPdfUrl?: string;
 
   @IsOptional()  
   createdAt?: Date;
   
   @IsOptional()  
   updatedAt?: Date;
+
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Pdf file to import',
+    required: true,
+  })
+  @IsNotEmpty()
+  file: File;
 }

@@ -26,7 +26,7 @@ export class CandidateUser {
   cvText: string;
 
   @Prop({ required: false })
-  cvPdfUrl: string;
+  cvPdfUrl?: string;
   
   @Prop()
   createdByUserId?: string; 

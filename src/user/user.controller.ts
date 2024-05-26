@@ -127,22 +127,30 @@ export class UserController {
 
 
   @Put('candidate')
+  @ApiConsumes('multipart/form-data', 'application/json')  
+  @UseInterceptors(FileInterceptor('file'))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create/update candidate user', description: 'Create/update a candidate user' })
   @ApiResponse({ status: 200, description: 'Created candidate user ok', type: UserResponseDto })
-  async createCandidate(    
-    @Body(new ValidationPipe()) candidateUser: candidateUserDto, @Req() request: Request
+  async createCandidate(     @UploadedFile() file: Express.Multer.File,
+    @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request
   ) {
     try {
       const userId = await this.authService.getUserIdFromToken(request);    
-      const user = await this.userService.findOne(userId);    
+      const user = await this.userService.findOne(userId);          
       
       if (!user) {
         return new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
       }
-      
-      user.candidateUser = candidateUser;    
+            
+      let candidateUser = new candidateUserDto;      
+      candidateUser = (JSON.parse(request.body.user.replace(/\r?\n|\r/g, '')));      
+
+      user.candidateUser = candidateUserByClient.candidateUser;    
       user.candidateUser.createdByUserId = userId;
+
+      const fileUrl = await this.filemanagerService.uploadFile (file);      
+      user.candidateUser.cvPdfUrl = fileUrl;
 
       const savedCandidateUser = await this.userService.createCandidateUser(userId, user);      
       return this.authService.generateToken(savedCandidateUser);
@@ -182,8 +190,7 @@ export class UserController {
       createdCandidateUser.candidateUser = candidateUser.candidateUser;
       createdCandidateUser.candidateUser.createdByUserId = userId;
 
-      const fileUrl = await this.filemanagerService.uploadFile (file);
-      console.log('fileUrl', fileUrl);
+      const fileUrl = await this.filemanagerService.uploadFile (file);      
       createdCandidateUser.candidateUser.cvPdfUrl = fileUrl;
 
       const savedCandidateUser = await this.userService.createCandidateUser(createdCandidateUser._id.toString(), createdCandidateUser);      
