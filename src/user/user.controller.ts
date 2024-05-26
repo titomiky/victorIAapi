@@ -212,6 +212,7 @@ export class UserController {
     @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request,  @Param('candidateId') candidateId: string
   ) {
     try {
+
       const clientUserId = await this.authService.getUserIdFromToken(request);    
       const clientUser = await this.userService.findOne(clientUserId);    
       
@@ -224,9 +225,14 @@ export class UserController {
         return new HttpException('Candidato no encontrado', HttpStatus.NOT_FOUND);
       }
       
+      let candidateUserByClient = new candidateUserByClientDto;      
+      candidateUserByClient.user = (JSON.parse(request.body.user.replace(/\r?\n|\r/g, '')));
+      candidateUserByClient.candidateUser = (JSON.parse(request.body.candidateUser.replace(/\r?\n|\r/g, '')))      
+
+      
       candidateUser.email = candidateUserByClient.user.email;
       candidateUser.candidateUser = candidateUserByClient.candidateUser;     
-       
+
       const fileUrl = await this.filemanagerService.uploadFile (file);      
       candidateUser.candidateUser.cvPdfUrl = fileUrl;    
 
