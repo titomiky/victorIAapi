@@ -3,6 +3,7 @@ pm2 stop victorIAapi
 pm2 delete victorIAapi
 
 # 2. get latest changes
+git -C /home/debian/GitHub/victorIAapi reset --hard
 git -C /home/debian/GitHub/victorIAapi pull
 
 # 3. install packages if necessary
