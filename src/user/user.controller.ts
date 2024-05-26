@@ -203,10 +203,12 @@ export class UserController {
   }
 
   @Put('candidateByClient/:candidateId')
+  @ApiConsumes('multipart/form-data', 'application/json')  
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update candidate user by a client', description: 'Update a candidate user a client' })
   @ApiResponse({ status: 200, description: 'Updated candidate by client user ok', type: UserResponseDto })
-  async updateCandidateByClient(    
+  async updateCandidateByClient( 
+    @UploadedFile() file: Express.Multer.File,
     @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request,  @Param('candidateId') candidateId: string
   ) {
     try {
@@ -223,7 +225,10 @@ export class UserController {
       }
       
       candidateUser.email = candidateUserByClient.user.email;
-      candidateUser.candidateUser = candidateUserByClient.candidateUser;          
+      candidateUser.candidateUser = candidateUserByClient.candidateUser;     
+       
+      const fileUrl = await this.filemanagerService.uploadFile (file);      
+      candidateUser.candidateUser.cvPdfUrl = fileUrl;    
 
       const savedCandidateUser = await this.userService.updateCandidateUser(candidateUser._id.toString(), candidateUser); 
 

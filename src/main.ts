@@ -22,7 +22,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
   .setTitle('VictorIA API Documentation')
   .setDescription('VictorIA API Documentation')
-  .setVersion('1.2.0')
+  .setVersion('1.3.0')
   .addBearerAuth()
   .build();
 
