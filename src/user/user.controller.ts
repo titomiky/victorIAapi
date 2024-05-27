@@ -674,11 +674,15 @@ export class UserController {
   @Post('uploadCVpdf')    
   async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() candidateCvPdf: CandidateCvPdfDto
 ) {
-    const fileUrl = await this.filemanagerService.uploadFile (file);
+    try {
+      const fileUrl = await this.filemanagerService.uploadFile (file);
 
-    const user = await this.userService.setCvPdfFileUrlToCandidate (fileUrl, candidateCvPdf.candidateId);
-    return { url: fileUrl };
+      const user = await this.userService.setCvPdfFileUrlToCandidate (fileUrl, candidateCvPdf.candidateId);
+      return { url: fileUrl };
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
-
 }
 
