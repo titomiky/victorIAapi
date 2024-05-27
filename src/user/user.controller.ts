@@ -131,7 +131,7 @@ export class UserController {
   @ApiOperation({ summary: 'Create/update candidate user', description: 'Create/update a candidate user' })
   @ApiResponse({ status: 200, description: 'Created candidate user ok', type: UserResponseDto })
   async createCandidate(
-     @Body(new ValidationPipe()) candidateUserByClient: candidateUserByClientDto, @Req() request: Request
+     @Body(new ValidationPipe()) candidateUserByClient: candidateUserDto, @Req() request: Request
   ) {
     try {
       const userId = await this.authService.getUserIdFromToken(request);    
@@ -141,7 +141,7 @@ export class UserController {
         return new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
       }
                   
-      user.candidateUser = candidateUserByClient.candidateUser;    
+      user.candidateUser = candidateUserByClient;    
       user.candidateUser.createdByUserId = userId;
       
       const savedCandidateUser = await this.userService.createCandidateUser(userId, user);      
