@@ -675,12 +675,14 @@ export class UserController {
   async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() candidateCvPdf: CandidateCvPdfDto
 ) {
     try {
+      const candidateExist  = await this.userService.findCandidate(candidateCvPdf.candidateId);
+      if (!candidateExist) return { error: 'Candidate not found' };
+
       const fileUrl = await this.filemanagerService.uploadFile (file);
 
       const user = await this.userService.setCvPdfFileUrlToCandidate (fileUrl, candidateCvPdf.candidateId);
       return { url: fileUrl };
-    } catch (error) {
-      console.log(error);
+    } catch (error) {      
       return error;
     }
   }
