@@ -57,12 +57,24 @@ export class UserController {
   @ApiResponse({ status: 201, description: 'Created user ok', type: UserResponseDto })
   async create(
     @Body(new ValidationPipe()) createuser: UserDto,
-    @Req() request: Request,
+    @Req() req: Request
   ) {
     try {  
       //this.logger.log(request);
       const savedUser = await this.userService.create(createuser);      
-      return this.authService.generateToken(savedUser);
+      
+      //Send email to validate account
+      const userId = await this.authService.getUserIdFromToken(req);    
+      const email = await this.authService.getEmailFromToken(req);    
+      
+      const hostname = req.headers.host;
+      const isSecure = req.secure;
+      const protocol = isSecure ? 'https' : 'http';
+      const currentURL = `${protocol}://${hostname}`;   
+            
+      const sentEmail = await this.userService.sendEmailToVerifyAccount(userId, email, currentURL);                
+      
+      return this.authService.generateToken(savedUser);    
       
     } catch (error) {      
       return new HttpException(error, HttpStatus.CONFLICT); 
@@ -549,48 +561,17 @@ export class UserController {
     @Req() req: Request, @Res() res: Response
   ) {
     try {              
-      const config = {
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        auth: {
-          user: process.env.EMAIL_AUTH_USER,
-          pass: process.env.EMAIL_AUTH_PASS
-        }
-      };
-
+ 
       const userId = await this.authService.getUserIdFromToken(req);    
       const email = await this.authService.getEmailFromToken(req);    
       
       const hostname = req.headers.host;
       const isSecure = req.secure;
       const protocol = isSecure ? 'https' : 'http';
-      const currentURL = `${protocol}://${hostname}`;      
-            
-      const verificationLink = currentURL + "/validateEmailByToken/" + userId;      
-      
-      // Render the HTML email body using the EJS template
-      const templatePath = __dirname.replace('user', 'views/validateEmail.ejs');      
+      const currentURL = `${protocol}://${hostname}`;                   
 
-      //const templateString = fs.readFileSync(templatePath, 'utf8');
-      const templateData  = {
-        email: email,
-        verificationLink: verificationLink,
-      };
-      const html = await ejs.renderFile(templatePath, templateData)      
-
-      // Define email options
-      const message = {
-        from: 'info@stoical.be',
-        to: email,
-        subject: 'Verificación de email',
-        html: html,
-        text: 'hola'
-      };
-    
-      // Send the email
-      try {
-        const transport = await nodemailer.createTransport(config);
-        const info = await transport.sendMail(message);                
+      try {        
+        const sentEmail = await this.userService.sendEmailToVerifyAccount(userId, email, currentURL);                
         return res.status(HttpStatus.OK).send('Verification email sent successfully.');      
       } catch (error) {
         

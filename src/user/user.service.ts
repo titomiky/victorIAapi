@@ -1,4 +1,4 @@
-import { HttpException, Injectable, OnModuleInit } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 const { ObjectId } = mongoose.Types;  
@@ -15,6 +15,8 @@ import { link } from 'fs';
 import { Readable } from 'stream';
 import * as Grid from 'gridfs-stream';
 import { FilesManagerService } from 'src/files-manager/files-manager.service';
+import * as ejs from 'ejs'; 
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class UserService {
@@ -419,6 +421,54 @@ export class UserService {
       return await user.save();
     }catch(error) {
       console.log(error);
+    }
+  }
+
+  async sendEmailToVerifyAccount(userId:  string, email: string, currentURL: string)
+  {
+    try {  
+
+      const config = {
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        auth: {
+          user: process.env.EMAIL_AUTH_USER,
+          pass: process.env.EMAIL_AUTH_PASS
+        }
+      };
+              
+      const verificationLink = currentURL + "/validateEmailByToken/" + userId;      
+      
+      // Render the HTML email body using the EJS template
+      const templatePath = __dirname.replace('user', 'views/validateEmail.ejs');      
+
+      //const templateString = fs.readFileSync(templatePath, 'utf8');
+      const templateData  = {
+        email: email,
+        verificationLink: verificationLink,
+      };
+      const html = await ejs.renderFile(templatePath, templateData)      
+
+      // Define email options
+      const message = {
+        from: 'info@stoical.be',
+        to: email,
+        subject: 'Verificación de email',
+        html: html,
+        text: 'hola'
+      };
+    
+      // Send the email
+      try {
+        const transport = await nodemailer.createTransport(config);
+        const info = await transport.sendMail(message);                
+        return HttpStatus.OK;      
+      } catch (error) {
+        
+        return HttpStatus.INTERNAL_SERVER_ERROR; 
+      }      
+    } catch (error) {            
+      return HttpStatus.INTERNAL_SERVER_ERROR;    
     }
 
   }
