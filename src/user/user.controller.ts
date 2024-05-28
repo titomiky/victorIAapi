@@ -627,7 +627,7 @@ export class UserController {
       const user = await this.userService.findByEmail(email.email);
       if (!user)  return res.status(HttpStatus.NOT_FOUND).send('Email not found.');
       
-      const verificationLink = "http://localhost:3000/auth/reset-password/" + user._id.toString();      
+      const verificationLink = process.env.WEB_URL + "/auth/reset-password/" + user._id.toString();      
       
       // Render the HTML email body using the EJS template
       const templatePath = __dirname.replace('user', 'views/changePassword.ejs');      
