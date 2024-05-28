@@ -407,9 +407,10 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'List candidates', description: 'List all candidates' })
   @ApiResponse({ status: 200, description: 'Returned candidates ok', type: User })
-  async findAllCandidates() {
+  async findAllCandidates( @Req() request: Request) {
     try {
-      return this.userService.findAllCandidates();
+      const userId = await this.authService.getUserIdFromToken(request);
+      return this.userService.findAllCandidates(userId);
     } catch (error) {      
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
     }
