@@ -427,6 +427,7 @@ export class UserService {
   async sendEmailToVerifyAccount(userId:  string, email: string, currentURL: string)
   {
     try {  
+      console.log(userId, email, currentURL);
 
       const config = {
         host: process.env.EMAIL_HOST,
@@ -436,7 +437,7 @@ export class UserService {
           pass: process.env.EMAIL_AUTH_PASS
         }
       };
-              
+      console.log('config', config);      
       const verificationLink = currentURL + "/validateEmailByToken/" + userId;      
       
       // Render the HTML email body using the EJS template
@@ -462,9 +463,9 @@ export class UserService {
       try {
         const transport = await nodemailer.createTransport(config);
         const info = await transport.sendMail(message);                
-        return HttpStatus.OK;      
+        return HttpStatus.OK;
       } catch (error) {
-        
+        console.log('error', error);
         return HttpStatus.INTERNAL_SERVER_ERROR; 
       }      
     } catch (error) {            

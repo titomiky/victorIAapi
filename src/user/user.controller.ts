@@ -63,17 +63,14 @@ export class UserController {
       //this.logger.log(request);
       const savedUser = await this.userService.create(createuser);      
       
-      //Send email to validate account
-      const userId = await this.authService.getUserIdFromToken(req);    
-      const email = await this.authService.getEmailFromToken(req);    
-      
+      //Send email to validate account      
       const hostname = req.headers.host;
       const isSecure = req.secure;
       const protocol = isSecure ? 'https' : 'http';
       const currentURL = `${protocol}://${hostname}`;   
             
-      const sentEmail = await this.userService.sendEmailToVerifyAccount(userId, email, currentURL);                
-      
+      const sentEmail = await this.userService.sendEmailToVerifyAccount(savedUser._id.toString(), savedUser.email, currentURL);
+
       return this.authService.generateToken(savedUser);    
       
     } catch (error) {      
