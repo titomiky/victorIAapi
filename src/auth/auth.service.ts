@@ -35,7 +35,7 @@ export class AuthService {
   }
   
 
-  async generateToken (user,  candidateId = undefined) {    
+  async generateToken (user,  candidateIdCreatedByClient = undefined) {    
 
     try {
       let  onboarding = (user.clientUser && typeof user.clientUser === 'object') || (user.adminUser && typeof user.adminUser === 'object') || (user.candidateUser && typeof user.candidateUser === 'object');
@@ -49,13 +49,13 @@ export class AuthService {
       
       if (user.candidateUser && typeof user.candidateUser === 'object') {
         role = 'candidate';    
-        if (candidateId) {
-          candidateId = candidateId;
-        }
-        else {
-          candidateId = user.candidateUser._id;
-        }
+        candidateId = user.candidateUser._id;
       }
+
+      //This is for uploading Pdf 
+      if (candidateIdCreatedByClient) {        
+        candidateId = candidateIdCreatedByClient;
+      }      
 
       if (user.clientUser && typeof user.clientUser === 'object') {
         role = 'client';
