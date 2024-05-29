@@ -35,7 +35,7 @@ export class AuthService {
   }
   
 
-  async generateToken (user) {    
+  async generateToken (user,  candidateId = undefined) {    
 
     try {
       let  onboarding = (user.clientUser && typeof user.clientUser === 'object') || (user.adminUser && typeof user.adminUser === 'object') || (user.candidateUser && typeof user.candidateUser === 'object');
@@ -49,7 +49,12 @@ export class AuthService {
       
       if (user.candidateUser && typeof user.candidateUser === 'object') {
         role = 'candidate';    
-        candidateId = user.candidateUser._id;
+        if (candidateId) {
+          candidateId = candidateId;
+        }
+        else {
+          candidateId = user.candidateUser._id;
+        }
       }
 
       if (user.clientUser && typeof user.clientUser === 'object') {
