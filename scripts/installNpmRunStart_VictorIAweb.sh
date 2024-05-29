@@ -1,2 +1,2 @@
 #!/bin/bash
-pnpm --prefix /home/debian/GitHub/victorIAmanu start
+#pnpm --prefix /home/debian/GitHub/victorIAmanu start

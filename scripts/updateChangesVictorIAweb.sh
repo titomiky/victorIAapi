@@ -12,4 +12,5 @@ pnpm --prefix /home/debian/GitHub/victorIAmanu run build
 
 # 4. start pm2
 chmod +x /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAweb.sh
-pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAweb.sh --name victorIAweb --daemon 
+#pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAweb.sh --name victorIAweb --daemon 
+pm2 start --name victorIAweb --interpreter pnpm --prefix /home/debian/GitHub/victorIAapi/ --start 
