@@ -7,8 +7,8 @@ git -C /home/debian/GitHub/victorIAmanu reset --hard
 git -C /home/debian/GitHub/victorIAmanu pull
 
 # 3. install packages if necessary
-npm install --prefix /home/debian/GitHub/victorIAmanu
-npm run build --prefix /home/debian/GitHub/victorIAmanu
+pnpm --prefix /home/debian/GitHub/victorIAmanu install
+pnpm --prefix /home/debian/GitHub/victorIAmanu run build
 
 # 4. start pm2
 chmod +x /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAweb.sh
