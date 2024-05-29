@@ -185,7 +185,7 @@ export class UserController {
 
       const savedCandidateUser = await this.userService.createCandidateUser(createdCandidateUser._id.toString(), createdCandidateUser);      
 
-      return this.authService.generateToken(clientUser);
+      return savedCandidateUser._id.toString();
     } catch (error) {        
       console.log('errorcito', error)    
       return new HttpException('Error de servicio', HttpStatus.INTERNAL_SERVER_ERROR); 
