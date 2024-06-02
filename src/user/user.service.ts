@@ -418,10 +418,8 @@ export class UserService {
     try {      
       const user = await this.userModel.findOne({ 'candidateUser._id':  candidateId}).exec();            
       user.candidateUser.cvPdfUrl = cvPdfUrl;      
-      await user.save();
+      return await user.save();
 
-      const returnUserWithcvPdfUrl = await this.userModel.findOne({ 'candidateUser._id':  candidateId}).exec();            
-      return returnUserWithcvPdfUrl;
     }catch(error) {
       console.log(error);
     }
