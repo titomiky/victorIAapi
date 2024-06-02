@@ -660,7 +660,7 @@ export class UserController {
       const fileUrl = await this.filemanagerService.uploadFile (file);
 
       const user = await this.userService.setCvPdfFileUrlToCandidate (fileUrl, candidateCvPdf.candidateId);
-      return { url: fileUrl };
+      return { url: user.candidateUser.cvPdfUrl };
     } catch (error) {      
       return error;
     }
