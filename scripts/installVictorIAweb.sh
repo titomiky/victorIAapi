@@ -100,6 +100,12 @@ sudo apt-get install -y iptables-persistent
 sudo netfilter-persistent save
 sudo netfilter-persistent reload
 
+# Instal pnpm for web
+sudo curl -fsSL https://get.pnpm.io/install.sh | sh -
+sudo npm install -g pnpm
+
+
+
 sudo apt update
 
 
