@@ -15,3 +15,6 @@ rm -rf installVictorIAapi.sh
 
 ##### local environment
 source ~/.nvm/nvm.sh
+
+## openai
+export OPENAI_API_KEY="xxxxxx"

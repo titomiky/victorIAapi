@@ -20,6 +20,12 @@ import { ApiTags, ApiResponse, ApiBearerAuth, ApiOperation, ApiConsumes, ApiBody
 import { AuthService } from 'src/auth/auth.service';
 import { Public } from '../auth/auth.controller';
 import { SessionDto } from './dtos/session.dto';
+import OpenAI from 'openai';
+import { ClientOptions } from 'openai';
+import express, {Response} from 'express';
+import { ChatCompletionMessageParam } from 'openai/resources';
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 @ApiTags('sessions')
 @Controller('sessions')
@@ -57,64 +63,32 @@ export class SessionController {
   }
 
 
-  // async getFormattedMessages() {
-  //   try {
-  //     // Recupera todas las conversaciones
-  //     const conversations = await Conversation.find({});
-  //     // Suponiendo que quieres formatear los mensajes de la primera conversación
-  //     if (conversations.length > 0) {
-  //       const sortedMessages = conversations[0].messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  //       const formattedMessages = sortedMessages.map(msg => ({
-  //         role: msg.role,
-  //         content: msg.content
-  //       }));
-  //       return formattedMessages;
-  //     }
-  //     return [];
-  //   } catch (error) {
-  //     console.error("Error al recuperar y formatear mensajes:", error);
-  //     return [];
-  //   }
-  // }
+  @Get('/inicio/:sessionId')
+  @Public()
+  async inicio(@Param('sessionId') sessionId: string,  @Req() req: Request, @Res() res: Response) {
+    try {
+      //TODO: validate that sessionId exists
+      const session = await this.sessionService.findOne(sessionId);
+      if (!session) {
+        throw new HttpException('Session not found', HttpStatus.NOT_FOUND);
+      }
 
-  // @Post()
-  // @Public()
-  // async ask(@Body() message: string){
-  //   const userMessage = message;
-  //   console.log(userMessage);
-  //   try {
-  
-  //     const messages = await getFormattedMessages();    
-  //     const messagesToSave = [];
-  //     messagesToSave.push({ role: "user", content: userMessage });
-  //     messages.push(messagesToSave[messagesToSave.length - 1]);
       
-  //     const stream = await openai.chat.completions.create({
-  //       model: "gpt-4",
-  //       messages: messages,
-  //       stream: true,
-  //     });
-  
-  //     let responseContent = "";
-  //     for await (const chunk of stream) {
-  //       responseContent += chunk.choices[0]?.delta?.content || "";
-  //     }  
-  //     const competencias = GetCompetencias(responseContent);
-  //     responseContent = EliminarJSONDeCompetencias(responseContent);
-          
-  //     messagesToSave.push({ role: "assistant", content: responseContent, competencias: competencias });   
-  //     messages.push(messagesToSave[messagesToSave.length - 1]);
-  //     const conversation = new Conversation({
-  //       messages: messagesToSave
-  //     });
-  //     await conversation.save(); // Guarda la conversación inicial en la base de datos
-  
-  //     res.json({ pregunta: responseContent });
-  //   } catch (error) {
-  //     console.error("Error al comunicarse con OpenAI:", error);
-  //     res.status(500).json({ message: "Error al procesar la solicitud" });
-  //   }
-  // });
-  
+      const messages : OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+        { role: "system", content: "Eres un reclutador de recursos humanos llamado Victoria que realiza una entrevista para saber qué grado de competencia tiene en Comunicación Efectiva, Trabajo en Equipo, Pensamiento Crítico, Resolución de Problemas, Liderazgo, Adaptabilidad y Flexibilidad, Gestión del Tiempo y Organización, Inteligencia Emocional. Empieza la entrevista haciendo una primera pregunta y no acaba hasta que el usuario le conteste a todas las preguntas necesarias para confirmar el nivel en las competencias. Sólo realiza una pregunta en cada mensaje. Como máximo se analizan dos competencias en cada pregunta. Cuando devuelvas la preguntas, devuelve al final del mensajes en el siguiente formato json cada competencia o competencias que estas analizando en cada pregunta {\"competencias\": [\"competencia1\", \"competencia2\", ...]]}. Trata siempre de tú, no de usted. No menciones el nombre de las capacidades que estás tratando de averiguar con las preguntas. Realiza varias sólo una pregunta a la vez." }
+      ];      
+
+      const stream = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages: messages,
+        stream: true,
+      });
+
+
+    } catch(error) {
+      console.log(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Error sending verification email.');      
+    }
+  }
 
 }
