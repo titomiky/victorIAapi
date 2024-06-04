@@ -6,14 +6,13 @@ export class QuestionAnswer {
   @ApiProperty({required:true})  
   @IsNotEmpty()  
   @IsString()
-  question: string;
+  role: string;
 
   @ApiProperty({required:true})  
   @IsNotEmpty()    
   @IsString()  
-  answer: string;
-
-  Date: Date;
+  content: string;
+  
   
 }
 

@@ -5,6 +5,7 @@ import { Session } from '../session/schema/session.schema';
 import { SessionDto } from './dtos/session.dto';
 import { Model } from 'mongoose';
 import { promises } from 'dns';
+import { QuestionAnswer } from './dtos/session.questionanswer.dto';
 
 
 @Injectable()
@@ -27,6 +28,11 @@ export class SessionService {
   async update(id: string, updateSessionDto: Partial<SessionDto>): Promise<Session> {
     return this.sessionModel.findByIdAndUpdate(id, updateSessionDto, { new: true }).exec();
   }
+
+  async addQuestionAnswer(id: string, questionAnswer: QuestionAnswer): Promise<Session> {
+    return this.sessionModel.findByIdAndUpdate(id, { $push: { interview: questionAnswer } }, { new: true }).exec();
+  }
+
 
   async remove(id: string): Promise<Session> {
     return this.sessionModel.findByIdAndDelete(id).exec();
