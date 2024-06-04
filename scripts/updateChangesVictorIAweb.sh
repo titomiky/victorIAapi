@@ -12,4 +12,4 @@ pnpm --prefix /home/debian/GitHub/victorIAmanu run build
 
 # 4. start pm2
 cd /home/debian/GitHub/victorIAmanu 
-pm2 start pnpm --name victorIAweb -- run start
+pm2 start pnpm --name victorIAweb -- run start -p 3100
