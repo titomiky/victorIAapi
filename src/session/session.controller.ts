@@ -64,9 +64,10 @@ export class SessionController {
   }
 
 
-  @Get('/inicio/:sessionId')
+  @Get('/start/:sessionId')
   @Public()
-  async inicio(@Param('sessionId') sessionId: string,  @Req() req: Request, @Res() res: Response) {
+  @ApiOperation({ summary: 'Starts the session', description: 'Equivalent to INICIO' })
+  async start(@Param('sessionId') sessionId: string,  @Req() req: Request, @Res() res: Response) {
     try {
       
       const session = await this.sessionService.findOne(sessionId);
