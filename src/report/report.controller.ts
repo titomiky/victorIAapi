@@ -33,13 +33,13 @@ export class ReportController {
     
     const competences = 
     [
-      { name: "competence1", value: 10 },
-      { name: "competence2", value: 20 },
-      { name: "competence3", value: 9 },
-      { name: "competence4", value: 51 },
-      { name: "competence5", value: 15 },
-      { name: "competence6", value: 26 },
-      { name: "competence7", value: 90 },
+      { name: "Comunicación Efectiva", value: 2 },
+      { name: "Trabajo en Equipo", value: 3 },
+      { name: "Pensamiento Crítico", value: 9 },
+      { name: "Resolución de Problemas", value: 5 },
+      { name: "Resolución de Problemas", value: 3 },
+      { name: "Adaptabilidad y Flexibilidad", value: 6 },
+      { name: "Gestión del Tiempo y Organización", value: 0 },
     ];
     return {
       "jobOfferName": "Oferta Developer",
