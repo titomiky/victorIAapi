@@ -33,17 +33,4 @@ export class Session {
 export const SessionSchema = SchemaFactory.createForClass(Session);
 
 
-SessionSchema.pre<Session>('save', function(next) {
-
-  if (!this.createdAt) {
-    this.createdAt = new Date();;
-  }
-  this.updatedAt = new Date();;
-  next();
-});
-
-SessionSchema.pre<Session>('findOneAndUpdate', function (next) {  
-  this.updatedAt = new Date();
   
-  next();
-});

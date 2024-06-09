@@ -13,6 +13,7 @@ export class QuestionAnswer {
   @IsString()  
   content: string;
   
-  
+  @ApiProperty({ default:  Date.now})
+  createdAt: Date;
 }
 

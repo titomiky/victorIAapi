@@ -18,24 +18,28 @@ export class SessionService {
   }
 
   async findAll(): Promise<Session[]> {
-    return this.sessionModel.find().exec();
+    return await this.sessionModel.find().exec();
   }
 
-  async findOne(id: string): Promise<Session> {
-    return this.sessionModel.findById(id).exec();
+  async findOne(sessionId: string): Promise<Session> {
+    return await this.sessionModel.findById(sessionId).exec();
   }
 
   async update(id: string, updateSessionDto: Partial<SessionDto>): Promise<Session> {
-    return this.sessionModel.findByIdAndUpdate(id, updateSessionDto, { new: true }).exec();
+    return await this.sessionModel.findByIdAndUpdate(id, updateSessionDto, { new: true }).exec();
   }
 
-  async addQuestionAnswer(id: string, questionAnswer: QuestionAnswer): Promise<Session> {
-    return this.sessionModel.findByIdAndUpdate(id, { $push: { interview: questionAnswer } }, { new: true }).exec();
+  async addQuestionAnswer(sessionId: string, questionAnswer: QuestionAnswer): Promise<Session> {
+    return await this.sessionModel.findByIdAndUpdate(sessionId, { $push: { interview: questionAnswer } }, { new: true }).exec();
   }
 
+  async getQuestionAnswers(sessionId: string) : Promise<QuestionAnswer[]> {
+    const session = await this.sessionModel.findById(sessionId).exec();
+    return session.interview;
+  }
 
   async remove(id: string): Promise<Session> {
-    return this.sessionModel.findByIdAndDelete(id).exec();
+    return await this.sessionModel.findByIdAndDelete(id).exec();
   }
 
   async getSessionLink(candidateId: string, jobOfferId: string): Promise<String> {      
