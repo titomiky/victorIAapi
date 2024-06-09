@@ -36,7 +36,7 @@ async function bootstrap() {
   app.useStaticAssets(path.join(__dirname, '..', 'public'));
 
   const corsOptions: cors.CorsOptions = {
-    origin: ['http://localhost:' + process.env.PORT, 'http://localhost:' + process.env.WEB_PORT, '*', process.env.WEB_URL], // Replace with allowed origins
+    origin: ['http://localhost:' + process.env.PORT, 'http://localhost:' + process.env.WEB_PORT, 'http://localhost:' + process.env.CHAT_PORT, '*', process.env.WEB_URL], // Replace with allowed origins
     
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed request headers
