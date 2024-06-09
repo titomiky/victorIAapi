@@ -16,5 +16,5 @@ tsc -p /home/debian/GitHub/victorIAapi
 # 5. start pm2
 chmod +x /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAapi.sh
 
-
+export OPENAI_API_KEY="sk-holaqueai-fYyIQxsKO9fkotUbMuF0T3BlbkFJQNvbf2vNFdHydPHZZxbK"
 pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAapi.sh --name victorIAapi --daemon 

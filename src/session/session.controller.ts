@@ -25,6 +25,7 @@ import { ClientOptions } from 'openai';
 import express, {Response} from 'express';
 import { ChatCompletionMessageParam } from 'openai/resources';
 import { QuestionAnswer } from './schema/session.questionAnswer.schema';
+import { SessionAskDto } from './dtos/session.ask';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -112,20 +113,19 @@ export class SessionController {
   }
 
 
-  @Post()
+  @Post('/ask')
   @ApiBearerAuth()
-  async ask(@Body() sessionId: string, message: string, @Req() req: Request, @Res() res: Response) {
-    console.log(message);
-
+  async ask(@Body() ask: SessionAskDto,  @Req() req: Request, @Res() res: Response) {
+    
     try {
 
-      const messages = await this.getFormattedMessages(sessionId);
+      const messages = await this.getFormattedMessages(ask.sessionId);
       const messagesToSave = [];
-      messagesToSave.push({ role: "user", content: message });
+      messagesToSave.push({ role: "user", content: ask.message });
       messages.push(messagesToSave[messagesToSave.length - 1]);
       
       const messagesToOpenAi : OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
-        { role: "user", content: message}
+        { role: "user", content: ask.message}
       ];
       
       const stream = await openai.chat.completions.create({
@@ -147,7 +147,7 @@ export class SessionController {
       questionAnswer.role= "assistant";
       questionAnswer.content= responseContent;
 
-      const updatedSession = await this.sessionService.addQuestionAnswer(sessionId, questionAnswer);
+      const updatedSession = await this.sessionService.addQuestionAnswer(ask.sessionId, questionAnswer);
       //return res.status(HttpStatus.OK).send('ok.');
 
       return res.json({ pregunta: responseContent });
