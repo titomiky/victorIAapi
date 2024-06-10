@@ -104,7 +104,8 @@ export class SessionController {
       questionAnswer.content = systemContent;
 
       const updatedSession = await this.sessionService.addQuestionAnswer(sessionId, questionAnswer);
-      return res.status(HttpStatus.OK).send('ok.');
+      
+      return res.json({ question: responseContent });
 
     } catch(error) {
       console.log(error);
