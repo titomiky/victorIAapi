@@ -117,9 +117,9 @@ export class SessionController {
   }
 
 
-  @Post('/ask')  
+  @Post('/answer')  
   @Public()
-  async ask(@Body() ask: SessionAskDto,  @Req() req: Request, @Res() res: Response) {
+  async answer(@Body() ask: SessionAskDto,  @Req() req: Request, @Res() res: Response) {
     
     try {
 
