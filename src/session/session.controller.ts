@@ -115,6 +115,7 @@ export class SessionController {
 
   @Post('/ask')
   @ApiBearerAuth()
+  @Public()
   async ask(@Body() ask: SessionAskDto,  @Req() req: Request, @Res() res: Response) {
     
     try {
