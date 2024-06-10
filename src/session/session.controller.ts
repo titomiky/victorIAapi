@@ -97,7 +97,10 @@ export class SessionController {
 
       console.log(responseContent);
       const competencias = this.GetCompetencias(responseContent);
-      responseContent += this.EliminarJSONDeCompetencias(responseContent);
+      console.log ('competencias', competencias);
+      const questionText = this.EliminarJSONDeCompetencias(responseContent);
+
+      console.log ('questionText', questionText);
 
       const questionAnswer = new QuestionAnswer();
       questionAnswer.role = systemRole;
@@ -105,7 +108,7 @@ export class SessionController {
 
       const updatedSession = await this.sessionService.addQuestionAnswer(sessionId, questionAnswer);
       
-      return res.json({ question: responseContent });
+      return res.json({ question: questionText });
 
     } catch(error) {
       console.log(error);
