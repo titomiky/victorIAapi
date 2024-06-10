@@ -154,7 +154,7 @@ export class SessionController {
       const updatedSession = await this.sessionService.addQuestionAnswer(ask.sessionId, questionAnswer);
       //return res.status(HttpStatus.OK).send('ok.');
 
-      return res.json({ pregunta: responseContent });
+      return res.json({ question: responseContent });
     } catch (error) {
       console.error("Error al comunicarse con OpenAI:", error);
       res.status(500).json({ message: "Error al procesar la solicitud" });
