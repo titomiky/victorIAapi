@@ -83,6 +83,13 @@ export class SessionController {
         { role: systemRole, content: systemContent}
       ];
 
+      const questionAnswer1 = new QuestionAnswer();
+      questionAnswer1.role = systemRole;
+      questionAnswer1.content = systemContent;
+
+      const updatedSession1 = await this.sessionService.addQuestionAnswer(sessionId, questionAnswer1);
+
+
       const stream = await openai.chat.completions.create({
         model: "gpt-4",
         messages: messages,
@@ -90,21 +97,15 @@ export class SessionController {
       });
 
       let responseContent = "";
-      for await (const chunk of stream) {
-        console.log(chunk);
+      for await (const chunk of stream) {        
         responseContent += chunk.choices[0]?.delta?.content || "";
       }
-
-      console.log(responseContent);
       const competencias = this.GetCompetencias(responseContent);
-      console.log ('competencias', competencias);
       const questionText = this.EliminarJSONDeCompetencias(responseContent);
-
-      console.log ('questionText', questionText);
-
+      
       const questionAnswer = new QuestionAnswer();
-      questionAnswer.role = systemRole;
-      questionAnswer.content = systemContent;
+      questionAnswer.role = "assistant";
+      questionAnswer.content = questionText;
 
       const updatedSession = await this.sessionService.addQuestionAnswer(sessionId, questionAnswer);
       
