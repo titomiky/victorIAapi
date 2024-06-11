@@ -52,21 +52,21 @@ npm run build
 #npm run --prefix /home/debian/GitHub/clientia start
 chmod +x /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAchat.sh
 
-pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAchat.sh --name victorIAweb --daemon 
+pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAchat.sh --name victorIAchat --daemon 
 
 # nginx + ssl
 sudo apt update
 sudo apt install nginx -y
 
-sudo cp /home/debian/GitHub/victorIAapi/scripts/web.holaqueai.com /etc/nginx/sites-available/web.holaqueai.com
+sudo cp /home/debian/GitHub/victorIAapi/scripts/session.holaqueai.com /etc/nginx/sites-available/session.holaqueai.com
 
-sudo ln -s /etc/nginx/sites-available/web.holaqueai.com /etc/nginx/sites-enabled/web.holaqueai.com
+sudo ln -s /etc/nginx/sites-available/session.holaqueai.com /etc/nginx/sites-enabled/session.holaqueai.com
 
 # certbot
 sudo apt update
 sudo apt install certbot python3-certbot-nginx -y
 
-sudo certbot --nginx -d web.holaqueai.com --email titomiky@gmail.com --agree-tos --no-eff-email --non-interactive
+sudo certbot --nginx -d session.holaqueai.com --email titomiky@gmail.com --agree-tos --no-eff-email --non-interactive
 
 sudo certbot renew --dry-run
 
@@ -100,11 +100,9 @@ sudo apt-get install -y iptables-persistent
 sudo netfilter-persistent save
 sudo netfilter-persistent reload
 
-# Instal pnpm for web
+# Instal pnpm for chat
 sudo curl -fsSL https://get.pnpm.io/install.sh | sh -
 sudo npm install -g pnpm
-
-
 
 sudo apt update
 
