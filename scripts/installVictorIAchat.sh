@@ -58,15 +58,15 @@ pm2 start /home/debian/GitHub/victorIAapi/scripts/installNpmRunStart_VictorIAcha
 sudo apt update
 sudo apt install nginx -y
 
-sudo cp /home/debian/GitHub/victorIAapi/scripts/session.holaqueai.com /etc/nginx/sites-available/session.holaqueai.com
+sudo cp /home/debian/GitHub/victorIAapi/scripts/sesion.holaqueai.com /etc/nginx/sites-available/sesion.holaqueai.com
 
-sudo ln -s /etc/nginx/sites-available/session.holaqueai.com /etc/nginx/sites-enabled/session.holaqueai.com
+sudo ln -s /etc/nginx/sites-available/sesion.holaqueai.com /etc/nginx/sites-enabled/sesion.holaqueai.com
 
 # certbot
 sudo apt update
 sudo apt install certbot python3-certbot-nginx -y
 
-sudo certbot --nginx -d session.holaqueai.com --email titomiky@gmail.com --agree-tos --no-eff-email --non-interactive
+sudo certbot --nginx -d sesion.holaqueai.com --email titomiky@gmail.com --agree-tos --no-eff-email --non-interactive
 sudo certbot --nginx -d sesion.holaqueai.com --email titomiky@gmail.com --agree-tos --no-eff-email --non-interactive
 
 sudo certbot renew --dry-run
