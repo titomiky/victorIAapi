@@ -67,6 +67,7 @@ sudo apt update
 sudo apt install certbot python3-certbot-nginx -y
 
 sudo certbot --nginx -d session.holaqueai.com --email titomiky@gmail.com --agree-tos --no-eff-email --non-interactive
+sudo certbot --nginx -d sesion.holaqueai.com --email titomiky@gmail.com --agree-tos --no-eff-email --non-interactive
 
 sudo certbot renew --dry-run
 
