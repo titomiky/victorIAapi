@@ -124,11 +124,17 @@ export class SessionController {
     
     try {
 
-      const messages = await this.getFormattedMessages(ask.sessionId);
+      const messages = await this.getFormattedAndSortedMessages(ask.sessionId);
+      console.log("messages", messages);
       const messagesToSave = [];
       messagesToSave.push({ role: "user", content: ask.message });
       messages.push(messagesToSave[messagesToSave.length - 1]);
       
+      const questionAnswerUser = new QuestionAnswer();
+      questionAnswerUser.role= "user";
+      questionAnswerUser.content= ask.message;
+      const updatedSessionUser = await this.sessionService.addQuestionAnswer(ask.sessionId, questionAnswerUser);
+
       const messagesToOpenAi : OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
         { role: "user", content: ask.message}
       ];
@@ -152,8 +158,7 @@ export class SessionController {
       questionAnswer.role= "assistant";
       questionAnswer.content= responseContent;
 
-      const updatedSession = await this.sessionService.addQuestionAnswer(ask.sessionId, questionAnswer);
-      //return res.status(HttpStatus.OK).send('ok.');
+      const updatedSession = await this.sessionService.addQuestionAnswer(ask.sessionId, questionAnswer);      
 
       return res.json({ question: responseContent });
     } catch (error) {
@@ -163,7 +168,7 @@ export class SessionController {
 }
 
 
-async getFormattedMessages(sessionId: string) {
+async getFormattedAndSortedMessages(sessionId: string) {
   try {
     // Recupera todas las conversaciones
     const questionAnswers = await this.sessionService.getQuestionAnswers(sessionId);
