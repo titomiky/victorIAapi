@@ -124,6 +124,7 @@ export class SessionController {
     
     try {
 
+      console.log('askitoooo', ask);
       const messages = await this.getFormattedAndSortedMessages(ask.sessionId);
       console.log("messages", messages);
       const messagesToSave = [];
@@ -170,19 +171,11 @@ export class SessionController {
 
 async getFormattedAndSortedMessages(sessionId: string) {
   try {
-    // Recupera todas las conversaciones
-    const questionAnswers = await this.sessionService.getQuestionAnswers(sessionId);
-    // Suponiendo que quieres formatear los mensajes de la primera conversación
-    if (questionAnswers.length > 0) {      
+  
+    const questionAnswers = await this.sessionService.getQuestionAnswers(sessionId);       
+    console.log("questionAnswers", questionAnswers);
+    return questionAnswers;
 
-      const sortedMessages = questionAnswers.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()); //TODO improve with Mongodb query
-      const formattedMessages = sortedMessages.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }));
-      return formattedMessages;
-    }
-    return [];
   } catch (error) {
     console.error("Error al recuperar y formatear mensajes:", error);
     return [];

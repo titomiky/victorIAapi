@@ -34,8 +34,11 @@ export class SessionService {
   }
 
   async getQuestionAnswers(sessionId: string) : Promise<QuestionAnswer[]> {
-    const session = await this.sessionModel.findById(sessionId).exec();
+    const session = await this.sessionModel.findById(sessionId).sort({ createdAt: 1 }).exec();
+
     return session.interview;
+    
+    
   }
 
   async remove(id: string): Promise<Session> {
