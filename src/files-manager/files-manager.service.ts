@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { awsConfig } from '../files-manager/aws.config';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class FilesManagerService {
@@ -18,7 +19,7 @@ export class FilesManagerService {
   async uploadFile(file: Express.Multer.File): Promise<string> {
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `${Date.now()}-${file.originalname}`,
+      Key: `${uuidv4()}-${file.originalname}`,
       Body: file.buffer,
       ContentType: file.mimetype,      
     };
